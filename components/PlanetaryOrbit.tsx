@@ -13,14 +13,14 @@ interface Planet {
 }
 
 const planets: Planet[] = [
-  { name: '海王星', colorRgb: '120, 150, 160', size: 10, orbitRadius: 16, duration: 95, opacity: 0.5 },
-  { name: '天王星', colorRgb: '170, 185, 200', size: 10, orbitRadius: 14, duration: 70, opacity: 0.55 },
-  { name: '土星', colorRgb: '160, 140, 110', size: 12, orbitRadius: 12, duration: 50, opacity: 0.6 },
-  { name: '木星', colorRgb: '130, 150, 135', size: 14, orbitRadius: 10, duration: 35, opacity: 0.6 },
+  { name: '海王星', colorRgb: '120, 150, 160', size: 10, orbitRadius: 25, duration: 95, opacity: 0.5 },
+  { name: '天王星', colorRgb: '170, 185, 200', size: 10, orbitRadius: 21, duration: 70, opacity: 0.55 },
+  { name: '土星', colorRgb: '160, 140, 110', size: 12, orbitRadius: 16, duration: 50, opacity: 0.6 },
+  { name: '木星', colorRgb: '130, 150, 135', size: 14, orbitRadius: 13, duration: 35, opacity: 0.6 },
   { name: '火星', colorRgb: '160, 130, 130', size: 8, orbitRadius: 8, duration: 22, opacity: 0.6 },
-  { name: '地球', colorRgb: '190, 200, 210', size: 10, orbitRadius: 6, duration: 15, opacity: 0.65 },
-  { name: '金星', colorRgb: '200, 185, 140', size: 8, orbitRadius: 4, duration: 10, opacity: 0.65 },
-  { name: '水星', colorRgb: '150, 160, 175', size: 6, orbitRadius: 2, duration: 5, opacity: 0.75 },
+  { name: '地球', colorRgb: '190, 200, 210', size: 10, orbitRadius: 6.5, duration: 15, opacity: 0.65 },
+  { name: '金星', colorRgb: '200, 185, 140', size: 8, orbitRadius: 5, duration: 10, opacity: 0.65 },
+  { name: '水星', colorRgb: '150, 160, 175', size: 6, orbitRadius: 3, duration: 5, opacity: 0.75 },
 ];
 
 export default function PlanetaryOrbit() {
