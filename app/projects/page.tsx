@@ -8,6 +8,14 @@ import FluidBackground from '@/components/FluidBackground';
 // 临时项目数据（之后会从 Sanity CMS 获取）
 const projects = [
   {
+    id: 5,
+    title: 'Planetary Orbit - 行星轨道动画',
+    description: '从头像装饰出发的设计探索，演化为太阳系八大行星的轨道可视化。通过分段渐变轨迹和差异化运动节奏营造空间深度感，动态拖影随速度变化，点击可切换旋转方向体验不同视角',
+    tags: ['Motion Design', 'Interactive Animation', 'React'],
+    year: '2026',
+    image: 'https://images.unsplash.com/photo-1614642264762-d0a3b8bf3700?w=1200&q=80',
+  },
+  {
     id: 1,
     title: 'E-Commerce Platform',
     description: '现代化电商解决方案，提供无缝结账体验和实时库存管理系统',
@@ -81,7 +89,7 @@ export default function ProjectsPage() {
                 className="group relative"
               >
                 <a
-                  href={`/projects/${project.id}`}
+                  href={project.id === 5 ? '/projects/planetary-orbit' : `/projects/${project.id}`}
                   className="block relative bg-white/5 backdrop-blur-sm rounded-3xl overflow-hidden border border-white/10 hover:border-white/30 transition-all duration-500"
                 >
                   {/* Image Section */}
