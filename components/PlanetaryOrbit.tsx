@@ -168,6 +168,7 @@ export default function PlanetaryOrbit() {
               height: '100%',
               zIndex: 10 + planetIndex,
               animation: `${isClockwise ? 'spin-clockwise' : 'spin-counterclockwise'} ${planet.duration}s linear infinite`,
+              animationPlayState: 'running',
             }}
           >
             {/* 渐变拖影 - 使用 SVG 弧线 */}
