@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
 import Navigation from '@/components/Navigation';
 import FluidBackground from '@/components/FluidBackground';
 
@@ -88,7 +89,7 @@ export default function ProjectsPage() {
                 transition={{ duration: 0.6, delay: index * 0.15 }}
                 className="group relative"
               >
-                <a
+                <Link
                   href={project.id === 5 ? '/projects/planetary-orbit' : `/projects/${project.id}`}
                   className="block relative bg-white/5 backdrop-blur-sm rounded-3xl overflow-hidden border border-white/10 hover:border-white/30 transition-all duration-500"
                 >
@@ -160,7 +161,7 @@ export default function ProjectsPage() {
                       </svg>
                     </div>
                   </div>
-                </a>
+                </Link>
               </motion.div>
             ))}
           </div>
@@ -175,7 +176,7 @@ export default function ProjectsPage() {
             <p className="text-gray-400 mb-6">
               Interested in working together?
             </p>
-            <a
+            <Link
               href="/contact"
               className="inline-flex items-center gap-2 px-8 py-3 bg-white text-black font-medium rounded-lg hover:bg-gray-100 transition-colors"
             >
@@ -183,7 +184,7 @@ export default function ProjectsPage() {
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
-            </a>
+            </Link>
           </motion.div>
         </div>
       </main>
