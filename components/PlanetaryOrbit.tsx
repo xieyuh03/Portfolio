@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 
+// Get base path for GitHub Pages
+const basePath = process.env.NODE_ENV === 'production' ? '/Portfolio' : '';
+
 interface Planet {
   name: string;
   colorRgb: string;
@@ -228,7 +231,7 @@ export default function PlanetaryOrbit() {
         }}
       >
         <img
-          src="/images/avatar.png"
+          src={`${basePath}/images/avatar.png`}
           alt="Avatar"
           width={avatarSize}
           height={avatarSize}
