@@ -1,6 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Enable static export for GitHub Pages
+  output: 'export',
+
+  // Set base path for GitHub Pages (repository name)
+  basePath: '/Portfolio',
+
   images: {
+    // Disable image optimization for static export
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
