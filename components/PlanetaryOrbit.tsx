@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 
 interface Planet {
   name: string;
@@ -227,13 +226,12 @@ export default function PlanetaryOrbit() {
           zIndex: 5
         }}
       >
-        <Image
+        <img
           src="/images/avatar.png"
           alt="Avatar"
           width={avatarSize}
           height={avatarSize}
           className="object-cover w-full h-full"
-          priority
         />
       </div>
       </div>
