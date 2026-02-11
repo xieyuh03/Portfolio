@@ -9,6 +9,14 @@ import FluidBackground from '@/components/FluidBackground';
 // 临时项目数据（之后会从 Sanity CMS 获取）
 const projects = [
   {
+    id: 6,
+    title: 'Modern Bank Reconciliation',
+    description: 'Microsoft 365 Finance ERP系统的银行对账功能重新设计。通过智能匹配引擎和优化的工作流程，将对账时间减少65%，错误率降低78%，显著提升用户体验和工作效率',
+    tags: ['UX Design', 'Enterprise', 'M365 Finance'],
+    year: '2025',
+    image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1200&q=80',
+  },
+  {
     id: 5,
     title: 'Planetary Orbit - 行星轨道动画',
     description: '从头像装饰出发的设计探索，演化为太阳系八大行星的轨道可视化。通过分段渐变轨迹和差异化运动节奏营造空间深度感，动态拖影随速度变化，点击可切换旋转方向体验不同视角',
@@ -90,7 +98,11 @@ export default function ProjectsPage() {
                 className="group relative"
               >
                 <Link
-                  href={project.id === 5 ? '/projects/planetary-orbit' : `/projects/${project.id}`}
+                  href={
+                    project.id === 6 ? '/projects/bank-reconciliation' :
+                    project.id === 5 ? '/projects/planetary-orbit' :
+                    `/projects/${project.id}`
+                  }
                   className="block relative bg-white/5 backdrop-blur-sm rounded-3xl overflow-hidden border border-white/10 hover:border-white/30 transition-all duration-500"
                 >
                   {/* Image Section */}
