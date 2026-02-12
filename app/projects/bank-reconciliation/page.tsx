@@ -52,11 +52,19 @@ export default function BankReconciliationPage() {
 
             {/* Right: 2 images stacked vertically */}
             <div className="space-y-4">
-              <div className="bg-gray-200 rounded-lg aspect-[16/9] flex items-center justify-center overflow-hidden">
-                <span className="text-gray-400 text-sm">UI Screenshot 1</span>
+              <div className="rounded-lg overflow-hidden shadow-xl">
+                <img
+                  src="/images/modern bank reconciliation/title image 01.png"
+                  alt="Bank Reconciliation UI Screenshot 1"
+                  className="w-full h-auto"
+                />
               </div>
-              <div className="bg-gray-200 rounded-lg aspect-[16/9] flex items-center justify-center overflow-hidden">
-                <span className="text-gray-400 text-sm">UI Screenshot 2</span>
+              <div className="rounded-lg overflow-hidden shadow-xl">
+                <img
+                  src="/images/modern bank reconciliation/title image 02.png"
+                  alt="Bank Reconciliation UI Screenshot 2"
+                  className="w-full h-auto"
+                />
               </div>
             </div>
 
@@ -171,17 +179,29 @@ export default function BankReconciliationPage() {
         </div>
         {/* End of Second Content Section */}
 
-        {/* Design Showcase - 宽容器 */}
-        <div className="max-w-[1600px] mx-auto px-8 py-12 mb-20">
+        {/* Design Showcase - 全屏宽度 */}
+        <div className="w-full px-8 py-12 mb-20">
           <div className="grid grid-cols-3 gap-6">
-            <div className="bg-gray-200 rounded-lg aspect-[16/10] flex items-center justify-center overflow-hidden">
-              <span className="text-gray-400 text-sm">UI Screenshot 3</span>
+            <div className="rounded-lg overflow-hidden shadow-xl">
+              <img
+                src="/images/modern bank reconciliation/image showcase 01.png"
+                alt="Design Showcase 1"
+                className="w-full h-auto"
+              />
             </div>
-            <div className="bg-gray-200 rounded-lg aspect-[16/10] flex items-center justify-center overflow-hidden">
-              <span className="text-gray-400 text-sm">UI Screenshot 4</span>
+            <div className="rounded-lg overflow-hidden shadow-xl">
+              <img
+                src="/images/modern bank reconciliation/image showcase 02.png"
+                alt="Design Showcase 2"
+                className="w-full h-auto"
+              />
             </div>
-            <div className="bg-gray-200 rounded-lg aspect-[16/10] flex items-center justify-center overflow-hidden">
-              <span className="text-gray-400 text-sm">UI Screenshot 5</span>
+            <div className="rounded-lg overflow-hidden shadow-xl">
+              <img
+                src="/images/modern bank reconciliation/image showcase 03.png"
+                alt="Design Showcase 3"
+                className="w-full h-auto"
+              />
             </div>
           </div>
         </div>
@@ -238,8 +258,12 @@ export default function BankReconciliationPage() {
             {/* Business flow */}
             <div className="mb-12">
               <h3 className="text-xl font-bold text-gray-900 mb-6">Business flow</h3>
-              <div className="bg-gray-100 rounded-lg p-8 flex items-center justify-center">
-                <span className="text-gray-400">Business Flow Diagram Placeholder</span>
+              <div className="rounded-lg overflow-hidden shadow-xl py-10">
+                <img
+                  src="/images/modern bank reconciliation/Business flow.png"
+                  alt="Business Flow Diagram"
+                  className="w-full h-auto"
+                />
               </div>
             </div>
 
@@ -314,8 +338,132 @@ export default function BankReconciliationPage() {
             {/* Team Collaboration */}
             <div className="mb-12">
               <h3 className="text-xl font-bold text-gray-900 mb-6">Team Collaboration</h3>
-              <div className="bg-gray-100 rounded-lg p-8 flex items-center justify-center">
-                <span className="text-gray-400">Team Collaboration Diagram Placeholder</span>
+              <div className="bg-gray-50 rounded-lg p-16 py-20">
+                <div className="max-w-3xl mx-auto relative">
+                  {/* Product Manager - Top Center */}
+                  <div className="flex flex-col items-center mb-24">
+                    <div className="w-20 h-20 bg-white rounded-full shadow-lg flex items-center justify-center mb-3">
+                      <img
+                        src="/emojis/man-office-worker.png"
+                        alt="Product Manager"
+                        className="w-14 h-14"
+                      />
+                    </div>
+                    <div className="text-base font-semibold text-gray-900">Product Manager</div>
+                  </div>
+
+                  {/* Bottom Row - Designer and Engineer Team */}
+                  <div className="grid grid-cols-2 gap-32 relative">
+                    {/* Designer - Left */}
+                    <div className="flex flex-col items-center">
+                      <div className="w-20 h-20 bg-white rounded-full shadow-lg flex items-center justify-center mb-3">
+                        <img
+                          src="/emojis/man-artist.png"
+                          alt="Designer"
+                          className="w-14 h-14"
+                        />
+                      </div>
+                      <div className="text-base font-semibold text-gray-900">Designer</div>
+                    </div>
+
+                    {/* Engineer Team - Right */}
+                    <div className="flex flex-col items-center">
+                      <div className="grid grid-cols-2 gap-3 mb-3">
+                        <div className="w-20 h-20 bg-white rounded-full shadow-lg flex items-center justify-center">
+                          <img
+                            src="/emojis/woman-technologist.png"
+                            alt="Engineer"
+                            className="w-14 h-14"
+                          />
+                        </div>
+                        <div className="w-20 h-20 bg-white rounded-full shadow-lg flex items-center justify-center">
+                          <img
+                            src="/emojis/man-technologist.png"
+                            alt="Engineer"
+                            className="w-14 h-14"
+                          />
+                        </div>
+                        <div className="w-20 h-20 bg-white rounded-full shadow-lg flex items-center justify-center">
+                          <img
+                            src="/emojis/woman-technologist-3.png"
+                            alt="Engineer"
+                            className="w-14 h-14"
+                          />
+                        </div>
+                        <div className="w-20 h-20 bg-white rounded-full shadow-lg flex items-center justify-center">
+                          <img
+                            src="/emojis/man-technologist-2.png"
+                            alt="Engineer"
+                            className="w-14 h-14"
+                          />
+                        </div>
+                      </div>
+                      <div className="text-base font-semibold text-gray-900">Engineer Team</div>
+                    </div>
+                  </div>
+
+                  {/* SVG for arrows */}
+                  <svg className="absolute w-full h-full top-0 left-0 pointer-events-none" style={{ zIndex: 1 }}>
+                    <defs>
+                      <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                        <polygon points="0 0, 8 4, 0 8" fill="#374151" />
+                      </marker>
+                    </defs>
+
+                    {/* PM to Designer arrow */}
+                    <line
+                      x1="50%"
+                      y1="22%"
+                      x2="28%"
+                      y2="58%"
+                      stroke="#374151"
+                      strokeWidth="2"
+                      markerEnd="url(#arrowhead)"
+                    />
+
+                    {/* PM to Engineer Team arrow */}
+                    <line
+                      x1="50%"
+                      y1="22%"
+                      x2="72%"
+                      y2="58%"
+                      stroke="#374151"
+                      strokeWidth="2"
+                      markerEnd="url(#arrowhead)"
+                    />
+
+                    {/* Designer to Engineer Team arrow */}
+                    <line
+                      x1="36%"
+                      y1="72%"
+                      x2="64%"
+                      y2="72%"
+                      stroke="#374151"
+                      strokeWidth="2"
+                      markerEnd="url(#arrowhead)"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            {/* Bank statement design */}
+            <div className="mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">Bank statement design</h2>
+
+              <div className="mb-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Main pain points</h3>
+                <ul className="space-y-3 text-base text-gray-900 list-disc pl-5">
+                  <li>
+                    The <span className="text-cyan-600">information hierarchy</span> lacks clarity.
+                  </li>
+                  <li>
+                    The <span className="text-cyan-600">relationship</span> between the bank statement and the worksheet is not clearly illustrated.
+                  </li>
+                  <li>
+                    The <span className="text-cyan-600">status</span> of transactions and statements is confusing.
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
