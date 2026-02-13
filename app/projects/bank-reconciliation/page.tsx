@@ -54,14 +54,14 @@ export default function BankReconciliationPage() {
             <div className="space-y-4">
               <div className="rounded-lg overflow-hidden shadow-xl">
                 <img
-                  src="/images/modern-bank-reconciliation/title image 01.png"
+                  src="images/modern-bank-reconciliation/title image 01.png"
                   alt="Bank Reconciliation UI Screenshot 1"
                   className="w-full h-auto"
                 />
               </div>
               <div className="rounded-lg overflow-hidden shadow-xl">
                 <img
-                  src="/images/modern-bank-reconciliation/title image 02.png"
+                  src="images/modern-bank-reconciliation/title image 02.png"
                   alt="Bank Reconciliation UI Screenshot 2"
                   className="w-full h-auto"
                 />
@@ -184,21 +184,21 @@ export default function BankReconciliationPage() {
           <div className="grid grid-cols-3 gap-4 md:gap-6 lg:gap-8 2xl:gap-10">
             <div className="rounded-lg overflow-hidden shadow-xl">
               <img
-                src="/images/modern-bank-reconciliation/image showcase 01.png"
+                src="images/modern-bank-reconciliation/image showcase 01.png"
                 alt="Design Showcase 1"
                 className="w-full h-auto"
               />
             </div>
             <div className="rounded-lg overflow-hidden shadow-xl">
               <img
-                src="/images/modern-bank-reconciliation/image showcase 02.png"
+                src="images/modern-bank-reconciliation/image showcase 02.png"
                 alt="Design Showcase 2"
                 className="w-full h-auto"
               />
             </div>
             <div className="rounded-lg overflow-hidden shadow-xl">
               <img
-                src="/images/modern-bank-reconciliation/image showcase 03.png"
+                src="images/modern-bank-reconciliation/image showcase 03.png"
                 alt="Design Showcase 3"
                 className="w-full h-auto"
               />
@@ -220,7 +220,7 @@ export default function BankReconciliationPage() {
                 <div className="flex gap-6">
                   <div className="flex-shrink-0 w-28 h-28 bg-white rounded-full shadow-lg flex items-center justify-center">
                     <img
-                      src="/emojis/woman-technologist.png"
+                      src="emojis/woman-technologist.png"
                       alt="Treasurer"
                       className="w-16 h-16"
                     />
@@ -239,7 +239,7 @@ export default function BankReconciliationPage() {
                 <div className="flex gap-6">
                   <div className="flex-shrink-0 w-28 h-28 bg-white rounded-full shadow-lg flex items-center justify-center">
                     <img
-                      src="/emojis/woman-office-worker.png"
+                      src="emojis/woman-office-worker.png"
                       alt="Finance Manager"
                       className="w-16 h-16"
                     />
@@ -260,7 +260,7 @@ export default function BankReconciliationPage() {
               <h3 className="text-lg md:text-xl lg:text-2xl 2xl:text-3xl font-bold text-gray-900 mb-4 md:mb-5 lg:mb-6">Business flow</h3>
               <div className="flex justify-center py-10">
                 <img
-                  src="/images/modern-bank-reconciliation/Business flow.png"
+                  src="images/modern-bank-reconciliation/Business flow.png"
                   alt="Business Flow Diagram"
                   className="w-4/5 h-auto"
                 />
@@ -340,7 +340,7 @@ export default function BankReconciliationPage() {
               <h3 className="text-lg md:text-xl lg:text-2xl 2xl:text-3xl font-bold text-gray-900 mb-4 md:mb-5 lg:mb-6">Team Collaboration</h3>
               <div className="flex justify-center py-10">
                 <img
-                  src="/images/modern-bank-reconciliation/Team collaboration.png"
+                  src="images/modern-bank-reconciliation/Team collaboration.png"
                   alt="Team Collaboration Diagram"
                   className="w-2/5 h-auto"
                 />
@@ -370,14 +370,14 @@ export default function BankReconciliationPage() {
               <div className="space-y-6">
                 <div className="rounded-lg overflow-hidden shadow-xl">
                   <img
-                    src="/images/modern-bank-reconciliation/original design.png"
+                    src="images/modern-bank-reconciliation/original design.png"
                     alt="Original Design"
                     className="w-full h-auto"
                   />
                 </div>
                 <div className="rounded-lg overflow-hidden shadow-xl">
                   <img
-                    src="/images/modern-bank-reconciliation/new design.png"
+                    src="images/modern-bank-reconciliation/new design.png"
                     alt="New Design"
                     className="w-full h-auto"
                   />
@@ -403,7 +403,7 @@ export default function BankReconciliationPage() {
                 {/* Relationship Diagram */}
                 <div className="flex justify-center py-10">
                   <img
-                    src="/images/modern-bank-reconciliation/relationship between.png"
+                    src="images/modern-bank-reconciliation/relationship between.png"
                     alt="Relationship Between Bank Statement and Worksheet"
                     className="w-4/5 h-auto"
                   />
@@ -422,7 +422,7 @@ export default function BankReconciliationPage() {
                 {/* Status Flow Diagram */}
                 <div className="flex justify-center py-10">
                   <img
-                    src="/images/modern-bank-reconciliation/status inherit.png"
+                    src="images/modern-bank-reconciliation/status inherit.png"
                     alt="Status Inherit Diagram"
                     className="w-4/5 h-auto"
                   />
