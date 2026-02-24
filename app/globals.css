@@ -44,3 +44,13 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+@keyframes spin-clockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spin-counterclockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}

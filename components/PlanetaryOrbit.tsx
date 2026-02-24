@@ -15,14 +15,14 @@ interface Planet {
 }
 
 const planets: Planet[] = [
-  { name: '海王星', colorRgb: '120, 150, 160', size: 10, orbitRadius: 25, duration: 95, opacity: 0.5 },
-  { name: '天王星', colorRgb: '170, 185, 200', size: 10, orbitRadius: 21, duration: 70, opacity: 0.55 },
-  { name: '土星', colorRgb: '160, 140, 110', size: 12, orbitRadius: 16, duration: 50, opacity: 0.6 },
-  { name: '木星', colorRgb: '130, 150, 135', size: 14, orbitRadius: 13, duration: 35, opacity: 0.6 },
-  { name: '火星', colorRgb: '160, 130, 130', size: 8, orbitRadius: 8, duration: 22, opacity: 0.6 },
-  { name: '地球', colorRgb: '190, 200, 210', size: 10, orbitRadius: 6.5, duration: 15, opacity: 0.65 },
-  { name: '金星', colorRgb: '200, 185, 140', size: 8, orbitRadius: 5, duration: 10, opacity: 0.65 },
-  { name: '水星', colorRgb: '150, 160, 175', size: 6, orbitRadius: 3, duration: 5, opacity: 0.75 },
+  { name: '海王星', colorRgb: '80, 155, 190',  size: 10, orbitRadius: 25, duration: 95, opacity: 0.5 },
+  { name: '天王星', colorRgb: '140, 185, 225', size: 10, orbitRadius: 21, duration: 70, opacity: 0.55 },
+  { name: '土星', colorRgb: '200, 160, 80',   size: 12, orbitRadius: 16, duration: 50, opacity: 0.6 },
+  { name: '木星', colorRgb: '110, 165, 120',  size: 14, orbitRadius: 13, duration: 35, opacity: 0.6 },
+  { name: '火星', colorRgb: '195, 100, 100',  size: 8,  orbitRadius: 8,  duration: 22, opacity: 0.6 },
+  { name: '地球', colorRgb: '160, 200, 230',  size: 10, orbitRadius: 6.5, duration: 15, opacity: 0.65 },
+  { name: '金星', colorRgb: '230, 195, 90',   size: 8,  orbitRadius: 5,  duration: 10, opacity: 0.65 },
+  { name: '水星', colorRgb: '130, 155, 200',  size: 6,  orbitRadius: 3,  duration: 5,  opacity: 0.75 },
 ];
 
 export default function PlanetaryOrbit() {
@@ -35,9 +35,6 @@ export default function PlanetaryOrbit() {
   const avatarSize = 180; // 头像尺寸
   const baseOrbitRadius = 110; // 基础轨道半径（从中心到最内层轨道）
 
-  // 轨道样式配置
-  const dashedOrbitIndices = [3, 4]; // 虚线轨道（木星、火星）
-
   // 为每个轨道生成"随机"但固定的起始角度（基于索引）
   const getStartAngle = (index: number) => {
     // 使用质数乘法生成看起来随机的角度
@@ -45,28 +42,8 @@ export default function PlanetaryOrbit() {
   };
 
   return (
-    <>
-      <style jsx>{`
-        @keyframes spin-clockwise {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
-        @keyframes spin-counterclockwise {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(-360deg);
-          }
-        }
-      `}</style>
-
-      <div
-        className="relative cursor-pointer"
+    <div
+      className="relative cursor-pointer"
         onClick={() => setIsClockwise(!isClockwise)}
         title="点击切换旋转方向 - 太阳系八大行星"
         style={{ width: `${containerSize}px`, height: `${containerSize}px` }}
@@ -120,10 +97,10 @@ export default function PlanetaryOrbit() {
 
             const startRad = (segmentStartAngle * Math.PI) / 180;
             const endRad = (segmentEndAngle * Math.PI) / 180;
-            const startX = centerX + radius * Math.cos(startRad);
-            const startY = centerY + radius * Math.sin(startRad);
-            const endX = centerX + radius * Math.cos(endRad);
-            const endY = centerY + radius * Math.sin(endRad);
+            const startX = (centerX + radius * Math.cos(startRad)).toFixed(4);
+            const startY = (centerY + radius * Math.sin(startRad)).toFixed(4);
+            const endX = (centerX + radius * Math.cos(endRad)).toFixed(4);
+            const endY = (centerY + radius * Math.sin(endRad)).toFixed(4);
 
             const segmentArcDegrees = arcDegrees / segments;
             const largeArcFlag = segmentArcDegrees > 180 ? 1 : 0;
@@ -170,7 +147,10 @@ export default function PlanetaryOrbit() {
               width: '100%',
               height: '100%',
               zIndex: 10 + planetIndex,
-              animation: `${isClockwise ? 'spin-clockwise' : 'spin-counterclockwise'} ${planet.duration}s linear infinite`,
+              animationName: isClockwise ? 'spin-clockwise' : 'spin-counterclockwise',
+              animationDuration: `${planet.duration}s`,
+              animationTimingFunction: 'linear',
+              animationIterationCount: 'infinite',
               animationPlayState: 'running',
             }}
           >
@@ -238,7 +218,6 @@ export default function PlanetaryOrbit() {
           className="object-cover w-full h-full"
         />
       </div>
-      </div>
-    </>
+    </div>
   );
 }

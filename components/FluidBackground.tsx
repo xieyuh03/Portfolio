@@ -59,7 +59,7 @@ export default function FluidBackground() {
       y,
       vx: vx * 0.15 + (Math.random() - 0.5) * 1,
       vy: vy * 0.15 + (Math.random() - 0.5) * 1,
-      size: Math.random() * 40 + 20,
+      size: Math.random() * 25 + 20,
       life: 1,
       decay: Math.random() * 0.01 + 0.008,
       color: fluidColors[Math.floor(Math.random() * fluidColors.length)],
@@ -83,7 +83,7 @@ export default function FluidBackground() {
 
     const drawParticle = (particle: Particle) => {
       ctx.save();
-      ctx.globalAlpha = particle.life * 0.3;
+      ctx.globalAlpha = particle.life * 0.8;
 
       const gradient = ctx.createRadialGradient(
         particle.x, particle.y, 0,
@@ -91,8 +91,8 @@ export default function FluidBackground() {
       );
 
       const c = particle.color;
-      gradient.addColorStop(0, `rgba(${c.r}, ${c.g}, ${c.b}, 0.4)`);
-      gradient.addColorStop(0.5, `rgba(${c.r}, ${c.g}, ${c.b}, 0.2)`);
+      gradient.addColorStop(0, `rgba(${c.r}, ${c.g}, ${c.b}, 1)`);
+      gradient.addColorStop(0.4, `rgba(${c.r}, ${c.g}, ${c.b}, 0.7)`);
       gradient.addColorStop(1, `rgba(${c.r}, ${c.g}, ${c.b}, 0)`);
 
       ctx.fillStyle = gradient;
@@ -151,10 +151,10 @@ export default function FluidBackground() {
     };
 
     const animate = () => {
-      ctx.fillStyle = 'rgba(10, 10, 10, 0.08)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
       const particles = particlesRef.current;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
       for (let i = particles.length - 1; i >= 0; i--) {
         updateParticle(particles[i]);
         drawParticle(particles[i]);

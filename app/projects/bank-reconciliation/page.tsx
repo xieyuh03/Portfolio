@@ -3,6 +3,9 @@
 import Link from 'next/link';
 import Navigation from '@/components/Navigation';
 
+// Helper to handle basePath for GitHub Pages
+const basePath = process.env.NODE_ENV === 'production' ? '/Portfolio' : '';
+
 export default function BankReconciliationPage() {
   return (
     <>
@@ -54,14 +57,14 @@ export default function BankReconciliationPage() {
             <div className="space-y-4">
               <div className="rounded-lg overflow-hidden shadow-xl">
                 <img
-                  src="images/modern-bank-reconciliation/title image 01.png"
+                  src={`${basePath}/images/modern-bank-reconciliation/title image 01.png`}
                   alt="Bank Reconciliation UI Screenshot 1"
                   className="w-full h-auto"
                 />
               </div>
               <div className="rounded-lg overflow-hidden shadow-xl">
                 <img
-                  src="images/modern-bank-reconciliation/title image 02.png"
+                  src={`${basePath}/images/modern-bank-reconciliation/title image 02.png`}
                   alt="Bank Reconciliation UI Screenshot 2"
                   className="w-full h-auto"
                 />
@@ -184,21 +187,21 @@ export default function BankReconciliationPage() {
           <div className="grid grid-cols-3 gap-4 md:gap-6 lg:gap-8 2xl:gap-10">
             <div className="rounded-lg overflow-hidden shadow-xl">
               <img
-                src="images/modern-bank-reconciliation/image showcase 01.png"
+                src={`${basePath}/images/modern-bank-reconciliation/image showcase 01.png`}
                 alt="Design Showcase 1"
                 className="w-full h-auto"
               />
             </div>
             <div className="rounded-lg overflow-hidden shadow-xl">
               <img
-                src="images/modern-bank-reconciliation/image showcase 02.png"
+                src={`${basePath}/images/modern-bank-reconciliation/image showcase 02.png`}
                 alt="Design Showcase 2"
                 className="w-full h-auto"
               />
             </div>
             <div className="rounded-lg overflow-hidden shadow-xl">
               <img
-                src="images/modern-bank-reconciliation/image showcase 03.png"
+                src={`${basePath}/images/modern-bank-reconciliation/image showcase 03.png`}
                 alt="Design Showcase 3"
                 className="w-full h-auto"
               />
@@ -220,7 +223,7 @@ export default function BankReconciliationPage() {
                 <div className="flex gap-6">
                   <div className="flex-shrink-0 w-28 h-28 bg-white rounded-full shadow-lg flex items-center justify-center">
                     <img
-                      src="emojis/woman-technologist.png"
+                      src={`${basePath}/emojis/woman-technologist.png`}
                       alt="Treasurer"
                       className="w-16 h-16"
                     />
@@ -239,7 +242,7 @@ export default function BankReconciliationPage() {
                 <div className="flex gap-6">
                   <div className="flex-shrink-0 w-28 h-28 bg-white rounded-full shadow-lg flex items-center justify-center">
                     <img
-                      src="emojis/woman-office-worker.png"
+                      src={`${basePath}/emojis/woman-office-worker.png`}
                       alt="Finance Manager"
                       className="w-16 h-16"
                     />
@@ -260,7 +263,7 @@ export default function BankReconciliationPage() {
               <h3 className="text-lg md:text-xl lg:text-2xl 2xl:text-3xl font-bold text-gray-900 mb-4 md:mb-5 lg:mb-6">Business flow</h3>
               <div className="flex justify-center py-10">
                 <img
-                  src="images/modern-bank-reconciliation/Business flow.png"
+                  src={`${basePath}/images/modern-bank-reconciliation/Business flow.png`}
                   alt="Business Flow Diagram"
                   className="w-4/5 h-auto"
                 />
@@ -340,7 +343,7 @@ export default function BankReconciliationPage() {
               <h3 className="text-lg md:text-xl lg:text-2xl 2xl:text-3xl font-bold text-gray-900 mb-4 md:mb-5 lg:mb-6">Team Collaboration</h3>
               <div className="flex justify-center py-10">
                 <img
-                  src="images/modern-bank-reconciliation/Team collaboration.png"
+                  src={`${basePath}/images/modern-bank-reconciliation/Team collaboration.png`}
                   alt="Team Collaboration Diagram"
                   className="w-2/5 h-auto"
                 />
@@ -370,14 +373,14 @@ export default function BankReconciliationPage() {
               <div className="space-y-6">
                 <div className="rounded-lg overflow-hidden shadow-xl">
                   <img
-                    src="images/modern-bank-reconciliation/original design.png"
+                    src={`${basePath}/images/modern-bank-reconciliation/original design.png`}
                     alt="Original Design"
                     className="w-full h-auto"
                   />
                 </div>
                 <div className="rounded-lg overflow-hidden shadow-xl">
                   <img
-                    src="images/modern-bank-reconciliation/new design.png"
+                    src={`${basePath}/images/modern-bank-reconciliation/new design.png`}
                     alt="New Design"
                     className="w-full h-auto"
                   />
@@ -403,7 +406,7 @@ export default function BankReconciliationPage() {
                 {/* Relationship Diagram */}
                 <div className="flex justify-center py-10">
                   <img
-                    src="images/modern-bank-reconciliation/relationship between.png"
+                    src={`${basePath}/images/modern-bank-reconciliation/relationship between.png`}
                     alt="Relationship Between Bank Statement and Worksheet"
                     className="w-4/5 h-auto"
                   />
@@ -422,7 +425,7 @@ export default function BankReconciliationPage() {
                 {/* Status Flow Diagram */}
                 <div className="flex justify-center py-10">
                   <img
-                    src="images/modern-bank-reconciliation/status inherit.png"
+                    src={`${basePath}/images/modern-bank-reconciliation/status inherit.png`}
                     alt="Status Inherit Diagram"
                     className="w-4/5 h-auto"
                   />
@@ -432,6 +435,342 @@ export default function BankReconciliationPage() {
           </div>
         </div>
         {/* End of Project Overview Section */}
+
+        {/* Worksheet design - 窄容器 */}
+        <div className="max-w-5xl lg:max-w-6xl 2xl:max-w-7xl mx-auto px-6 md:px-8 lg:px-12 mb-12 md:mb-16 lg:mb-20">
+          <div className="mb-12">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-bold text-gray-900 mb-6 md:mb-7 lg:mb-8">Worksheet design</h2>
+
+            <div className="mb-8">
+              <h3 className="text-lg md:text-xl lg:text-2xl 2xl:text-3xl font-bold text-gray-900 mb-3 md:mb-4 lg:mb-5">Main pain points</h3>
+              <ul className="space-y-2 md:space-y-2.5 lg:space-y-3 text-sm md:text-base lg:text-lg text-gray-900 font-semibold list-disc pl-4 md:pl-5 lg:pl-6">
+                <li>
+                  <span className="text-cyan-600">Navigation and interactions</span> are not user-friendly, making it hard for users to find what they need.
+                </li>
+                <li>
+                  The <span className="text-cyan-600">selection, comparison and confirmation</span> process is disorganized, causing confusion.
+                </li>
+              </ul>
+            </div>
+
+            {/* Design Images */}
+            <div className="space-y-6">
+              <div className="rounded-lg overflow-hidden shadow-xl">
+                <img
+                  src={`${basePath}/images/modern-bank-reconciliation/Worksheet original design.png`}
+                  alt="Worksheet Original Design"
+                  className="w-full h-auto"
+                />
+              </div>
+              <div className="rounded-lg overflow-hidden shadow-xl">
+                <img
+                  src={`${basePath}/images/modern-bank-reconciliation/worksheet final design.png`}
+                  alt="Worksheet Final Design"
+                  className="w-full h-auto"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Design explorations - 窄容器 */}
+        <div className="max-w-5xl lg:max-w-6xl 2xl:max-w-7xl mx-auto px-6 md:px-8 lg:px-12 mb-12 md:mb-16 lg:mb-20">
+          <div className="mb-12">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-bold text-gray-900 mb-6 md:mb-7 lg:mb-8">Design explorations</h2>
+
+            {/* Quote with left border */}
+            <div className="mb-8 md:mb-10 lg:mb-12 border-l-4 border-cyan-600 pl-4 md:pl-5 lg:pl-6 bg-gray-50 py-4">
+              <p className="text-sm md:text-base lg:text-lg text-gray-900 leading-relaxed">
+                Design is an iterative process that demands careful refinement. We have examined several layout options, including card view, grouped list view, and side-by-side list view. Our evaluation focused on information presentation, interaction processes, and usability effectiveness. We decided that the side-by-side view is the best option and continued refining it to finalize the design.
+              </p>
+            </div>
+
+            {/* Unmatched transactions */}
+            <div className="mb-8 md:mb-10 lg:mb-12">
+              <h3 className="text-lg md:text-xl lg:text-2xl 2xl:text-3xl font-bold text-gray-900 mb-4 md:mb-5 lg:mb-6">Unmatched transactions</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 lg:gap-6">
+                <div className="bg-gray-200 rounded-lg aspect-[4/3] flex items-center justify-center text-gray-500">
+                  [Image: Unmatched transactions design 1]
+                </div>
+                <div className="bg-gray-200 rounded-lg aspect-[4/3] flex items-center justify-center text-gray-500">
+                  [Image: Unmatched transactions design 2]
+                </div>
+                <div className="bg-gray-200 rounded-lg aspect-[4/3] flex items-center justify-center text-gray-500">
+                  [Image: Unmatched transactions design 3]
+                </div>
+                <div className="bg-gray-200 rounded-lg aspect-[4/3] flex items-center justify-center text-gray-500">
+                  [Image: Unmatched transactions design 4]
+                </div>
+                <div className="bg-gray-200 rounded-lg aspect-[4/3] flex items-center justify-center text-gray-500">
+                  [Image: Unmatched transactions design 5]
+                </div>
+                <div className="bg-gray-200 rounded-lg aspect-[4/3] flex items-center justify-center text-gray-500">
+                  [Image: Unmatched transactions design 6]
+                </div>
+              </div>
+            </div>
+
+            {/* Pending transaction */}
+            <div className="mb-8 md:mb-10 lg:mb-12">
+              <h3 className="text-lg md:text-xl lg:text-2xl 2xl:text-3xl font-bold text-gray-900 mb-4 md:mb-5 lg:mb-6">Pending transaction</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 lg:gap-6">
+                <div className="bg-gray-200 rounded-lg aspect-[4/3] flex items-center justify-center text-gray-500">
+                  [Image: Pending transaction design 1]
+                </div>
+                <div className="bg-gray-200 rounded-lg aspect-[4/3] flex items-center justify-center text-gray-500">
+                  [Image: Pending transaction design 2]
+                </div>
+                <div className="bg-gray-200 rounded-lg aspect-[4/3] flex items-center justify-center text-gray-500">
+                  [Image: Pending transaction design 3]
+                </div>
+                <div className="bg-gray-200 rounded-lg aspect-[4/3] flex items-center justify-center text-gray-500">
+                  [Image: Pending transaction design 4]
+                </div>
+                <div className="bg-gray-200 rounded-lg aspect-[4/3] flex items-center justify-center text-gray-500">
+                  [Image: Pending transaction design 5]
+                </div>
+                <div className="bg-gray-200 rounded-lg aspect-[4/3] flex items-center justify-center text-gray-500">
+                  [Image: Pending transaction design 6]
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Flowchart - 全屏宽度 */}
+        <div className="w-full mb-12 md:mb-16 lg:mb-20">
+          {/* Title and Quote in narrow container */}
+          <div className="max-w-5xl lg:max-w-6xl 2xl:max-w-7xl mx-auto px-6 md:px-8 lg:px-12 mb-8 md:mb-10 lg:mb-12">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-bold text-gray-900 mb-6 md:mb-7 lg:mb-8">Flowchart</h2>
+
+            {/* Quote with left border */}
+            <div className="border-l-4 border-cyan-600 pl-4 md:pl-5 lg:pl-6 bg-gray-50 py-4">
+              <p className="text-sm md:text-base lg:text-lg text-gray-900 leading-relaxed">
+                Product design and execution often present challenges. As the project scope evolves, designer involvement shifts, necessitating deeper research into the product. This leads to ongoing design iterations and functionality assessments, culminating in final decisions made collaboratively with the product manager and engineering team.
+              </p>
+            </div>
+          </div>
+
+          {/* Flow Images - Horizontal Scroll - Full Width */}
+          <div className="overflow-x-auto scrollbar-hide px-6 md:px-8 lg:px-12">
+            <div className="flex gap-6 pb-2">
+              <div className="flex-shrink-0 w-[70vw] md:w-[50vw] lg:w-[40vw] rounded-lg overflow-hidden shadow-xl">
+                <img
+                  src={`${basePath}/images/modern-bank-reconciliation/Flow-original.png`}
+                  alt="Flow Original Design"
+                  className="w-full h-auto"
+                />
+              </div>
+              <div className="flex-shrink-0 w-[70vw] md:w-[50vw] lg:w-[40vw] rounded-lg overflow-hidden shadow-xl">
+                <img
+                  src={`${basePath}/images/modern-bank-reconciliation/flow-version01.png`}
+                  alt="Flow Design Version 1"
+                  className="w-full h-auto"
+                />
+              </div>
+              <div className="flex-shrink-0 w-[70vw] md:w-[50vw] lg:w-[40vw] rounded-lg overflow-hidden shadow-xl">
+                <img
+                  src={`${basePath}/images/modern-bank-reconciliation/flow-version02.png`}
+                  alt="Flow Design Version 2"
+                  className="w-full h-auto"
+                />
+              </div>
+              <div className="flex-shrink-0 w-[70vw] md:w-[50vw] lg:w-[40vw] rounded-lg overflow-hidden shadow-xl">
+                <img
+                  src={`${basePath}/images/modern-bank-reconciliation/Flow-final.png`}
+                  alt="Flow Final Design"
+                  className="w-full h-auto"
+                />
+              </div>
+            </div>
+          </div>
+
+          <style jsx>{`
+            .scrollbar-hide {
+              -ms-overflow-style: none;
+              scrollbar-width: none;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+              display: none;
+            }
+          `}</style>
+        </div>
+
+        {/* Usability testing - 窄容器 */}
+        <div className="max-w-5xl lg:max-w-6xl 2xl:max-w-7xl mx-auto px-6 md:px-8 lg:px-12 mb-12 md:mb-16 lg:mb-20">
+          <div className="mb-12">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-bold text-gray-900 mb-6 md:mb-7 lg:mb-8">Usability testing</h2>
+
+            {/* Quote with left border */}
+            <div className="mb-8 md:mb-10 lg:mb-12 border-l-4 border-cyan-600 pl-4 md:pl-5 lg:pl-6 bg-gray-50 py-4">
+              <p className="text-sm md:text-base lg:text-lg text-gray-900 leading-relaxed">
+                Before the product launch, we conducted usability testing to evaluate our design. We recruited four finance professionals from usertesting.com to assess the process, from importing bank statements to completing reconciliations. The feedback was overwhelmingly positive, with a <span className="font-semibold">100% task completion rate</span>. Insights on design specifics were well-received and have informed our subsequent improvements.
+              </p>
+            </div>
+
+            {/* Key findings */}
+            <h3 className="text-lg md:text-xl lg:text-2xl 2xl:text-3xl font-bold text-gray-900 mb-6 md:mb-7 lg:mb-8">Key findings</h3>
+
+            {/* First user quote */}
+            <div className="flex gap-4 mb-8 md:mb-10 lg:mb-12">
+              <div className="flex-shrink-0 w-12 h-12 bg-gray-300 rounded-full"></div>
+              <div className="flex-1 bg-gray-50 p-4 rounded-lg">
+                <p className="text-sm md:text-base lg:text-lg text-gray-700 italic leading-relaxed">
+                  "I could see this tool helping me with doing this monthly checks and balances, for sure. If there's way you can extract a report, too, then it would help, absolutely. I'm interested in seeing when will this go live so that I can actually use it? I'll definitely check it out. I can see it... helping me with things my current tools (SAP and Salesforce) are not doing."
+                </p>
+              </div>
+            </div>
+
+            {/* Two UI Screenshots */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 md:mb-10 lg:mb-12">
+              <div className="bg-gray-200 rounded-lg aspect-[16/10] flex items-center justify-center text-gray-500">
+                [Image: UI Screenshot with debit/credit reconciliation]
+              </div>
+              <div className="bg-gray-200 rounded-lg aspect-[16/10] flex items-center justify-center text-gray-500">
+                [Image: UI Screenshot with statement analysis]
+              </div>
+            </div>
+
+            {/* Two user quotes below screenshots */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 w-12 h-12 bg-gray-300 rounded-full"></div>
+                <div className="flex-1">
+                  <p className="text-sm md:text-base lg:text-lg text-gray-700 italic leading-relaxed mb-2">
+                    "There's some debit and credit transactions in and out - I like how that's set up how the debits and credits are in separate areas - looks like a reconciliation."
+                  </p>
+                  <p className="text-sm md:text-base text-gray-900 font-semibold">-- Senior Manager / Accountant</p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 w-12 h-12 bg-gray-300 rounded-full"></div>
+                <div className="flex-1">
+                  <p className="text-sm md:text-base lg:text-lg text-gray-700 italic leading-relaxed mb-2">
+                    "It looks like the system has performed some analysis on the statement. We have received a bank statement and want to check these against what we expect. I need to manually go and see what do they align to."
+                  </p>
+                  <p className="text-sm md:text-base text-gray-900 font-semibold">-- Business Consultant</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Product Impact - 窄容器 */}
+        <div className="max-w-5xl lg:max-w-6xl 2xl:max-w-7xl mx-auto px-6 md:px-8 lg:px-12 mb-12 md:mb-16 lg:mb-20">
+          <div className="mb-12">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-bold text-gray-900 mb-8 md:mb-10 lg:mb-12">Product Impact</h2>
+
+            {/* Timeline with circles */}
+            <div className="relative pl-16 md:pl-20 lg:pl-24 mb-12 md:mb-14 lg:mb-16">
+              {/* Vertical line connecting circles */}
+              <div className="absolute left-16 md:left-20 lg:left-24 top-0 bottom-0 w-0.5 bg-gray-300" style={{transform: 'translateX(-50%)'}}></div>
+
+              {/* March 2024 */}
+              <div className="relative mb-12 md:mb-16 lg:mb-20">
+                <div className="absolute left-0 top-0 w-16 md:w-20 lg:w-24 flex flex-col items-center">
+                  <div className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 bg-white border-4 border-gray-300 rounded-full flex items-center justify-center shadow-lg">
+                    <div className="text-center">
+                      <div className="font-bold text-sm md:text-base lg:text-lg">March</div>
+                      <div className="font-bold text-sm md:text-base lg:text-lg">2024</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="ml-16 md:ml-20 lg:ml-24 bg-gray-50 p-4 md:p-5 lg:p-6 rounded-lg">
+                  <p className="text-sm md:text-base lg:text-lg text-gray-900 leading-relaxed">
+                    GA feature has been demonstrated with customers Germany Red Cross and Bavaria Red Cross. <span className="text-cyan-600">Users are satisfied with these features</span> and believe Modern bank reconciliation can significantly reduce their manual work.
+                  </p>
+                </div>
+              </div>
+
+              {/* April 2024 */}
+              <div className="relative mb-12 md:mb-16 lg:mb-20">
+                <div className="absolute left-0 top-0 w-16 md:w-20 lg:w-24 flex flex-col items-center">
+                  <div className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 bg-white border-4 border-gray-300 rounded-full flex items-center justify-center shadow-lg">
+                    <div className="text-center">
+                      <div className="font-bold text-sm md:text-base lg:text-lg">April</div>
+                      <div className="font-bold text-sm md:text-base lg:text-lg">2024</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="ml-16 md:ml-20 lg:ml-24 bg-gray-50 p-4 md:p-5 lg:p-6 rounded-lg">
+                  <p className="text-sm md:text-base lg:text-lg text-gray-900 leading-relaxed">
+                    Support shared very positive sentimental feedback from customer for the feature, <span className="text-cyan-600">customers are chasing the GA for availability</span> in product environment.
+                  </p>
+                </div>
+              </div>
+
+              {/* May 2024 */}
+              <div className="relative mb-12 md:mb-14 lg:mb-16">
+                <div className="absolute left-0 top-0 w-16 md:w-20 lg:w-24 flex flex-col items-center">
+                  <div className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 bg-white border-4 border-gray-300 rounded-full flex items-center justify-center shadow-lg">
+                    <div className="text-center">
+                      <div className="font-bold text-sm md:text-base lg:text-lg">May</div>
+                      <div className="font-bold text-sm md:text-base lg:text-lg">2024</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="ml-16 md:ml-20 lg:ml-24 bg-gray-50 p-4 md:p-5 lg:p-6 rounded-lg">
+                  <p className="text-sm md:text-base lg:text-lg text-gray-900 leading-relaxed">
+                    A partner education session was completed in April, more than 60 participants from 16 different partners in Denmark and Germany. Partner feedback: <span className="text-cyan-600">"It is so good that Microsoft is doing these new bank functionalities</span> so we can recommend standard instead of an ISV".
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Chart placeholder */}
+            <div className="bg-gray-50 rounded-lg p-6 md:p-8 lg:p-10">
+              <div className="bg-gray-200 rounded-lg aspect-[16/9] flex items-center justify-center text-gray-500">
+                [Image: Line chart showing Active preview customers growth: 40 (4.1) → 89 (5.1) → 108 (6.1)]
+              </div>
+              <p className="text-center text-sm md:text-base lg:text-lg text-gray-700 mt-4 font-semibold">
+                Active preview customers within last 14 days
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Growth - 窄容器 */}
+        <div className="max-w-5xl lg:max-w-6xl 2xl:max-w-7xl mx-auto px-6 md:px-8 lg:px-12 mb-12 md:mb-16 lg:mb-20">
+          <div className="mb-12">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-bold text-gray-900 mb-8 md:mb-10 lg:mb-12">Growth</h2>
+
+            {/* Three numbered points */}
+            <div className="space-y-8 md:space-y-10 lg:space-y-12">
+              {/* 1. Comprehensive Design */}
+              <div className="flex gap-6">
+                <div className="flex-shrink-0 text-5xl md:text-6xl lg:text-7xl font-bold text-cyan-600">1</div>
+                <div className="flex-1 pt-2">
+                  <h3 className="text-base md:text-lg lg:text-xl font-bold text-gray-900 mb-2 md:mb-3">Comprehensive Design:</h3>
+                  <p className="text-sm md:text-base lg:text-lg text-gray-600 leading-relaxed">
+                    The design philosophy should be rooted in actual business processes, optimizing the overall user experience pathway rather than merely focusing on page improvements.
+                  </p>
+                </div>
+              </div>
+
+              {/* 2. Bold Innovation */}
+              <div className="flex gap-6">
+                <div className="flex-shrink-0 text-5xl md:text-6xl lg:text-7xl font-bold text-cyan-600">2</div>
+                <div className="flex-1 pt-2">
+                  <h3 className="text-base md:text-lg lg:text-xl font-bold text-gray-900 mb-2 md:mb-3">Bold Innovation:</h3>
+                  <p className="text-sm md:text-base lg:text-lg text-gray-600 leading-relaxed">
+                    In design brainstorming sessions, it is crucial to embrace bold innovation, striving for an exceptional user experience while establishing clear ideas and development directions, and assessing feasibility appropriately.
+                  </p>
+                </div>
+              </div>
+
+              {/* 3. Prudent Implementation */}
+              <div className="flex gap-6">
+                <div className="flex-shrink-0 text-5xl md:text-6xl lg:text-7xl font-bold text-cyan-600">3</div>
+                <div className="flex-1 pt-2">
+                  <h3 className="text-base md:text-lg lg:text-xl font-bold text-gray-900 mb-2 md:mb-3">Prudent Implementation:</h3>
+                  <p className="text-sm md:text-base lg:text-lg text-gray-600 leading-relaxed">
+                    During project execution, it is essential to balance efficiency and user experience among stakeholders. A gradual innovation strategy should be adopted, allocating resources wisely to achieve optimal results while formulating input-output metrics and intermediate products based on real circumstances.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* Footer Nav - 窄容器 */}
         <div className="max-w-5xl lg:max-w-6xl 2xl:max-w-7xl mx-auto px-6 md:px-8 lg:px-12 mb-12 md:mb-16 lg:mb-20">
