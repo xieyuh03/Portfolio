@@ -16,13 +16,22 @@ export default function Navigation() {
   const pathname = usePathname();
   const [hoveredPath, setHoveredPath] = useState<string | null>(null);
 
+  // White-background pages: light glass nav with dark text; dark-background pages: dark glass with white text
+  const isLightBg = pathname.startsWith('/projects/');
+
+  const navBg      = isLightBg ? 'bg-white/70 border-gray-200/60'  : 'bg-white/5 border-white/10';
+  const textBase   = isLightBg ? 'text-gray-400 hover:text-gray-900' : 'text-white/60 hover:text-white';
+  const textActive = isLightBg ? 'text-gray-900' : 'text-white';
+  const iconColor  = isLightBg ? 'text-gray-700' : 'text-white';
+  const underline  = isLightBg ? 'bg-gray-800'   : 'bg-white';
+
   return (
     <div className="fixed top-8 left-0 right-0 z-50 flex justify-center px-6">
       <motion.nav
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="backdrop-blur-md bg-white/5 rounded-full shadow-lg border border-white/10 px-16 py-4"
+        className={`backdrop-blur-md rounded-full border px-16 py-4 ${navBg}`}
       >
         <ul className="flex items-center gap-16">
           {navItems.map((item) => {
@@ -38,7 +47,6 @@ export default function Navigation() {
                   className="relative block"
                 >
                   {item.isIcon ? (
-                    // Simple home icon
                     <div className={`w-5 h-5 transition-opacity duration-300 ${
                       isActive ? 'opacity-100' : 'opacity-60 hover:opacity-100'
                     }`}>
@@ -49,7 +57,7 @@ export default function Navigation() {
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className="text-white"
+                        className={iconColor}
                       >
                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                         <polyline points="9 22 9 12 15 12 15 22" />
@@ -58,16 +66,12 @@ export default function Navigation() {
                   ) : (
                     <div className="relative py-1">
                       <span className={`text-sm font-light tracking-wide transition-all duration-300 ${
-                        isActive
-                          ? 'text-white'
-                          : 'text-white/60 hover:text-white'
+                        isActive ? textActive : textBase
                       }`}>
                         {item.name}
                       </span>
-
-                      {/* Bottom border animation */}
                       <span
-                        className={`absolute bottom-0 left-0 h-[2px] bg-white transition-all ease-out ${
+                        className={`absolute bottom-0 left-0 h-[2px] ${underline} transition-all ease-out ${
                           isActive
                             ? 'w-full opacity-100'
                             : isHovered
