@@ -9,12 +9,12 @@ import FluidBackground from '@/components/FluidBackground';
 // Project data
 const projects = [
   {
-    id: 7,
-    title: 'Vendor Invoice Center',
-    description: 'A workspace redesign for Microsoft Dynamics 365 Finance that visualizes and streamlines vendor invoice processing steps. Achieved 100% positive customer feedback by making invoice workflows more intuitive and actionable for AP teams.',
-    tags: ['UX Design', 'Enterprise', 'D365 Finance'],
-    year: '2023',
-    image: '/images/Frontimage.png',
+    id: 5,
+    title: 'Planetary Orbit',
+    description: 'A design exploration that evolved from avatar decoration into a solar system orbital visualization. Segmented gradient trails and varied motion rhythms create a sense of spatial depth, with dynamic trailing effects that change with speed. Click to reverse the rotation direction.',
+    tags: ['Motion Design', 'Interactive Animation', 'React'],
+    year: '2026',
+    image: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=1200&q=80',
   },
   {
     id: 6,
@@ -25,44 +25,12 @@ const projects = [
     image: '/images/Frontimage.png',
   },
   {
-    id: 5,
-    title: 'Planetary Orbit',
-    description: 'A design exploration that evolved from avatar decoration into a solar system orbital visualization. Segmented gradient trails and varied motion rhythms create a sense of spatial depth, with dynamic trailing effects that change with speed. Click to reverse the rotation direction.',
-    tags: ['Motion Design', 'Interactive Animation', 'React'],
-    year: '2026',
-    image: 'https://images.unsplash.com/photo-1614642264762-d0a3b8bf3700?w=1200&q=80',
-  },
-  {
-    id: 1,
-    title: 'E-Commerce Platform',
-    description: 'A modern e-commerce solution with a seamless checkout experience and real-time inventory management.',
-    tags: ['Next.js', 'TypeScript', 'Stripe'],
-    year: '2024',
-    image: 'https://images.unsplash.com/photo-1661956602116-aa6865609028?w=1200&q=80',
-  },
-  {
-    id: 2,
-    title: 'Task Manager',
-    description: 'A team collaboration tool with real-time sync and task assignment management.',
-    tags: ['React', 'Firebase'],
-    year: '2024',
-    image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&q=80',
-  },
-  {
-    id: 3,
-    title: 'AI Chat Assistant',
-    description: 'An intelligent chat assistant with contextual understanding and natural language processing capabilities.',
-    tags: ['OpenAI', 'Node.js'],
+    id: 7,
+    title: 'Vendor Invoice Center',
+    description: 'A workspace redesign for Microsoft Dynamics 365 Finance that visualizes and streamlines vendor invoice processing steps. Achieved 100% positive customer feedback by making invoice workflows more intuitive and actionable for AP teams.',
+    tags: ['UX Design', 'Enterprise', 'D365 Finance'],
     year: '2023',
-    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&q=80',
-  },
-  {
-    id: 4,
-    title: 'Data Visualization Dashboard',
-    description: 'An interactive data analytics platform with real-time data streaming and customizable chart systems.',
-    tags: ['D3.js', 'React', 'WebSocket'],
-    year: '2023',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80',
+    image: '/images/vendor-invoice-center/Front page.png',
   },
 ];
 
@@ -109,8 +77,7 @@ export default function ProjectsPage() {
                   href={
                     project.id === 7 ? '/projects/vendor-invoice-center' :
                     project.id === 6 ? '/projects/bank-reconciliation' :
-                    project.id === 5 ? '/projects/planetary-orbit' :
-                    `/projects/${project.id}`
+                    '/projects/planetary-orbit'
                   }
                   className="block relative bg-white/5 backdrop-blur-sm rounded-3xl overflow-hidden border border-white/10 hover:border-white/30 transition-all duration-500"
                 >
