@@ -15,7 +15,7 @@ const ease    = { duration: 0.5, ease: 'easeOut' as const };
 
 export default function BankReconciliationPage() {
   return (
-    <div className="bg-white">
+    <div className="bg-white min-h-screen overflow-x-hidden">
       <Navigation />
 
       <main className="min-h-screen bg-white pt-24">

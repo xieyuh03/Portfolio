@@ -6,20 +6,28 @@ import Link from 'next/link';
 import Navigation from '@/components/Navigation';
 import FluidBackground from '@/components/FluidBackground';
 
-// 临时项目数据（之后会从 Sanity CMS 获取）
+// Project data
 const projects = [
+  {
+    id: 7,
+    title: 'Vendor Invoice Center',
+    description: 'A workspace redesign for Microsoft Dynamics 365 Finance that visualizes and streamlines vendor invoice processing steps. Achieved 100% positive customer feedback by making invoice workflows more intuitive and actionable for AP teams.',
+    tags: ['UX Design', 'Enterprise', 'D365 Finance'],
+    year: '2023',
+    image: '/images/Frontimage.png',
+  },
   {
     id: 6,
     title: 'Modern Bank Reconciliation',
-    description: 'Microsoft 365 Finance ERP系统的银行对账功能重新设计。通过智能匹配引擎和优化的工作流程，将对账时间减少65%，错误率降低78%，显著提升用户体验和工作效率',
+    description: 'A redesign of the bank reconciliation feature for Microsoft 365 Finance ERP. Reduced reconciliation time by 65% and error rate by 78% through an intelligent matching engine and optimized workflow.',
     tags: ['UX Design', 'Enterprise', 'M365 Finance'],
     year: '2025',
-    image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1200&q=80',
+    image: '/images/Frontimage.png',
   },
   {
     id: 5,
-    title: 'Planetary Orbit - 行星轨道动画',
-    description: '从头像装饰出发的设计探索，演化为太阳系八大行星的轨道可视化。通过分段渐变轨迹和差异化运动节奏营造空间深度感，动态拖影随速度变化，点击可切换旋转方向体验不同视角',
+    title: 'Planetary Orbit',
+    description: 'A design exploration that evolved from avatar decoration into a solar system orbital visualization. Segmented gradient trails and varied motion rhythms create a sense of spatial depth, with dynamic trailing effects that change with speed. Click to reverse the rotation direction.',
     tags: ['Motion Design', 'Interactive Animation', 'React'],
     year: '2026',
     image: 'https://images.unsplash.com/photo-1614642264762-d0a3b8bf3700?w=1200&q=80',
@@ -27,7 +35,7 @@ const projects = [
   {
     id: 1,
     title: 'E-Commerce Platform',
-    description: '现代化电商解决方案，提供无缝结账体验和实时库存管理系统',
+    description: 'A modern e-commerce solution with a seamless checkout experience and real-time inventory management.',
     tags: ['Next.js', 'TypeScript', 'Stripe'],
     year: '2024',
     image: 'https://images.unsplash.com/photo-1661956602116-aa6865609028?w=1200&q=80',
@@ -35,7 +43,7 @@ const projects = [
   {
     id: 2,
     title: 'Task Manager',
-    description: '团队协作工具，支持实时同步和任务分配管理',
+    description: 'A team collaboration tool with real-time sync and task assignment management.',
     tags: ['React', 'Firebase'],
     year: '2024',
     image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&q=80',
@@ -43,7 +51,7 @@ const projects = [
   {
     id: 3,
     title: 'AI Chat Assistant',
-    description: '智能聊天助手，具备上下文理解和自然语言处理能力',
+    description: 'An intelligent chat assistant with contextual understanding and natural language processing capabilities.',
     tags: ['OpenAI', 'Node.js'],
     year: '2023',
     image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&q=80',
@@ -51,7 +59,7 @@ const projects = [
   {
     id: 4,
     title: 'Data Visualization Dashboard',
-    description: '交互式数据分析平台，实时数据流和可定制图表系统',
+    description: 'An interactive data analytics platform with real-time data streaming and customizable chart systems.',
     tags: ['D3.js', 'React', 'WebSocket'],
     year: '2023',
     image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80',
@@ -99,6 +107,7 @@ export default function ProjectsPage() {
               >
                 <Link
                   href={
+                    project.id === 7 ? '/projects/vendor-invoice-center' :
                     project.id === 6 ? '/projects/bank-reconciliation' :
                     project.id === 5 ? '/projects/planetary-orbit' :
                     `/projects/${project.id}`
