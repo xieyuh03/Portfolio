@@ -6,6 +6,8 @@ import Link from 'next/link';
 import Navigation from '@/components/Navigation';
 import FluidBackground from '@/components/FluidBackground';
 
+const basePath = process.env.NODE_ENV === 'production' ? '/Portfolio' : '';
+
 // Project data
 const projects = [
   {
@@ -22,7 +24,7 @@ const projects = [
     description: 'A redesign of the bank reconciliation feature for Microsoft 365 Finance ERP. Reduced reconciliation time by 65% and error rate by 78% through an intelligent matching engine and optimized workflow.',
     tags: ['UX Design', 'Enterprise', 'M365 Finance'],
     year: '2025',
-    image: '/images/Frontimage.png',
+    image: `${basePath}/images/Frontimage.png`,
   },
   {
     id: 7,
@@ -30,7 +32,7 @@ const projects = [
     description: 'A workspace redesign for Microsoft Dynamics 365 Finance that visualizes and streamlines vendor invoice processing steps. Achieved 100% positive customer feedback by making invoice workflows more intuitive and actionable for AP teams.',
     tags: ['UX Design', 'Enterprise', 'D365 Finance'],
     year: '2023',
-    image: '/images/vendor-invoice-center/Front page.png',
+    image: `${basePath}/images/vendor-invoice-center/Front page.png`,
   },
 ];
 
