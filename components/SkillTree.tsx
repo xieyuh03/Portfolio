@@ -1,226 +1,180 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { motion, useMotionValue, useSpring, PanInfo } from 'framer-motion';
+import { useRef, useEffect, useState } from 'react';
+import { motion, useMotionValue, useSpring, useTransform, useAnimationFrame } from 'framer-motion';
 
-// 技能数据
-const skillsData = [
-  {
-    id: 'center',
-    name: 'Designer',
-    initialPos: { x: 50, y: 50 },
-    size: 'large',
-    style: 'px-8 py-4 bg-white text-black rounded-2xl font-bold text-2xl shadow-2xl',
-  },
-  {
-    id: 'ui',
-    name: 'UI',
-    initialPos: { x: 20, y: 25 },
-    size: 'medium',
-    style: 'px-5 py-3 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 text-lg font-medium',
-    animation: { duration: 5, delay: 0 }
-  },
-  {
-    id: 'ux',
-    name: 'UX',
-    initialPos: { x: 75, y: 30 },
-    size: 'medium',
-    style: 'px-5 py-3 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 text-lg font-medium',
-    animation: { duration: 6, delay: 0.5 }
-  },
-  {
-    id: 'interaction',
-    name: 'Interaction',
-    initialPos: { x: 15, y: 70 },
-    size: 'medium',
-    style: 'px-5 py-3 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 text-lg font-medium',
-    animation: { duration: 5.5, delay: 1 }
-  },
-  {
-    id: 'research',
-    name: 'Research',
-    initialPos: { x: 80, y: 75 },
-    size: 'medium',
-    style: 'px-5 py-3 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 text-lg font-medium',
-    animation: { duration: 5, delay: 1.5 }
-  },
-  {
-    id: 'data',
-    name: 'Data Analysis',
-    initialPos: { x: 65, y: 15 },
-    size: 'small',
-    style: 'px-4 py-2 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 text-sm',
-    animation: { duration: 4.5, delay: 0.8 }
-  },
-  {
-    id: 'vibe',
-    name: 'Vibe Coding',
-    initialPos: { x: 30, y: 85 },
-    size: 'small',
-    style: 'px-4 py-2 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 text-sm',
-    animation: { duration: 5.2, delay: 1.2 }
-  },
-];
+const ORBIT_SKILLS = [
+  { id: 'ui',          name: 'UI Design',     angleDeg: 315, radius: 145, orbitSpeed: 3.0,  breathDuration: 4.0, breathDelay: 0.3 },
+  { id: 'ux',          name: 'UX Design',     angleDeg: 5,   radius: 152, orbitSpeed: 4.2,  breathDuration: 3.8, breathDelay: 0.8 },
+  { id: 'research',    name: 'Research',      angleDeg: 65,  radius: 140, orbitSpeed: 5.0,  breathDuration: 4.2, breathDelay: 0.5 },
+  { id: 'interaction', name: 'Interaction',   angleDeg: 130, radius: 148, orbitSpeed: 3.8,  breathDuration: 3.6, breathDelay: 1.2 },
+  { id: 'data',        name: 'Data Analysis', angleDeg: 200, radius: 145, orbitSpeed: 4.5,  breathDuration: 4.5, breathDelay: 0.2 },
+  { id: 'vibe',        name: 'Vibe Coding',   angleDeg: 255, radius: 152, orbitSpeed: 5.5,  breathDuration: 3.9, breathDelay: 1.0 },
+] as const;
 
-// 计算两点之间的距离
-function getDistance(x1: number, y1: number, x2: number, y2: number) {
-  return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-}
+type OrbitSkill = typeof ORBIT_SKILLS[number];
 
-interface SkillCardProps {
-  skill: typeof skillsData[0];
-  draggingId: string | null;
-  dragPosition: { x: number; y: number } | null;
-  containerSize: { width: number; height: number };
-  onDragStart: () => void;
-  onDrag: (x: number, y: number) => void;
-  onDragEnd: () => void;
-}
+function OrbitCard({ skill, cx, cy }: { skill: OrbitSkill; cx: number; cy: number }) {
+  const angleRef    = useRef<number>(skill.angleDeg);
+  const isPausedRef = useRef(false);
+  const [isActive, setIsActive] = useState(false);
 
-function SkillCard({ skill, draggingId, dragPosition, containerSize, onDragStart, onDrag, onDragEnd }: SkillCardProps) {
-  const baseX = (skill.initialPos.x / 100) * containerSize.width;
-  const baseY = (skill.initialPos.y / 100) * containerSize.height;
+  // 轨道位置（由 useAnimationFrame 驱动）
+  const orbitalX = useMotionValue(0);
+  const orbitalY = useMotionValue(0);
 
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
+  // 拖拽偏移（松手后弹回 0）
+  const dragTargetX = useMotionValue(0);
+  const dragTargetY = useMotionValue(0);
+  const dragSpringX = useSpring(dragTargetX, { stiffness: 280, damping: 24 });
+  const dragSpringY = useSpring(dragTargetY, { stiffness: 280, damping: 24 });
 
-  // 弹簧配置：松手后的缓冲效果
-  const springX = useSpring(x, { stiffness: 300, damping: 30 });
-  const springY = useSpring(y, { stiffness: 300, damping: 30 });
+  // 最终位置 = 轨道位置 + 弹簧偏移
+  const finalX = useTransform([orbitalX, dragSpringX], ([ox, dx]) => (ox as number) + (dx as number));
+  const finalY = useTransform([orbitalY, dragSpringY], ([oy, dy]) => (oy as number) + (dy as number));
 
-  const isBeingDragged = draggingId === skill.id;
-  const isCenter = skill.id === 'center';
+  const pointerStartRef  = useRef<{ x: number; y: number } | null>(null);
+  const isDraggingRef    = useRef(false);
+  const resumeTimerRef   = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // 计算联动效果
+  // 容器尺寸变化时更新初始位置
   useEffect(() => {
-    if (!isBeingDragged && draggingId && dragPosition && containerSize.width > 0) {
-      const dragX = dragPosition.x;
-      const dragY = dragPosition.y;
-
-      // 计算当前卡片和被拖拽卡片之间的距离
-      const distance = getDistance(baseX, baseY, dragX, dragY);
-
-      // 影响范围：300px 内有影响
-      const influenceRadius = 300;
-
-      if (distance < influenceRadius) {
-        // 计算影响强度（距离越近影响越大）
-        const influence = 1 - (distance / influenceRadius);
-        const maxDisplacement = 50; // 最大位移
-
-        // 计算方向向量
-        const dx = baseX - dragX;
-        const dy = baseY - dragY;
-        const angle = Math.atan2(dy, dx);
-
-        // 应用位移（被推开的效果）
-        const offsetX = Math.cos(angle) * influence * maxDisplacement;
-        const offsetY = Math.sin(angle) * influence * maxDisplacement;
-
-        x.set(offsetX);
-        y.set(offsetY);
-      } else {
-        // 距离太远，回归原位
-        x.set(0);
-        y.set(0);
-      }
-    } else if (!draggingId) {
-      // 没有拖拽时，回归原位
-      x.set(0);
-      y.set(0);
+    if (cx > 0) {
+      const rad = angleRef.current * Math.PI / 180;
+      orbitalX.set(cx + skill.radius * Math.cos(rad));
+      orbitalY.set(cy + skill.radius * Math.sin(rad));
     }
-  }, [draggingId, dragPosition, isBeingDragged, baseX, baseY, containerSize, x, y]);
+  }, [cx, cy, orbitalX, orbitalY, skill.radius]);
 
-  const handleDrag = (_: any, info: PanInfo) => {
-    if (isBeingDragged && containerSize.width > 0) {
-      onDrag(info.point.x, info.point.y);
+  // 轨道旋转
+  useAnimationFrame((_, delta) => {
+    if (cx === 0 || isPausedRef.current) return;
+    angleRef.current = (angleRef.current + (skill.orbitSpeed * delta) / 1000) % 360;
+    const rad = angleRef.current * Math.PI / 180;
+    orbitalX.set(cx + skill.radius * Math.cos(rad));
+    orbitalY.set(cy + skill.radius * Math.sin(rad));
+  });
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    e.stopPropagation();
+    e.currentTarget.setPointerCapture(e.pointerId);
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    isPausedRef.current = true;
+    isDraggingRef.current = false;
+    setIsActive(true);
+    pointerStartRef.current = { x: e.clientX, y: e.clientY };
+    dragTargetX.set(0);
+    dragTargetY.set(0);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!pointerStartRef.current) return;
+    const dx = e.clientX - pointerStartRef.current.x;
+    const dy = e.clientY - pointerStartRef.current.y;
+    if (Math.abs(dx) > 4 || Math.abs(dy) > 4) isDraggingRef.current = true;
+    if (isDraggingRef.current) {
+      dragTargetX.set(dx);
+      dragTargetY.set(dy);
     }
   };
 
+  const handlePointerUp = () => {
+    pointerStartRef.current = null;
+    // 弹回截停位置
+    dragTargetX.set(0);
+    dragTargetY.set(0);
+    // 弹簧落定后恢复旋转（~600ms）
+    resumeTimerRef.current = setTimeout(() => {
+      isPausedRef.current = false;
+      setIsActive(false);
+    }, 650);
+  };
+
+  useEffect(() => () => {
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+  }, []);
+
   return (
     <motion.div
-      drag={!draggingId || isBeingDragged}
-      dragMomentum={true}
-      dragElastic={0.2}
-      dragTransition={{ bounceStiffness: 300, bounceDamping: 30 }}
-      onDragStart={onDragStart}
-      onDrag={handleDrag}
-      onDragEnd={onDragEnd}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      // 外层：截停放大
+      animate={{ scale: isActive ? 1.18 : 1 }}
+      transition={{ duration: 0.25, ease: 'easeOut' }}
       style={{
         position: 'absolute',
-        left: `${skill.initialPos.x}%`,
-        top: `${skill.initialPos.y}%`,
-        x: isBeingDragged ? undefined : springX,
-        y: isBeingDragged ? undefined : springY,
-        cursor: 'grab',
-        zIndex: isBeingDragged ? 20 : isCenter ? 10 : 5,
+        left: finalX,
+        top: finalY,
+        translateX: '-50%',
+        translateY: '-50%',
+        zIndex: isActive ? 15 : 5,
+        cursor: isActive ? 'grabbing' : 'grab',
+        touchAction: 'none',
+        userSelect: 'none',
       }}
-      animate={!draggingId && skill.animation ? {
-        y: [0, -15, 0],
-        x: skill.animation.delay > 1 ? [0, 10, 0] : [0, 5, 0],
-      } : !draggingId && isCenter ? {
-        y: [0, -10, 0],
-      } : {}}
-      transition={skill.animation ? {
-        duration: skill.animation.duration,
-        repeat: Infinity,
-        ease: "easeInOut",
-        delay: skill.animation.delay,
-      } : isCenter && !draggingId ? {
-        duration: 4,
-        repeat: Infinity,
-        ease: "easeInOut",
-      } : {}}
-      whileHover={{ scale: 1.05 }}
-      whileDrag={{ scale: 1.1, cursor: 'grabbing' }}
     >
-      <div className={skill.style}>
-        {skill.name}
-      </div>
+      {/* 内层：独立呼吸动画，始终运行 */}
+      <motion.div
+        animate={{ scale: [1, 1.05, 1] }}
+        transition={{
+          duration: skill.breathDuration,
+          repeat: Infinity,
+          ease: 'easeInOut',
+          delay: skill.breathDelay,
+        }}
+      >
+        <div className="px-5 py-3 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 text-base font-medium whitespace-nowrap">
+          {skill.name}
+        </div>
+      </motion.div>
     </motion.div>
   );
 }
 
 export default function SkillTree() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [draggingId, setDraggingId] = useState<string | null>(null);
-  const [dragPosition, setDragPosition] = useState<{ x: number; y: number } | null>(null);
-  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+  const ref = useRef<HTMLDivElement>(null);
+  const [size, setSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
-    const updateSize = () => {
-      if (containerRef.current) {
-        setContainerSize({
-          width: containerRef.current.offsetWidth,
-          height: containerRef.current.offsetHeight,
-        });
-      }
+    const update = () => {
+      if (ref.current) setSize({ width: ref.current.offsetWidth, height: ref.current.offsetHeight });
     };
-    updateSize();
-    window.addEventListener('resize', updateSize);
-    return () => window.removeEventListener('resize', updateSize);
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
   }, []);
 
-  return (
-    <div ref={containerRef} className="relative w-full h-full">
-      {skillsData.map((skill) => (
-        <SkillCard
-          key={skill.id}
-          skill={skill}
-          draggingId={draggingId}
-          dragPosition={dragPosition}
-          containerSize={containerSize}
-          onDragStart={() => setDraggingId(skill.id)}
-          onDrag={(x, y) => setDragPosition({ x, y })}
-          onDragEnd={() => {
-            setDraggingId(null);
-            setDragPosition(null);
-          }}
-        />
-      ))}
+  const cx = size.width / 2;
+  const cy = size.height / 2;
 
-      {/* 背景光晕 */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+  return (
+    <div ref={ref} className="relative w-full h-full">
+      {size.width > 0 && (
+        <>
+          {/* 中心白卡（呼吸） */}
+          <motion.div
+            style={{
+              position: 'absolute',
+              left: cx,
+              top: cy,
+              translateX: '-50%',
+              translateY: '-50%',
+              zIndex: 10,
+            }}
+            animate={{ scale: [1, 1.07, 1] }}
+            transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <div className="px-8 py-4 bg-white text-black rounded-2xl font-bold text-2xl shadow-2xl cursor-default">
+              Designer
+            </div>
+          </motion.div>
+
+          {ORBIT_SKILLS.map(skill => (
+            <OrbitCard key={skill.id} skill={skill} cx={cx} cy={cy} />
+          ))}
+        </>
+      )}
     </div>
   );
 }

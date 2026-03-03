@@ -11,6 +11,14 @@ const basePath = process.env.NODE_ENV === 'production' ? '/Portfolio' : '';
 // Project data
 const projects = [
   {
+    id: 8,
+    title: 'MADS UI Agent',
+    description: 'Built to close the gap between design specs and production code in M365 Admin Center. Replaced the token-heavy Figma MCP approach with a code-based component library and AI restoration skill — reducing UI rebuild time from 1 hour to under 3 minutes.',
+    tags: ['Design System', 'AI Workflow', 'Fluent UI', 'React'],
+    year: '2026',
+    image: `${basePath}/images/MADS agent/Playground - Yuheng.png`,
+  },
+  {
     id: 5,
     title: 'Planetary Orbit',
     description: 'A design exploration that evolved from avatar decoration into a solar system orbital visualization. Segmented gradient trails and varied motion rhythms create a sense of spatial depth, with dynamic trailing effects that change with speed. Click to reverse the rotation direction.',
@@ -77,6 +85,7 @@ export default function ProjectsPage() {
               >
                 <Link
                   href={
+                    project.id === 8 ? '/projects/mads-ui-simplified' :
                     project.id === 7 ? '/projects/vendor-invoice-center' :
                     project.id === 6 ? '/projects/bank-reconciliation' :
                     '/projects/planetary-orbit'

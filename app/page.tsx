@@ -98,20 +98,20 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative h-[600px] hidden md:flex flex-col items-center justify-start"
+              className="relative h-[900px] hidden md:flex flex-col items-center justify-start"
             >
-              {/* 3D Avatar - 顶部 */}
+              {/* 行星轨道 - 顶部 */}
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
-                className="-mt-20 mb-20 z-20"
+                className="-mt-20 mb-6 z-20"
               >
                 <PlanetaryOrbit />
               </motion.div>
 
-              {/* 3D 技能树 - 头像下方 */}
-              <div className="relative w-full h-full">
+              {/* 技能树 - 下方 */}
+              <div className="relative w-full h-[380px]">
                 <SkillTree />
               </div>
             </motion.div>

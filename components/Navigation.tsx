@@ -16,8 +16,9 @@ export default function Navigation() {
   const pathname = usePathname();
   const [hoveredPath, setHoveredPath] = useState<string | null>(null);
 
-  // White-background pages: light glass nav with dark text; dark-background pages: dark glass with white text
-  const isLightBg = pathname.startsWith('/projects/');
+  // Only UX case study pages have white backgrounds — all other pages (including vibe coding projects) are dark
+  const lightBgPages = ['/projects/bank-reconciliation', '/projects/vendor-invoice-center'];
+  const isLightBg = lightBgPages.some(p => pathname.startsWith(p));
 
   const navBg      = isLightBg ? 'bg-white/70 border-gray-200/60'  : 'bg-white/5 border-white/10';
   const textBase   = isLightBg ? 'text-gray-400 hover:text-gray-900' : 'text-white/60 hover:text-white';
