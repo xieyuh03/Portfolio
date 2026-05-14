@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
+import { Roboto_Flex } from "next/font/google";
 import "./globals.css";
+
+const robotoFlex = Roboto_Flex({
+  subsets: ["latin"],
+  variable: "--font-roboto-flex",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "个人作品集 | Portfolio",
@@ -14,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN">
-      <body>
+      <body className={robotoFlex.variable}>
         {children}
       </body>
     </html>

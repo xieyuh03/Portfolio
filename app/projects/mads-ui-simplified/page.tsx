@@ -199,6 +199,7 @@ export default function MADSUIPage() {
       <FluidBackground />
       <Navigation />
 
+
       {/* Language toggle */}
       <div className="fixed top-6 right-6 z-[60]">
         <div className="flex items-center bg-white/8 backdrop-blur-sm border border-white/15 rounded-full p-1 gap-0.5">

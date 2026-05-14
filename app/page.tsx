@@ -1,16 +1,77 @@
 'use client';
 
+import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Navigation from '@/components/Navigation';
 import FluidBackground from '@/components/FluidBackground';
 import SkillTree from '@/components/SkillTree';
 import PlanetaryOrbit from '@/components/PlanetaryOrbit';
+import RotatingText from '@/components/effects/RotatingText';
+import ShinyText from '@/components/effects/ShinyText';
+import Magnet from '@/components/effects/Magnet';
+import ScrollVelocity from '@/components/effects/ScrollVelocity';
+import VariableProximity from '@/components/effects/VariableProximity';
+import Lightning from '@/components/effects/Lightning';
+
+interface BoltConfig { angle: number; xOffset: number; intensity: number; size: number; hue: number; speed: number; }
+
+function randomBolt(): BoltConfig {
+  return {
+    angle:     (Math.random() - 0.5) * 130,
+    xOffset:   (Math.random() - 0.5) * 1.4,
+    intensity: 0.35 + Math.random() * 0.35,
+    size:      0.7  + Math.random() * 1.1,
+    hue:       200  + Math.random() * 55,
+    speed:     0.15,
+  };
+}
 
 export default function Home() {
+  const heroRef = useRef<HTMLDivElement>(null);
+  const [bolt, setBolt]       = useState<BoltConfig>(randomBolt);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+    const cycle = () => {
+      // Update bolt config while still invisible, let WebGL reinit before fading in
+      setBolt(randomBolt());
+      timeout = setTimeout(() => {
+        setVisible(true);
+        // Show for 2000–3500 ms
+        timeout = setTimeout(() => {
+          setVisible(false);
+          // Hidden for 3000–6000 ms, then next bolt
+          timeout = setTimeout(cycle, 3000 + Math.random() * 3000);
+        }, 2000 + Math.random() * 1500);
+      }, 150);
+    };
+    // Initial delay before first bolt
+    timeout = setTimeout(cycle, 800);
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
     <>
       <FluidBackground />
+      {/* Lightning — single bolt, cycles in/out at random angles */}
+      <div className="fixed inset-0 z-[2] pointer-events-none overflow-hidden" style={{ opacity: 0.45 }}>
+        <div style={{
+          position: 'absolute', inset: '-60%',
+          transform: `rotate(${bolt.angle}deg)`,
+          opacity: visible ? 1 : 0,
+          transition: 'opacity 0.25s ease',
+        }}>
+          <Lightning
+            hue={bolt.hue}
+            xOffset={bolt.xOffset}
+            speed={bolt.speed}
+            intensity={bolt.intensity}
+            size={bolt.size}
+          />
+        </div>
+      </div>
       <Navigation />
 
       <main className="relative z-10 min-h-screen flex items-center justify-center px-6 py-20">
@@ -18,20 +79,51 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-16 items-center">
             {/* 左侧：文字内容 */}
             <motion.div
+              ref={heroRef}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
               <div className="mb-4">
                 <span className="text-sm uppercase tracking-wider text-gray-400">
-                  Hey, I'm Yuheng 👋
+                  Hey, I&apos;m Yuheng 👋
                 </span>
               </div>
 
               <h1 className="text-6xl md:text-8xl font-bold mb-6 leading-tight">
-                Product Designer &
-                <span className="block mt-2">Creative Developer</span>
+                <VariableProximity
+                  label="Product Designer &"
+                  containerRef={heroRef}
+                  fromFontVariationSettings="'wght' 700"
+                  toFontVariationSettings="'wght' 900"
+                  radius={200}
+                  falloff="gaussian"
+                  className="block"
+                />
+                <VariableProximity
+                  label="Creative Developer"
+                  containerRef={heroRef}
+                  fromFontVariationSettings="'wght' 700"
+                  toFontVariationSettings="'wght' 900"
+                  radius={200}
+                  falloff="gaussian"
+                  className="block mt-2"
+                />
               </h1>
+
+              {/* 旋转文字标签 */}
+              <div className="flex items-center gap-2 mb-4 overflow-hidden">
+                <span className="text-sm text-gray-500 uppercase tracking-wider">Currently →</span>
+                <div className="overflow-hidden h-6 flex items-center">
+                  <RotatingText
+                    texts={['Exploring AI × Design', 'Building creative tools', 'Designing for humans', 'Available for work']}
+                    mainClassName="text-sm text-blue-400 uppercase tracking-wider"
+                    rotationInterval={2800}
+                    staggerDuration={0.02}
+                    staggerFrom="first"
+                  />
+                </div>
+              </div>
 
               <p className="text-xl text-gray-400 mb-8 leading-relaxed">
                 I craft intuitive digital experiences at the intersection of design and technology.
@@ -41,13 +133,13 @@ export default function Home() {
               <div className="flex gap-4 mb-8">
                 <Link
                   href="/projects"
-                  className="px-8 py-3 bg-white text-black font-medium rounded-lg hover:bg-gray-100 transition-colors"
+                  className="px-8 py-3 bg-white text-black font-medium rounded-lg hover:bg-gray-100 transition-colors inline-block"
                 >
                   View Work
                 </Link>
                 <Link
                   href="/contact"
-                  className="px-8 py-3 border border-white/20 font-medium rounded-lg hover:bg-white/5 transition-colors"
+                  className="px-8 py-3 border border-white/20 font-medium rounded-lg hover:bg-white/5 transition-colors inline-block"
                 >
                   Get in Touch
                 </Link>
@@ -59,7 +151,7 @@ export default function Home() {
                   href="https://github.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-gray-400 hover:text-white transition-colors block"
                 >
                   <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
@@ -69,7 +161,7 @@ export default function Home() {
                   href="https://linkedin.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-gray-400 hover:text-white transition-colors block"
                 >
                   <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
@@ -79,7 +171,7 @@ export default function Home() {
                   href="https://twitter.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-gray-400 hover:text-white transition-colors block"
                 >
                   <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
@@ -88,7 +180,7 @@ export default function Home() {
                 <div className="w-px h-6 bg-white/20 mx-2"></div>
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-full text-green-400 text-sm">
                   <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                  Available
+                  <ShinyText text="Available" color="#4ade80" shineColor="#86efac" speed={3} />
                 </div>
               </div>
             </motion.div>
@@ -118,6 +210,20 @@ export default function Home() {
           </div>
         </div>
       </main>
+
+      {/* ScrollVelocity Marquee — 技术栈 */}
+      <div className="relative z-10 py-8 border-t border-white/5 overflow-hidden">
+        <ScrollVelocity
+          texts={[
+            '✦ UX Design  ✦ Interaction Design  ✦ Creative Coding  ✦ AI Workflows  ✦ React  ✦ TypeScript  ✦ Framer Motion  ✦ Figma',
+            '✦ Product Design  ✦ Design Systems  ✦ Three.js  ✦ Next.js  ✦ Prototyping  ✦ User Research  ✦ Motion Design'
+          ]}
+          velocity={60}
+          className="text-sm uppercase tracking-widest text-gray-600 font-medium"
+          numCopies={3}
+          parallaxClassName="py-2"
+        />
+      </div>
     </>
   );
 }
