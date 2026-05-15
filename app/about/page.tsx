@@ -23,7 +23,7 @@ type Company = {
 const experience: Company[] = [
   {
     company: 'Microsoft',
-    year: '2022',
+    year: '2022-2026',
     span: '2022 — 至今',
     location: '上海, 中国',
     roles: [
@@ -305,38 +305,49 @@ export default function AboutPage() {
           {/* 教育经历 */}
           <section className="mb-24 md:mb-32">
             <SectionHeading label="02" title="教育经历" />
-            <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
               {education.map((edu, i) => (
-                <TwoColRow
+                <motion.div
                   key={edu.school}
-                  index={i}
-                  left={
-                    <LeftAxis
-                      year={edu.year}
-                      span={edu.span}
-                      title={edu.school}
-                      location={edu.location}
-                    />
-                  }
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-60px' }}
+                  transition={{ duration: 0.5, delay: i * 0.05 }}
+                  className="relative rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-6 md:p-8 hover:border-white/20 hover:bg-white/[0.04] transition-colors flex flex-col"
                 >
-                  <ul className="space-y-4 text-sm md:text-base">
+                  <div className="flex items-baseline justify-between mb-5">
+                    <p className="font-mono text-sm md:text-base text-white/60 tabular-nums tracking-wider">
+                      {edu.span}
+                    </p>
+                    <span className="text-xs text-gray-600 tabular-nums">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-bold text-white leading-snug mb-1">
+                    {edu.school}
+                  </h3>
+                  <p className="text-xs text-gray-500 mb-6">{edu.location}</p>
+                  <div className="h-px bg-white/10 mb-5" />
+                  <ul className="space-y-4">
                     {edu.degrees.map((d, j) => (
                       <li key={j}>
-                        <p className="text-xs uppercase tracking-[0.15em] text-gray-500 mb-1">
-                          {d.title}
+                        <div className="flex items-baseline gap-3 mb-1 flex-wrap">
+                          <span className="text-xs uppercase tracking-[0.15em] text-gray-500">
+                            {d.title}
+                          </span>
                           {d.note && (
-                            <span className="ml-3 text-blue-400 normal-case tracking-normal">
-                              · {d.note}
+                            <span className="text-xs text-blue-400 border border-blue-400/30 px-2 py-0.5 rounded-full">
+                              {d.note}
                             </span>
                           )}
-                        </p>
+                        </div>
                         <p className="text-base md:text-lg font-semibold text-white leading-snug">
                           {d.major}
                         </p>
                       </li>
                     ))}
                   </ul>
-                </TwoColRow>
+                </motion.div>
               ))}
             </div>
           </section>
@@ -369,7 +380,7 @@ export default function AboutPage() {
                       <span key={item}>
                         <span className="whitespace-nowrap">{item}</span>
                         {j < group.items.length - 1 && (
-                          <span className="mx-2.5 text-gray-500" aria-hidden>·</span>
+                          <span className="text-gray-500" aria-hidden>{' · '}</span>
                         )}
                       </span>
                     ))}
