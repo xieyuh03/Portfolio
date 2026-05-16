@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Navigation from '@/components/Navigation';
 import CustomCursor from '@/components/CustomCursor';
@@ -645,12 +646,12 @@ export default function AboutPage() {
               <span className="text-gray-700" aria-hidden>
                 ·
               </span>
-              <a
+              <Link
                 href={lang === 'en' ? '/resume?lang=en' : '/resume'}
                 className="inline-flex items-center gap-1 text-blue-300 hover:text-blue-200 transition-colors border-b border-blue-400/40 hover:border-blue-400 pb-0.5"
               >
                 {t.viewResume} <span aria-hidden>↗</span>
-              </a>
+              </Link>
             </div>
           </motion.section>
 

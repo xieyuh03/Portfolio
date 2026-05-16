@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import Link from 'next/link';
 
 // ============================================================
 //  Yuheng Xie · Resume (A4 single page, ZH / EN switchable)
@@ -470,12 +471,12 @@ export default function ResumePage() {
       <div className="resume-shell min-h-screen bg-neutral-200 print:bg-white py-8 print:py-0 px-4 print:px-0">
         {/* 顶部控制条 —— 屏幕显示 */}
         <div className="max-w-[210mm] mx-auto mb-4 flex justify-between items-center gap-4 print:hidden">
-          <a
+          <Link
             href={lang === 'en' ? '/about?lang=en' : '/about'}
             className="text-sm text-gray-600 hover:text-black underline underline-offset-2"
           >
             {t.backToAbout}
-          </a>
+          </Link>
           <div className="flex items-center gap-3">
             {/* Language toggle */}
             <div className="flex items-center bg-white border border-gray-300 rounded-full p-1 gap-0.5">
