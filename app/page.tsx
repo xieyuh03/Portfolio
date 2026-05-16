@@ -137,12 +137,6 @@ export default function Home() {
                 >
                   View Work
                 </Link>
-                <Link
-                  href="/contact"
-                  className="px-8 py-3 border border-white/20 font-medium rounded-lg hover:bg-white/5 transition-colors inline-block"
-                >
-                  Get in Touch
-                </Link>
               </div>
 
               {/* 社交链接 */}

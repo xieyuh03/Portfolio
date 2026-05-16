@@ -236,7 +236,8 @@ export default function ProjectsPage() {
             ))}
           </div>
 
-          {/* Earlier Work Section */}
+          {/* Earlier Work Section —— 暂时隐藏 */}
+          {false && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -286,27 +287,8 @@ export default function ProjectsPage() {
               })}
             </div>
           </motion.div>
+          )}
 
-          {/* Call to Action */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="mt-20 text-center"
-          >
-            <p className="text-gray-400 mb-6">
-              Interested in working together?
-            </p>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 px-8 py-3 bg-white text-black font-medium rounded-lg hover:bg-gray-100 transition-colors"
-            >
-              Let's Talk
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-          </motion.div>
         </div>
       </main>
     </>

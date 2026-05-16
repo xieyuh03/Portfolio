@@ -10,7 +10,6 @@ const navItems = [
   { name: 'Home', path: '/', isIcon: true },
   { name: 'Work', path: '/projects' },
   { name: 'About', path: '/about' },
-  { name: 'Contact', path: '/contact' },
 ];
 
 export default function Navigation() {
