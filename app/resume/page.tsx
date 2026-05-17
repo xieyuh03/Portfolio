@@ -191,13 +191,13 @@ const experienceEN: Job[] = [
         period: '2025 — Present',
         bullets: [
           <>
-            Drove <M>20+</M> Copilot Connectors to public preview on schedule across 4 release waves; led end-to-end design and delivery of the simplified Connector Setup OAuth 2.0 to GA, cutting setup time from hours to minutes and <K>halving the team&apos;s incoming ICM count</K>; led the first Notification design to close a long-standing connector status visibility gap.
+            Drove <M>20+</M> Copilot Connectors to public preview across 4 release waves; shipped Connector Setup OAuth 2.0 simplified GA, cutting setup time from hours to minutes and <K>halving incoming ICM count</K>; shipped first-gen Notification, closing a long-standing connector status visibility gap.
           </>,
           <>
-            Led architecture and rollout of <K>MADS Design Agent</K> — built on Claude Code and GitHub Copilot, shifting the team&apos;s design workflow from manual Figma work to code-first, cutting page generation from hours to minutes; the architecture was adopted by multiple designers and PMs with their own branches, <K>evolving from personal exploration into a team-wide foundational framework</K>.
+            Led <K>MADS Design Agent</K> on Claude Code and GitHub Copilot, shifting design workflow from manual Figma to code-first; page generation cut from hours to minutes; adopted by multiple designers and PMs across their own branches, <K>becoming a team-wide foundational framework</K>.
           </>,
           <>
-            Spread AI-native design practices across teams: established a GitHub branch-based collaboration model with PMs to upgrade design-to-engineering handoff; systematically shared Claude Code architecture and AI workflow practices, enabling other product design teams to build component libraries and adopt code-first design systems.
+            Established a GitHub branch-based collaboration model with PMs for design-to-engineering handoff; shared Claude Code architecture and AI workflow practices, helping other design teams build component libraries and adopt code-first design systems.
           </>,
         ],
       },
@@ -206,13 +206,13 @@ const experienceEN: Job[] = [
         period: '2022 — 2025',
         bullets: [
           <>
-            Led end-to-end experience design for <K>Modern Bank Reconciliation</K>, covering the full flow from Bank Statement to Reconciliation Worksheet; attracted <M>89</M> active enterprise customers within 14 days of preview, prompting partners to recommend the standard solution over existing ISV alternatives. Subsequently led Bank Reconciliation Copilot design, achieving <M>99.8%</M> matching accuracy, and represented the team at the Microsoft Business Application Launch Event for a global demo.
+            Led end-to-end design of <K>Modern Bank Reconciliation</K> across the Bank Statement to Reconciliation Worksheet flow; <M>89</M> active enterprise customers in 14 days of preview, partners shifted from ISV alternatives to the standard solution. Designed Bank Reconciliation Copilot at <M>99.8%</M> matching accuracy; demoed at Microsoft Business Application Launch Event.
           </>,
           <>
-            As a core designer, shipped multi-scenario experiences for D365 Finance Copilot, leading Customer Summary and other core modules, driving Copilot Summary to <M>242K</M> monthly active users; drove the global team&apos;s product home page redesign for the AI era, independently designed Immersive Home Page for two key personas, partnering with upstream and downstream teams to present a complete Source-to-Pay story to leadership and validate the immersive home page paradigm&apos;s commercial value in enterprise scenarios.
+            Core designer on D365 Finance Copilot; led Customer Summary and other core modules, taking Copilot Summary to <M>242K</M> monthly active users. Drove the global product home page redesign for the AI era; designed Immersive Home Page for two personas, presenting a Source-to-Pay story with upstream and downstream teams that validated the immersive home page paradigm in enterprise scenarios.
           </>,
           <>
-            Systematically introduced <K>research-led design</K> into product-engineering collaboration: presented the full usability testing process and findings to partners for the first time, codifying a traceable workflow reused by the team; as the APAC representative, participated deeply in large-scale design collaboration across Europe, North America, and Asia, contributing reusable experience components for the AI era.
+            Introduced <K>research-led design</K> into product-engineering collaboration; presented usability testing process and findings to partners, codifying a traceable workflow reused by the team. As APAC representative, joined large-scale design collaboration across Europe, North America, and Asia, contributing reusable experience components for the AI era.
           </>,
         ],
       },
@@ -225,7 +225,7 @@ const experienceEN: Job[] = [
     role: 'Interaction Designer',
     bullets: [
       <>
-        Owned the AR business card app for Tecno&apos;s flagship phone, driving interaction optimization from Beta to release; through A/B testing and usability research, analyzed design flaws and independently delivered a comprehensive optimization plan across interaction, visual, and motion design.
+        Owned the AR business card app for Tecno&apos;s flagship phone, driving interaction optimization from Beta to release; analyzed design flaws via A/B testing and usability research, delivered an optimization plan across interaction, visual, and motion design.
       </>,
     ],
   },
@@ -236,7 +236,7 @@ const experienceEN: Job[] = [
     role: 'Product Designer',
     bullets: [
       <>
-        Led the SaaS product&apos;s 0-to-1 design process end-to-end, defined web and mini-program interface standards, visual language and interaction guidelines; built a Figma online component library, <K>lifting team efficiency by <M>75%</M></K>.
+        Led the SaaS product&apos;s 0-to-1 design process; defined web and mini-program interface standards, visual language and interaction guidelines; built a Figma component library, <K>lifting team efficiency by <M>75%</M></K>.
       </>,
     ],
   },
@@ -474,17 +474,17 @@ export default function ResumePage() {
   const education = lang === 'zh' ? educationZH : educationEN;
   const skills = lang === 'zh' ? skillsZH : skillsEN;
 
-  // 中文密度高、英文密度低 —— 中英 spacing 不同确保各自 A4 一页
+  // 中文密度高、英文精炼后接近舒适 —— 两者 spacing 略有差异但都给充分呼吸感
   const isEN = lang === 'en';
   const sp = {
-    padding: isEN ? '9mm 12mm 3mm 12mm' : '12mm 12mm 10mm 12mm',
-    headerMb: isEN ? '4mm' : '8mm',
-    section01Mb: isEN ? '3mm' : '9mm',
-    bulletFs: isEN ? '9pt' : '9.5pt',
-    bulletLh: isEN ? 1.45 : 1.6,
-    companyGap: isEN ? 'space-y-2' : 'space-y-4',
-    subGapClass: isEN ? 'space-y-1.5 mt-1' : 'space-y-3 mt-2',
-    eduGap: isEN ? 'space-y-1.5' : 'space-y-3',
+    padding: isEN ? '10mm 12mm 5mm 12mm' : '12mm 12mm 10mm 12mm',
+    headerMb: isEN ? '5mm' : '8mm',
+    section01Mb: isEN ? '5mm' : '9mm',
+    bulletFs: isEN ? '9.5pt' : '9.5pt',
+    bulletLh: isEN ? 1.5 : 1.6,
+    companyGap: isEN ? 'space-y-3' : 'space-y-4',
+    subGapClass: isEN ? 'space-y-2 mt-1.5' : 'space-y-3 mt-2',
+    eduGap: isEN ? 'space-y-2' : 'space-y-3',
   };
 
   return (
