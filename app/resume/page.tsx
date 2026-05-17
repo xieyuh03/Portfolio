@@ -438,7 +438,7 @@ function Bullet({ children }: { children: React.ReactNode }) {
   return (
     <li
       className="flex gap-3"
-      style={{ fontSize: '9.5pt', lineHeight: 1.6, color: '#1f2937' }}
+      style={{ fontSize: '9pt', lineHeight: 1.5, color: '#1f2937' }}
     >
       <span style={{ color: ACCENT, flexShrink: 0, fontWeight: 600 }}>·</span>
       <span>{children}</span>
@@ -515,7 +515,7 @@ export default function ResumePage() {
           className="resume-page mx-auto bg-white shadow-xl print:shadow-none"
           style={{
             width: '210mm',
-            padding: '12mm 12mm 10mm 12mm',
+            padding: '10mm 12mm 4mm 12mm',
             color: INK,
             fontFamily:
               '"Inter", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif',
@@ -523,7 +523,7 @@ export default function ResumePage() {
           }}
         >
           {/* ===== Header ===== */}
-          <header style={{ marginBottom: '8mm' }}>
+          <header style={{ marginBottom: '5mm' }}>
             <div
               style={{ height: '1px', backgroundColor: ACCENT, marginBottom: '3mm' }}
             />
@@ -587,10 +587,10 @@ export default function ResumePage() {
           <div style={{ display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
             <div style={{ flex: '9 1 0', minWidth: 0 }}>
               {/* ===== 01 / Work Experience ===== */}
-              <section style={{ marginBottom: '9mm' }}>
+              <section style={{ marginBottom: '4mm' }}>
                 <SectionHeader no="01" label={t.section01} en={t.section01EN} />
 
-                <div className="space-y-4">
+                <div className="space-y-2">
                   {experience.map((job, i) => (
                     <div key={i}>
                       {/* 公司行 */}
@@ -628,7 +628,7 @@ export default function ResumePage() {
 
                       {/* 多产品线 */}
                       {job.sub ? (
-                        <div className="space-y-3 mt-2">
+                        <div className="space-y-1.5 mt-1">
                           {job.sub.map((s, j) => (
                             <div key={j}>
                               <div
@@ -703,7 +703,7 @@ export default function ResumePage() {
               {/* ===== 02 / Education —— 左列内 ===== */}
               <section>
                 <SectionHeader no="02" label={t.section02} en={t.section02EN} />
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {education.map((edu, i) => (
                     <div key={i}>
                       <div
