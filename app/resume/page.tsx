@@ -191,10 +191,10 @@ const experienceEN: Job[] = [
         period: '2025 — Present',
         bullets: [
           <>
-            Drove <M>20+</M> Copilot Connectors to public preview on schedule across 4 release waves; led end-to-end design and delivery of the simplified Connector Setup OAuth 2.0 to GA, cutting setup time from hours to minutes and <K>halving the team&apos;s incoming ICMs</K>; led Notification design to close a long-standing connector status visibility gap.
+            Drove <M>20+</M> Copilot Connectors to public preview on schedule across 4 release waves; led end-to-end design and delivery of the simplified Connector Setup OAuth 2.0 to GA, cutting setup time from hours to minutes and <K>halving the team&apos;s incoming ICM count</K>; led the first Notification design to close a long-standing connector status visibility gap.
           </>,
           <>
-            Led architecture and rollout of <K>MADS Design Agent</K> — built on Claude Code and GitHub Copilot, shifting the team&apos;s workflow from Figma manual to code-first, with page generation reduced from hours to minutes; the architecture was adopted by multiple designers and PMs with their own branches, <K>evolving from personal exploration into a team-wide foundational framework</K>.
+            Led architecture and rollout of <K>MADS Design Agent</K> — built on Claude Code and GitHub Copilot, shifting the team&apos;s design workflow from manual Figma work to code-first, cutting page generation from hours to minutes; the architecture was adopted by multiple designers and PMs with their own branches, <K>evolving from personal exploration into a team-wide foundational framework</K>.
           </>,
           <>
             Spread AI-native design practices across teams: established a GitHub branch-based collaboration model with PMs to upgrade design-to-engineering handoff; systematically shared Claude Code architecture and AI workflow practices, enabling other product design teams to build component libraries and adopt code-first design systems.
@@ -206,13 +206,13 @@ const experienceEN: Job[] = [
         period: '2022 — 2025',
         bullets: [
           <>
-            Led end-to-end experience design for <K>Modern Bank Reconciliation</K>, covering the Bank Statement to Reconciliation Worksheet flow; attracted <M>89</M> active enterprise customers within 14 days of preview, pushing partners to recommend the standard solution over existing ISV alternatives. Subsequently led Bank Reconciliation Copilot design, achieving <M>99.8%</M> matching accuracy, and represented the team in a global demo at Microsoft Business Application Launch Event.
+            Led end-to-end experience design for <K>Modern Bank Reconciliation</K>, covering the full flow from Bank Statement to Reconciliation Worksheet; attracted <M>89</M> active enterprise customers within 14 days of preview, prompting partners to recommend the standard solution over existing ISV alternatives. Subsequently led Bank Reconciliation Copilot design, achieving <M>99.8%</M> matching accuracy, and represented the team at the Microsoft Business Application Launch Event for a global demo.
           </>,
           <>
-            As a core designer, shipped multi-scenario experiences for D365 Finance Copilot, leading Customer Summary and other core modules, driving Copilot Summary to <M>242K</M> monthly active users; led the global team&apos;s home page redesign for the AI era, independently designed Immersive Home Page for two key personas, partnering with upstream and downstream teams to present a complete Source-to-Pay story to leadership and validate the paradigm&apos;s commercial value in enterprise scenarios.
+            As a core designer, shipped multi-scenario experiences for D365 Finance Copilot, leading Customer Summary and other core modules, driving Copilot Summary to <M>242K</M> monthly active users; drove the global team&apos;s product home page redesign for the AI era, independently designed Immersive Home Page for two key personas, partnering with upstream and downstream teams to present a complete Source-to-Pay story to leadership and validate the immersive home page paradigm&apos;s commercial value in enterprise scenarios.
           </>,
           <>
-            Systematically introduced <K>research-led design</K> into product-engineering collaboration: presented the full usability testing process and findings for the first time, codifying a traceable workflow reused by the team; as the APAC representative, participated deeply in large-scale design collaboration across Europe / NA / Asia, contributing reusable experience components for the AI era.
+            Systematically introduced <K>research-led design</K> into product-engineering collaboration: presented the full usability testing process and findings to partners for the first time, codifying a traceable workflow reused by the team; as the APAC representative, participated deeply in large-scale design collaboration across Europe, North America, and Asia, contributing reusable experience components for the AI era.
           </>,
         ],
       },
@@ -434,11 +434,19 @@ function SectionHeader({
   );
 }
 
-function Bullet({ children }: { children: React.ReactNode }) {
+function Bullet({
+  children,
+  fs,
+  lh,
+}: {
+  children: React.ReactNode;
+  fs: string;
+  lh: number;
+}) {
   return (
     <li
       className="flex gap-3"
-      style={{ fontSize: '9pt', lineHeight: 1.5, color: '#1f2937' }}
+      style={{ fontSize: fs, lineHeight: lh, color: '#1f2937' }}
     >
       <span style={{ color: ACCENT, flexShrink: 0, fontWeight: 600 }}>·</span>
       <span>{children}</span>
@@ -465,6 +473,19 @@ export default function ResumePage() {
   const experience = lang === 'zh' ? experienceZH : experienceEN;
   const education = lang === 'zh' ? educationZH : educationEN;
   const skills = lang === 'zh' ? skillsZH : skillsEN;
+
+  // 中文密度高、英文密度低 —— 中英 spacing 不同确保各自 A4 一页
+  const isEN = lang === 'en';
+  const sp = {
+    padding: isEN ? '9mm 12mm 3mm 12mm' : '12mm 12mm 10mm 12mm',
+    headerMb: isEN ? '4mm' : '8mm',
+    section01Mb: isEN ? '3mm' : '9mm',
+    bulletFs: isEN ? '9pt' : '9.5pt',
+    bulletLh: isEN ? 1.45 : 1.6,
+    companyGap: isEN ? 'space-y-2' : 'space-y-4',
+    subGapClass: isEN ? 'space-y-1.5 mt-1' : 'space-y-3 mt-2',
+    eduGap: isEN ? 'space-y-1.5' : 'space-y-3',
+  };
 
   return (
     <>
@@ -515,7 +536,7 @@ export default function ResumePage() {
           className="resume-page mx-auto bg-white shadow-xl print:shadow-none"
           style={{
             width: '210mm',
-            padding: '10mm 12mm 4mm 12mm',
+            padding: sp.padding,
             color: INK,
             fontFamily:
               '"Inter", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif',
@@ -523,7 +544,7 @@ export default function ResumePage() {
           }}
         >
           {/* ===== Header ===== */}
-          <header style={{ marginBottom: '5mm' }}>
+          <header style={{ marginBottom: sp.headerMb }}>
             <div
               style={{ height: '1px', backgroundColor: ACCENT, marginBottom: '3mm' }}
             />
@@ -587,10 +608,10 @@ export default function ResumePage() {
           <div style={{ display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
             <div style={{ flex: '9 1 0', minWidth: 0 }}>
               {/* ===== 01 / Work Experience ===== */}
-              <section style={{ marginBottom: '4mm' }}>
+              <section style={{ marginBottom: sp.section01Mb }}>
                 <SectionHeader no="01" label={t.section01} en={t.section01EN} />
 
-                <div className="space-y-2">
+                <div className={sp.companyGap}>
                   {experience.map((job, i) => (
                     <div key={i}>
                       {/* 公司行 */}
@@ -628,7 +649,7 @@ export default function ResumePage() {
 
                       {/* 多产品线 */}
                       {job.sub ? (
-                        <div className="space-y-1.5 mt-1">
+                        <div className={sp.subGapClass}>
                           {job.sub.map((s, j) => (
                             <div key={j}>
                               <div
@@ -668,7 +689,9 @@ export default function ResumePage() {
                               </div>
                               <ul className="space-y-1.5">
                                 {s.bullets.map((b, k) => (
-                                  <Bullet key={k}>{b}</Bullet>
+                                  <Bullet key={k} fs={sp.bulletFs} lh={sp.bulletLh}>
+                                    {b}
+                                  </Bullet>
                                 ))}
                               </ul>
                             </div>
@@ -690,7 +713,9 @@ export default function ResumePage() {
                           )}
                           <ul className="space-y-1.5">
                             {(job.bullets ?? []).map((b, k) => (
-                              <Bullet key={k}>{b}</Bullet>
+                              <Bullet key={k} fs={sp.bulletFs} lh={sp.bulletLh}>
+                                {b}
+                              </Bullet>
                             ))}
                           </ul>
                         </>
@@ -703,7 +728,7 @@ export default function ResumePage() {
               {/* ===== 02 / Education —— 左列内 ===== */}
               <section>
                 <SectionHeader no="02" label={t.section02} en={t.section02EN} />
-                <div className="space-y-2">
+                <div className={sp.eduGap}>
                   {education.map((edu, i) => (
                     <div key={i}>
                       <div
