@@ -9,6 +9,7 @@ import GlassSurface from '@/components/effects/GlassSurface';
 const navItems = [
   { name: 'Home', path: '/', isIcon: true },
   { name: 'Work', path: '/projects' },
+  { name: 'Gallery', path: '/gallery' },
   { name: 'About', path: '/about' },
 ];
 
