@@ -2,10 +2,11 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import Navigation from '@/components/Navigation';
 import FluidBackground from '@/components/FluidBackground';
 import PlanetaryOrbit from '@/components/PlanetaryOrbit';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function PlanetaryOrbitProject() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -17,8 +18,7 @@ export default function PlanetaryOrbitProject() {
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95]);
 
-  const [lang, setLang] = useState<'en' | 'zh'>('en');
-  const t = <T,>(en: T, zh: T): T => lang === 'zh' ? zh : en;
+  const { t } = useLanguage();
 
   const planets = [
     { name: t('Mercury', '水星'), color: 'rgb(150, 160, 175)', desc: t('Silver gray', '银灰色调') },
@@ -125,24 +125,6 @@ export default function PlanetaryOrbitProject() {
     <>
       <FluidBackground />
       <Navigation />
-
-      {/* Language Toggle */}
-      <div className="fixed top-6 right-6 z-[60]">
-        <div className="flex items-center bg-white/8 backdrop-blur-sm border border-white/15 rounded-full p-1 gap-0.5">
-          <button
-            onClick={() => setLang('en')}
-            className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${lang === 'en' ? 'bg-white text-black' : 'text-gray-400 hover:text-white'}`}
-          >
-            EN
-          </button>
-          <button
-            onClick={() => setLang('zh')}
-            className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${lang === 'zh' ? 'bg-white text-black' : 'text-gray-400 hover:text-white'}`}
-          >
-            中文
-          </button>
-        </div>
-      </div>
 
       <main ref={containerRef} className="relative z-10 min-h-screen pt-32 pb-20 px-6">
         <div className="max-w-6xl mx-auto">

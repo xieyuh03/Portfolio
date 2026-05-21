@@ -4,8 +4,10 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import Navigation from '@/components/Navigation';
 import CustomCursor from '@/components/CustomCursor';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function ContactPage() {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -14,9 +16,8 @@ export default function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // 这里之后可以集成表单提交功能
-    console.log('表单提交:', formData);
-    alert('感谢你的留言！我会尽快回复。');
+    console.log('Contact form submit:', formData);
+    alert(t('Thanks for your message! I’ll get back to you soon.', '感谢你的留言！我会尽快回复。'));
     setFormData({ name: '', email: '', message: '' });
   };
 
@@ -43,10 +44,13 @@ export default function ContactPage() {
             className="text-center mb-16"
           >
             <h1 className="text-5xl md:text-7xl font-bold mb-6 gradient-text">
-              联系我
+              {t('Get in Touch', '联系我')}
             </h1>
             <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              有任何问题或合作意向？欢迎给我留言
+              {t(
+                'Have a question or want to collaborate? Drop me a line.',
+                '有任何问题或合作意向？欢迎给我留言'
+              )}
             </p>
           </motion.div>
 
@@ -57,7 +61,7 @@ export default function ContactPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <h2 className="text-3xl font-bold mb-8">联系方式</h2>
+              <h2 className="text-3xl font-bold mb-8">{t('Contact', '联系方式')}</h2>
 
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
@@ -77,7 +81,7 @@ export default function ContactPage() {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="font-semibold mb-1">邮箱</h3>
+                    <h3 className="font-semibold mb-1">{t('Email', '邮箱')}</h3>
                     <a
                       href="mailto:your@email.com"
                       className="text-gray-400 hover:text-purple-400 transition-colors"
@@ -147,7 +151,7 @@ export default function ContactPage() {
               >
                 <div className="mb-6">
                   <label htmlFor="name" className="block mb-2 font-semibold">
-                    姓名
+                    {t('Name', '姓名')}
                   </label>
                   <input
                     type="text"
@@ -157,13 +161,13 @@ export default function ContactPage() {
                     onChange={handleChange}
                     required
                     className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:border-purple-500 focus:outline-none transition-colors"
-                    placeholder="请输入你的姓名"
+                    placeholder={t('Your name', '请输入你的姓名')}
                   />
                 </div>
 
                 <div className="mb-6">
                   <label htmlFor="email" className="block mb-2 font-semibold">
-                    邮箱
+                    {t('Email', '邮箱')}
                   </label>
                   <input
                     type="email"
@@ -179,7 +183,7 @@ export default function ContactPage() {
 
                 <div className="mb-6">
                   <label htmlFor="message" className="block mb-2 font-semibold">
-                    留言
+                    {t('Message', '留言')}
                   </label>
                   <textarea
                     id="message"
@@ -189,7 +193,7 @@ export default function ContactPage() {
                     required
                     rows={6}
                     className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:border-purple-500 focus:outline-none transition-colors resize-none"
-                    placeholder="请输入你的留言..."
+                    placeholder={t('Your message...', '请输入你的留言...')}
                   />
                 </div>
 
@@ -197,7 +201,7 @@ export default function ContactPage() {
                   type="submit"
                   className="w-full px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg text-lg font-semibold hover:scale-[1.02] transition-transform duration-200 shadow-lg shadow-purple-500/50"
                 >
-                  发送消息
+                  {t('Send Message', '发送消息')}
                 </button>
               </form>
             </motion.div>

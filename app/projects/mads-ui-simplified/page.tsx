@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import Navigation from '@/components/Navigation';
 import FluidBackground from '@/components/FluidBackground';
+import { useLanguage } from '@/lib/LanguageContext';
 
 const basePath = process.env.NODE_ENV === 'production' ? '/Portfolio' : '';
 
@@ -32,8 +33,7 @@ const layersZH = [
 ];
 
 export default function MADSUIPage() {
-  const [lang, setLang] = useState<'en' | 'zh'>('en');
-  const t = <T,>(en: T, zh: T): T => lang === 'zh' ? zh : en;
+  const { lang, t } = useLanguage();
 
   const components = lang === 'zh' ? componentsZH : componentsEN;
   const layers = lang === 'zh' ? layersZH : layersEN;
@@ -198,25 +198,6 @@ export default function MADSUIPage() {
     <>
       <FluidBackground />
       <Navigation />
-
-
-      {/* Language toggle */}
-      <div className="fixed top-6 right-6 z-[60]">
-        <div className="flex items-center bg-white/8 backdrop-blur-sm border border-white/15 rounded-full p-1 gap-0.5">
-          <button
-            onClick={() => setLang('en')}
-            className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${lang === 'en' ? 'bg-white text-black' : 'text-gray-400 hover:text-white'}`}
-          >
-            EN
-          </button>
-          <button
-            onClick={() => setLang('zh')}
-            className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${lang === 'zh' ? 'bg-white text-black' : 'text-gray-400 hover:text-white'}`}
-          >
-            中文
-          </button>
-        </div>
-      </div>
 
       {/* Lightbox */}
       {lightboxComp && (

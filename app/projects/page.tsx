@@ -7,16 +7,54 @@ import Navigation from '@/components/Navigation';
 import SoftAurora from '@/components/effects/SoftAurora';
 import FluidBackground from '@/components/FluidBackground';
 import TiltWrapper from '@/components/effects/TiltWrapper';
+import { useLanguage } from '@/lib/LanguageContext';
 
 const basePath = process.env.NODE_ENV === 'production' ? '/Portfolio' : '';
 
+type LocalizedText = { en: string; zh: string };
+
+type Project = {
+  id: number;
+  title: string;
+  description: LocalizedText;
+  tags: LocalizedText[];
+  year: string;
+  image: string;
+  imageSize?: string;
+};
+
 // Featured project data
-const projects = [
+const projects: Project[] = [
+  {
+    id: 9,
+    title: 'AI-Native Design Framework',
+    description: {
+      en: 'A multi-product page-generation framework that decouples process from product. PM, Designer, Engineer, Reviewer and Modifier each live in their own Claude Code skill — connected by structured Brief/Spec files instead of a chat thread. Same flow, plug in any product\'s component library.',
+      zh: '一个把流程与产品解耦的多产品页面生成框架。PM、设计师、工程师、审查者、修改者各自独立为 Claude Code 技能——通过结构化的 Brief / Spec 文件衔接，而非聊天上下文。同一套流程，可接入任何产品的组件库。',
+    },
+    tags: [
+      { en: 'Workflow Architecture', zh: '工作流架构' },
+      { en: 'AI Workflow', zh: 'AI 工作流' },
+      { en: 'Claude Code', zh: 'Claude Code' },
+      { en: 'Storybook', zh: 'Storybook' },
+    ],
+    year: '2026',
+    image: `${basePath}/images/MADS agent/dev ops code file.png`,
+    imageSize: 'cover',
+  },
   {
     id: 8,
     title: 'MADS UI Agent',
-    description: 'Built to close the gap between design specs and production code in M365 Admin Center. Replaced the token-heavy Figma MCP approach with a code-based component library and AI restoration skill — reducing UI rebuild time from 1 hour to under 3 minutes.',
-    tags: ['Design System', 'AI Workflow', 'Fluent UI', 'React'],
+    description: {
+      en: 'Built to close the gap between design specs and production code in M365 Admin Center. Replaced the token-heavy Figma MCP approach with a code-based component library and AI restoration skill — reducing UI rebuild time from 1 hour to under 3 minutes.',
+      zh: '为弥合 M365 Admin Center 设计稿与生产代码之间的差距而建。以代码组件库与 AI 还原技能取代消耗 token 严重的 Figma MCP 方案——把 UI 还原时间从 1 小时缩短至 3 分钟以内。',
+    },
+    tags: [
+      { en: 'Design System', zh: '设计体系' },
+      { en: 'AI Workflow', zh: 'AI 工作流' },
+      { en: 'Fluent UI', zh: 'Fluent UI' },
+      { en: 'React', zh: 'React' },
+    ],
     year: '2026',
     image: `${basePath}/images/MADS agent/Playground - Yuheng.png`,
     imageSize: '105%',
@@ -24,16 +62,30 @@ const projects = [
   {
     id: 5,
     title: 'Planetary Orbit',
-    description: 'A design exploration that evolved from avatar decoration into a solar system orbital visualization. Segmented gradient trails and varied motion rhythms create a sense of spatial depth, with dynamic trailing effects that change with speed. Click to reverse the rotation direction.',
-    tags: ['Motion Design', 'Interactive Animation', 'React'],
+    description: {
+      en: 'A design exploration that evolved from avatar decoration into a solar system orbital visualization. Segmented gradient trails and varied motion rhythms create a sense of spatial depth, with dynamic trailing effects that change with speed. Click to reverse the rotation direction.',
+      zh: '一次从头像装饰演化为太阳系轨道可视化的设计探索。分段渐变拖影与差异化的运动节奏营造空间纵深，拖影长度随速度动态变化。点击可反转旋转方向。',
+    },
+    tags: [
+      { en: 'Motion Design', zh: '动效设计' },
+      { en: 'Interactive Animation', zh: '交互动画' },
+      { en: 'React', zh: 'React' },
+    ],
     year: '2026',
     image: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=1200&q=80',
   },
   {
     id: 6,
     title: 'Modern Bank Reconciliation',
-    description: 'A redesign of the bank reconciliation feature for Microsoft 365 Finance ERP. Reduced reconciliation time by 65% and error rate by 78% through an intelligent matching engine and optimized workflow.',
-    tags: ['UX Design', 'Enterprise', 'M365 Finance'],
+    description: {
+      en: 'A redesign of the bank reconciliation feature for Microsoft 365 Finance ERP. Reduced reconciliation time by 65% and error rate by 78% through an intelligent matching engine and optimized workflow.',
+      zh: '面向 Microsoft 365 Finance ERP 的银行对账功能重设计。通过智能匹配引擎与优化的工作流，将对账时间减少 65%、错误率降低 78%。',
+    },
+    tags: [
+      { en: 'UX Design', zh: '用户体验设计' },
+      { en: 'Enterprise', zh: '企业级' },
+      { en: 'M365 Finance', zh: 'M365 Finance' },
+    ],
     year: '2025',
     image: `${basePath}/images/Frontimage.png`,
     imageSize: '105%',
@@ -41,8 +93,15 @@ const projects = [
   {
     id: 7,
     title: 'Vendor Invoice Center',
-    description: 'A workspace redesign for Microsoft Dynamics 365 Finance that visualizes and streamlines vendor invoice processing steps. Achieved 100% positive customer feedback by making invoice workflows more intuitive and actionable for AP teams.',
-    tags: ['UX Design', 'Enterprise', 'D365 Finance'],
+    description: {
+      en: 'A workspace redesign for Microsoft Dynamics 365 Finance that visualizes and streamlines vendor invoice processing steps. Achieved 100% positive customer feedback by making invoice workflows more intuitive and actionable for AP teams.',
+      zh: '为 Microsoft Dynamics 365 Finance 重设计的供应商发票工作区。可视化并简化发票处理步骤，让 AP 团队的工作流更直观、可操作，最终获得 100% 正向客户反馈。',
+    },
+    tags: [
+      { en: 'UX Design', zh: '用户体验设计' },
+      { en: 'Enterprise', zh: '企业级' },
+      { en: 'D365 Finance', zh: 'D365 Finance' },
+    ],
     year: '2023',
     image: `${basePath}/images/vendor-invoice-center/Front page.png`,
   },
@@ -125,6 +184,7 @@ const earlierProjects = [
 ];
 
 export default function ProjectsPage() {
+  const { lang, t } = useLanguage();
   return (
     <>
       <div className="fixed inset-0 z-0 bg-[#0a0a0a] pointer-events-none">
@@ -159,14 +219,17 @@ export default function ProjectsPage() {
             <div className="flex items-center gap-3 mb-4">
               <div className="w-12 h-px bg-white"></div>
               <span className="text-sm uppercase tracking-wider text-gray-400">
-                Selected Work
+                {t('Selected Work', '精选作品')}
               </span>
             </div>
             <h1 className="text-5xl md:text-7xl font-bold mb-6">
-              Projects & Case Studies
+              {t('Projects & Case Studies', '项目与案例')}
             </h1>
             <p className="text-xl text-gray-400 max-w-2xl">
-              A collection of work spanning product design, development, and creative experiments.
+              {t(
+                'A collection of work spanning product design, development, and creative experiments.',
+                '横跨产品设计、开发与创意实验的作品集。'
+              )}
             </p>
           </motion.div>
 
@@ -182,6 +245,7 @@ export default function ProjectsPage() {
                 >
                   <Link
                     href={
+                      project.id === 9 ? '/projects/ai-native-design-framework' :
                       project.id === 8 ? '/projects/mads-ui-simplified' :
                       project.id === 7 ? '/projects/vendor-invoice-center' :
                       project.id === 6 ? '/projects/bank-reconciliation' :
@@ -212,8 +276,8 @@ export default function ProjectsPage() {
                     <div className="relative p-8 md:p-12">
                       <div className="flex flex-wrap gap-2 mb-6">
                         {project.tags.map((tag) => (
-                          <span key={tag} className="px-4 py-1.5 text-xs bg-white/10 rounded-full border border-white/20 group-hover:border-white/40 transition-colors">
-                            {tag}
+                          <span key={tag.en} className="px-4 py-1.5 text-xs bg-white/10 rounded-full border border-white/20 group-hover:border-white/40 transition-colors">
+                            {tag[lang]}
                           </span>
                         ))}
                       </div>
@@ -221,10 +285,10 @@ export default function ProjectsPage() {
                         {project.title}
                       </h3>
                       <p className="text-lg text-gray-400 mb-8 leading-relaxed line-clamp-2">
-                        {project.description}
+                        {project.description[lang]}
                       </p>
                       <div className="inline-flex items-center gap-3 px-6 py-3 bg-white text-black font-medium rounded-lg group-hover:bg-gray-100 transition-all duration-300">
-                        <span>View Case</span>
+                        <span>{t('View Case', '查看案例')}</span>
                         <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>

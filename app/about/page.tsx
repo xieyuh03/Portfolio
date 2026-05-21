@@ -1,13 +1,11 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Navigation from '@/components/Navigation';
 import CustomCursor from '@/components/CustomCursor';
 import Threads from '@/components/effects/Threads';
-
-type Lang = 'en' | 'zh';
+import { useLanguage } from '@/lib/LanguageContext';
 
 type Bullet = {
   kind?: 'project' | 'collab';
@@ -575,7 +573,7 @@ function KindChip({
 /* ---------- 页面 ---------- */
 
 export default function AboutPage() {
-  const [lang, setLang] = useState<Lang>('zh');
+  const { lang } = useLanguage();
   const t = ui[lang];
   const experience = lang === 'zh' ? experienceZH : experienceEN;
   const education = lang === 'zh' ? educationZH : educationEN;
@@ -591,28 +589,6 @@ export default function AboutPage() {
         <Threads color={[0.4, 0.7, 1.0]} amplitude={1.2} distance={0.3} />
       </div>
       <Navigation />
-
-      {/* Language toggle —— 固定右上 */}
-      <div className="fixed top-6 right-6 z-[60]">
-        <div className="flex items-center bg-white/8 backdrop-blur-sm border border-white/15 rounded-full p-1 gap-0.5">
-          <button
-            onClick={() => setLang('en')}
-            className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
-              lang === 'en' ? 'bg-white text-black' : 'text-gray-400 hover:text-white'
-            }`}
-          >
-            EN
-          </button>
-          <button
-            onClick={() => setLang('zh')}
-            className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
-              lang === 'zh' ? 'bg-white text-black' : 'text-gray-400 hover:text-white'
-            }`}
-          >
-            中文
-          </button>
-        </div>
-      </div>
 
       <main className="relative z-10 min-h-screen pt-32 pb-24 px-6">
         <div className="max-w-5xl mx-auto">
@@ -647,7 +623,7 @@ export default function AboutPage() {
                 ·
               </span>
               <Link
-                href={lang === 'en' ? '/resume?lang=en' : '/resume'}
+                href="/resume"
                 className="inline-flex items-center gap-1 text-blue-300 hover:text-blue-200 transition-colors border-b border-blue-400/40 hover:border-blue-400 pb-0.5"
               >
                 {t.viewResume} <span aria-hidden>↗</span>

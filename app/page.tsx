@@ -13,6 +13,7 @@ import Magnet from '@/components/effects/Magnet';
 import ScrollVelocity from '@/components/effects/ScrollVelocity';
 import VariableProximity from '@/components/effects/VariableProximity';
 import Lightning from '@/components/effects/Lightning';
+import { useLanguage } from '@/lib/LanguageContext';
 
 interface BoltConfig { angle: number; xOffset: number; intensity: number; size: number; hue: number; speed: number; }
 
@@ -29,7 +30,9 @@ function randomBolt(): BoltConfig {
 
 export default function Home() {
   const heroRef = useRef<HTMLDivElement>(null);
-  const [bolt, setBolt]       = useState<BoltConfig>(randomBolt);
+  const { lang, t } = useLanguage();
+  // Defer randomization to client effect to avoid SSR/client hydration mismatch
+  const [bolt, setBolt]       = useState<BoltConfig | null>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -55,23 +58,25 @@ export default function Home() {
   return (
     <>
       <FluidBackground />
-      {/* Lightning — single bolt, cycles in/out at random angles */}
-      <div className="fixed inset-0 z-[2] pointer-events-none overflow-hidden" style={{ opacity: 0.45 }}>
-        <div style={{
-          position: 'absolute', inset: '-60%',
-          transform: `rotate(${bolt.angle}deg)`,
-          opacity: visible ? 1 : 0,
-          transition: 'opacity 0.25s ease',
-        }}>
-          <Lightning
-            hue={bolt.hue}
-            xOffset={bolt.xOffset}
-            speed={bolt.speed}
-            intensity={bolt.intensity}
-            size={bolt.size}
-          />
+      {/* Lightning — single bolt, cycles in/out at random angles. Client-only to avoid hydration mismatch. */}
+      {bolt && (
+        <div className="fixed inset-0 z-[2] pointer-events-none overflow-hidden" style={{ opacity: 0.45 }}>
+          <div style={{
+            position: 'absolute', inset: '-60%',
+            transform: `rotate(${bolt.angle}deg)`,
+            opacity: visible ? 1 : 0,
+            transition: 'opacity 0.25s ease',
+          }}>
+            <Lightning
+              hue={bolt.hue}
+              xOffset={bolt.xOffset}
+              speed={bolt.speed}
+              intensity={bolt.intensity}
+              size={bolt.size}
+            />
+          </div>
         </div>
-      </div>
+      )}
       <Navigation />
 
       <main className="relative z-10 min-h-screen flex items-center justify-center px-6 py-20">
@@ -86,13 +91,13 @@ export default function Home() {
             >
               <div className="mb-4">
                 <span className="text-sm uppercase tracking-wider text-gray-400">
-                  Hey, I&apos;m Yuheng 👋
+                  {t('Hey, I’m Yuheng 👋', '嗨，我是玉珩 👋')}
                 </span>
               </div>
 
-              <h1 className="text-6xl md:text-8xl font-bold mb-6 leading-tight">
+              <h1 key={`headline-${lang}`} className="text-6xl md:text-8xl font-bold mb-6 leading-tight">
                 <VariableProximity
-                  label="Product Designer &"
+                  label={t('Product Designer &', '产品设计师 &')}
                   containerRef={heroRef}
                   fromFontVariationSettings="'wght' 700"
                   toFontVariationSettings="'wght' 900"
@@ -101,7 +106,7 @@ export default function Home() {
                   className="block"
                 />
                 <VariableProximity
-                  label="Creative Developer"
+                  label={t('Creative Developer', '创意开发者')}
                   containerRef={heroRef}
                   fromFontVariationSettings="'wght' 700"
                   toFontVariationSettings="'wght' 900"
@@ -113,10 +118,14 @@ export default function Home() {
 
               {/* 旋转文字标签 */}
               <div className="flex items-center gap-2 mb-4 overflow-hidden">
-                <span className="text-sm text-gray-500 uppercase tracking-wider">Currently →</span>
+                <span className="text-sm text-gray-500 uppercase tracking-wider">{t('Currently →', '当前 →')}</span>
                 <div className="overflow-hidden h-6 flex items-center">
                   <RotatingText
-                    texts={['Exploring AI × Design', 'Building creative tools', 'Designing for humans', 'Available for work']}
+                    key={`rotating-${lang}`}
+                    texts={t(
+                      ['Exploring AI × Design', 'Building creative tools', 'Designing for humans', 'Available for work'],
+                      ['探索 AI × 设计', '构建创意工具', '为人而设计', '开放合作机会']
+                    )}
                     mainClassName="text-sm text-blue-400 uppercase tracking-wider"
                     rotationInterval={2800}
                     staggerDuration={0.02}
@@ -126,8 +135,10 @@ export default function Home() {
               </div>
 
               <p className="text-xl text-gray-400 mb-8 leading-relaxed">
-                I craft intuitive digital experiences at the intersection of design and technology.
-                Currently exploring AI, interactive media, and creative coding.
+                {t(
+                  'I craft intuitive digital experiences at the intersection of design and technology. Currently exploring AI, interactive media, and creative coding.',
+                  '我在设计与技术的交叉点打造直观的数字体验，目前专注于 AI、交互媒介与创意编程的探索。'
+                )}
               </p>
 
               <div className="flex gap-4 mb-8">
@@ -135,7 +146,7 @@ export default function Home() {
                   href="/projects"
                   className="px-8 py-3 bg-white text-black font-medium rounded-lg hover:bg-gray-100 transition-colors inline-block"
                 >
-                  View Work
+                  {t('View Work', '查看作品')}
                 </Link>
               </div>
 
@@ -174,7 +185,7 @@ export default function Home() {
                 <div className="w-px h-6 bg-white/20 mx-2"></div>
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-full text-green-400 text-sm">
                   <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                  <ShinyText text="Available" color="#4ade80" shineColor="#86efac" speed={3} />
+                  <ShinyText text={t('Available', '可合作')} color="#4ade80" shineColor="#86efac" speed={3} />
                 </div>
               </div>
             </motion.div>
@@ -208,10 +219,17 @@ export default function Home() {
       {/* ScrollVelocity Marquee — 技术栈 */}
       <div className="relative z-10 py-8 border-t border-white/5 overflow-hidden">
         <ScrollVelocity
-          texts={[
-            '✦ UX Design  ✦ Interaction Design  ✦ Creative Coding  ✦ AI Workflows  ✦ React  ✦ TypeScript  ✦ Framer Motion  ✦ Figma',
-            '✦ Product Design  ✦ Design Systems  ✦ Three.js  ✦ Next.js  ✦ Prototyping  ✦ User Research  ✦ Motion Design'
-          ]}
+          key={`marquee-${lang}`}
+          texts={t(
+            [
+              '✦ UX Design  ✦ Interaction Design  ✦ Creative Coding  ✦ AI Workflows  ✦ React  ✦ TypeScript  ✦ Framer Motion  ✦ Figma',
+              '✦ Product Design  ✦ Design Systems  ✦ Three.js  ✦ Next.js  ✦ Prototyping  ✦ User Research  ✦ Motion Design'
+            ],
+            [
+              '✦ 用户体验设计  ✦ 交互设计  ✦ 创意编程  ✦ AI 工作流  ✦ React  ✦ TypeScript  ✦ Framer Motion  ✦ Figma',
+              '✦ 产品设计  ✦ 设计体系  ✦ Three.js  ✦ Next.js  ✦ 原型设计  ✦ 用户研究  ✦ 动效设计'
+            ]
+          )}
           velocity={60}
           className="text-sm uppercase tracking-widest text-gray-600 font-medium"
           numCopies={3}

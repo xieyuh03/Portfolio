@@ -5,17 +5,19 @@ import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import GlassSurface from '@/components/effects/GlassSurface';
-
-const navItems = [
-  { name: 'Home', path: '/', isIcon: true },
-  { name: 'Work', path: '/projects' },
-  { name: 'Gallery', path: '/gallery' },
-  { name: 'About', path: '/about' },
-];
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function Navigation() {
   const pathname = usePathname();
   const [hoveredPath, setHoveredPath] = useState<string | null>(null);
+  const { t } = useLanguage();
+
+  const navItems = [
+    { name: t('Home', '首页'), path: '/', isIcon: true },
+    { name: t('Work', '作品'), path: '/projects' },
+    { name: t('Gallery', '画廊'), path: '/gallery' },
+    { name: t('About', '关于'), path: '/about' },
+  ];
 
   const lightBgPages = ['/projects/bank-reconciliation', '/projects/vendor-invoice-center'];
   const isLightBg = lightBgPages.some(p => pathname.startsWith(p));

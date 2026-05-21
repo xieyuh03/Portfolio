@@ -1,7 +1,8 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import Link from 'next/link';
+import { useLanguage } from '@/lib/LanguageContext';
 
 // ============================================================
 //  Yuheng Xie · Resume (A4 single page, ZH / EN switchable)
@@ -459,13 +460,7 @@ function Bullet({
 // ============================================================
 
 export default function ResumePage() {
-  const [lang, setLang] = useState<Lang>('zh');
-
-  // 通过 URL ?lang=en 切换初始语言（让 About EN 页可链接到 EN resume）
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('lang') === 'en') setLang('en');
-  }, []);
+  const { lang, setLang } = useLanguage();
 
   const handlePrint = useCallback(() => window.print(), []);
 
@@ -493,7 +488,7 @@ export default function ResumePage() {
         {/* 顶部控制条 —— 屏幕显示 */}
         <div className="max-w-[210mm] mx-auto mb-4 flex justify-between items-center gap-4 print:hidden">
           <Link
-            href={lang === 'en' ? '/about?lang=en' : '/about'}
+            href="/about"
             className="text-sm text-gray-600 hover:text-black underline underline-offset-2"
           >
             {t.backToAbout}
