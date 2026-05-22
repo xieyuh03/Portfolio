@@ -39,7 +39,7 @@ const projects: Project[] = [
       { en: 'Storybook', zh: 'Storybook' },
     ],
     year: '2026',
-    image: `${basePath}/images/MADS agent/dev ops code file.png`,
+    image: `${basePath}/images/ai-native-design-framework/storybook page.png`,
     imageSize: 'cover',
   },
   {

@@ -1,8 +1,8 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Navigation from '@/components/Navigation';
 import FluidBackground from '@/components/FluidBackground';
 import { useLanguage } from '@/lib/LanguageContext';
@@ -428,6 +428,21 @@ export default function AINativeDesignFrameworkPage() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 0.12], [1, 0.96]);
 
+  // Lightbox：点击图片放大查看
+  const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
+  useEffect(() => {
+    if (!lightbox) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setLightbox(null);
+    };
+    window.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [lightbox]);
+
   return (
     <>
       <FluidBackground />
@@ -776,6 +791,59 @@ export default function AINativeDesignFrameworkPage() {
                 '同样五步。差别在于每一步的产物住在哪里 —— 以及下一个角色能不能直接接手，而不是把前一步再做一遍。'
               )}
             </p>
+
+            {/* 两张实际产物截图：Storybook + GitHub Wiki（点击放大） */}
+            <div className="mt-12 grid md:grid-cols-2 gap-4 md:gap-6">
+              {[
+                {
+                  src: `${basePath}/images/ai-native-design-framework/storybook page.png`,
+                  alt: t('Storybook deployed branch preview', 'Storybook 分支预览'),
+                  kicker: t('Storybook · Live preview', 'Storybook · 在线预览'),
+                  caption: t(
+                    'Pages built by the agent run as live Storybook stories, with the actual component library backing them.',
+                    'Agent 生成的页面以 Storybook story 形式实时运行，背后是真实组件库。'
+                  ),
+                },
+                {
+                  src: `${basePath}/images/ai-native-design-framework/github wiki.png`,
+                  alt: t('GitHub Wiki auto-updated branch index', 'GitHub Wiki 自动更新的分支索引'),
+                  kicker: t('GitHub Wiki · Auto index', 'GitHub Wiki · 自动索引'),
+                  caption: t(
+                    'Every branch push updates a Wiki index — one click to the latest preview, no hand-off message needed.',
+                    '每次分支推送都会更新 Wiki 索引——一键跳到最新预览，不需要单独发消息交接。'
+                  ),
+                },
+              ].map((shot, i) => (
+                <figure
+                  key={i}
+                  className="group rounded-2xl overflow-hidden border border-white/10 bg-white/[0.02] hover:border-white/25 transition-colors"
+                >
+                  <button
+                    type="button"
+                    onClick={() => setLightbox({ src: shot.src, alt: shot.alt })}
+                    aria-label={t('Open full-size image', '查看大图')}
+                    className="block w-full aspect-[16/10] overflow-hidden cursor-zoom-in relative"
+                  >
+                    <img
+                      src={shot.src}
+                      alt={shot.alt}
+                      className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.02]"
+                    />
+                    <span className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/30 transition-colors">
+                      <span className="opacity-0 group-hover:opacity-100 transition-opacity text-white text-xs uppercase tracking-[0.25em] bg-black/60 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2">
+                        {t('Click to zoom', '点击放大')}
+                      </span>
+                    </span>
+                  </button>
+                  <figcaption className="px-5 py-4 border-t border-white/10">
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-blue-300/80 mb-1">
+                      {shot.kicker}
+                    </p>
+                    <p className="text-sm text-gray-300 leading-relaxed">{shot.caption}</p>
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
           </motion.section>
 
           {/* ── Three layers, four stages (Project Vision) ─────────── */}
@@ -1262,6 +1330,39 @@ export default function AINativeDesignFrameworkPage() {
           </motion.div>
         </div>
       </main>
+
+      {/* Lightbox overlay */}
+      <AnimatePresence>
+        {lightbox && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 z-[100] bg-black/92 backdrop-blur-sm flex items-center justify-center p-6 md:p-12 cursor-zoom-out"
+            onClick={() => setLightbox(null)}
+          >
+            <button
+              type="button"
+              onClick={() => setLightbox(null)}
+              aria-label={t('Close', '关闭')}
+              className="absolute top-6 right-6 w-10 h-10 rounded-full border border-white/20 bg-white/5 hover:bg-white/15 text-white flex items-center justify-center transition-colors"
+            >
+              ✕
+            </button>
+            <motion.img
+              initial={{ scale: 0.96 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.96 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              src={lightbox.src}
+              alt={lightbox.alt}
+              className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
