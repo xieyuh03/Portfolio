@@ -14,6 +14,9 @@ const nextConfig = {
   // Set base path for GitHub Pages (only in production)
   basePath: process.env.NODE_ENV === 'production' ? '/Portfolio' : '',
 
+  // GH Pages 只能按 folder/index.html 解析路径，必须开启
+  trailingSlash: true,
+
   images: {
     // Disable image optimization for static export
     unoptimized: true,
