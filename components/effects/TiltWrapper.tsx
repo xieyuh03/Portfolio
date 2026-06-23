@@ -50,7 +50,7 @@ export default function TiltWrapper({
   return (
     <div
       ref={ref}
-      className={`[perspective:800px] [transform-style:preserve-3d] ${className}`}
+      className={`[perspective:800px] ${className}`}
       onMouseMove={handleMouse}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -60,7 +60,6 @@ export default function TiltWrapper({
           rotateX,
           rotateY,
           scale,
-          transformStyle: 'preserve-3d'
         }}
       >
         {children}
