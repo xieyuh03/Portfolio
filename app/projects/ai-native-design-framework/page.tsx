@@ -846,7 +846,7 @@ export default function AINativeDesignFrameworkPage() {
             </div>
           </motion.section>
 
-          {/* ── Three layers, four stages (Project Vision) ─────────── */}
+          {/* ── After it landed (feedback + measured speed-up) ────── */}
           <motion.section
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -856,6 +856,138 @@ export default function AINativeDesignFrameworkPage() {
           >
             <div className="mb-12">
               <span className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-3 block">05</span>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                {t('After it landed', '落地之后')}
+              </h2>
+              <div className="h-px w-12 bg-gradient-to-r from-white/50 to-transparent" />
+              <p className="text-gray-400 mt-6 max-w-3xl text-base md:text-lg leading-relaxed">
+                {t(
+                  'Once the framework was in the team\'s daily flow — qualitative signals from PM and engineering, and the speed-ups we could actually measure.',
+                  '框架进入团队日常之后 —— PM 与工程师的反馈，以及实际跑下来的提速。'
+                )}
+              </p>
+            </div>
+
+            {/* Voices from the team */}
+            <div className="mb-14">
+              <p className="text-[10px] uppercase tracking-[0.22em] text-gray-500 mb-6">
+                {t('Voices from the team', '对新工作流的反馈')}
+              </p>
+              <div className="grid md:grid-cols-2 gap-5">
+                {/* PM quote */}
+                <div className="rounded-2xl bg-white/[0.03] border border-white/10 p-7 md:p-9 hover:border-white/25 transition-colors">
+                  <div className="text-blue-300/60 text-5xl leading-none mb-4 font-serif select-none">“</div>
+                  <p className="text-base md:text-lg text-gray-200 leading-relaxed mb-8">
+                    {t(
+                      <>Faster iteration, easier to understand, smoother communication —{' '}
+                        <span className="text-blue-300 font-medium">PMs can now participate in many design decisions</span>.</>,
+                      <>迭代更快，理解更容易，沟通更方便 ——{' '}
+                        <span className="text-blue-300 font-medium">PM 也能参与很多设计环节</span>。</>
+                    )}
+                  </p>
+                  <div className="flex items-center gap-3 pt-4 border-t border-white/[0.06]">
+                    <div className="w-10 h-10 rounded-full bg-blue-500/15 border border-blue-400/25 flex items-center justify-center text-blue-300 text-[11px] font-semibold tracking-wider">
+                      PM
+                    </div>
+                    <div>
+                      <p className="text-sm text-white">{t('Product Manager', '产品经理')}</p>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Product Manager</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Engineer quote */}
+                <div className="rounded-2xl bg-white/[0.03] border border-white/10 p-7 md:p-9 hover:border-white/25 transition-colors">
+                  <div className="text-emerald-300/60 text-5xl leading-none mb-4 font-serif select-none">“</div>
+                  <p className="text-base md:text-lg text-gray-200 leading-relaxed mb-8">
+                    {t(
+                      <>Component styles, responsive layout, interaction logic — all visible right in the live page.{' '}
+                        <span className="text-emerald-300 font-medium">What you see is what you get</span>, no extra mental translation.</>,
+                      <>组件样式、响应式布局、页面操作的交互逻辑，通过动态网页直接看 ——{' '}
+                        <span className="text-emerald-300 font-medium">所见即所得</span>，省了很多理解上的功夫。</>
+                    )}
+                  </p>
+                  <div className="flex items-center gap-3 pt-4 border-t border-white/[0.06]">
+                    <div className="w-10 h-10 rounded-full bg-white/[0.08] border border-white/15 flex items-center justify-center text-white text-sm font-mono">
+                      {'</>'}
+                    </div>
+                    <div>
+                      <p className="text-sm text-white">{t('Engineer', '工程师')}</p>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Engineer</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Measured speed-up */}
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.22em] text-gray-500 mb-6">
+                {t('Measured speed-up', '新工作流的成果')}
+              </p>
+              <div className="grid md:grid-cols-3 gap-5">
+                {/* Stat 1: prototype */}
+                <div className="rounded-2xl bg-white/[0.03] border border-white/10 p-7 md:p-9 text-center hover:border-white/25 transition-colors">
+                  <p className="text-[10px] uppercase tracking-[0.22em] text-gray-500 mb-7">
+                    {t('Time to prototype', '出设计 Prototype')}
+                  </p>
+                  <div className="flex items-baseline justify-center gap-3 mb-6">
+                    <span className="text-2xl md:text-3xl text-gray-500 line-through font-light tabular-nums">
+                      {t('1–2 h', '1–2 小时')}
+                    </span>
+                    <span className="text-gray-600 text-xl">→</span>
+                    <span className="text-4xl md:text-5xl font-bold text-white tabular-nums">
+                      {t('30 min', '30 分钟')}
+                    </span>
+                  </div>
+                  <p className="text-sm text-blue-300 font-medium">{t('~3× speed-up', '约 3× 提速')}</p>
+                </div>
+
+                {/* Stat 2: meeting */}
+                <div className="rounded-2xl bg-white/[0.03] border border-white/10 p-7 md:p-9 text-center hover:border-white/25 transition-colors">
+                  <p className="text-[10px] uppercase tracking-[0.22em] text-gray-500 mb-7">
+                    {t('Per meeting', '单次 Meeting')}
+                  </p>
+                  <div className="flex items-baseline justify-center gap-3 mb-6">
+                    <span className="text-2xl md:text-3xl text-gray-500 line-through font-light tabular-nums">
+                      {t('30 min', '30 分钟')}
+                    </span>
+                    <span className="text-gray-600 text-xl">→</span>
+                    <span className="text-4xl md:text-5xl font-bold text-white tabular-nums">
+                      {t('15 min', '15 分钟')}
+                    </span>
+                  </div>
+                  <p className="text-sm text-blue-300 font-medium">{t('Comms ×2', '沟通效率 ×2')}</p>
+                </div>
+
+                {/* Stat 3: PM 0→1 */}
+                <div className="rounded-2xl bg-blue-500/[0.05] border border-blue-400/30 p-7 md:p-9 text-center hover:border-blue-400/50 transition-colors">
+                  <p className="text-[10px] uppercase tracking-[0.22em] text-blue-200/80 mb-7">
+                    {t('PM-led', 'PM 主导')}
+                  </p>
+                  <div className="flex items-baseline justify-center gap-3 mb-6">
+                    <span className="text-4xl md:text-5xl text-gray-500 font-light tabular-nums">0</span>
+                    <span className="text-gray-600 text-xl">→</span>
+                    <span className="text-4xl md:text-5xl font-bold text-blue-300 tabular-nums">1</span>
+                  </div>
+                  <p className="text-sm text-blue-300 font-medium">
+                    {t('Argue with mockups · ship 0→1 features', '用设计图阐述观点 · 做 0→1 功能')}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.section>
+
+          {/* ── Three layers, four stages (Project Vision) ─────────── */}
+          <motion.section
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.7 }}
+            className="mb-40"
+          >
+            <div className="mb-12">
+              <span className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-3 block">06</span>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 {t('Three layers, four stages', '三层骨架，四阶段流转')}
               </h2>
@@ -1011,7 +1143,7 @@ export default function AINativeDesignFrameworkPage() {
             className="mb-40"
           >
             <div className="mb-12">
-              <span className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-3 block">06</span>
+              <span className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-3 block">07</span>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 {t('Skill inventory', 'Skill 清单')}
               </h2>
@@ -1095,7 +1227,7 @@ export default function AINativeDesignFrameworkPage() {
             className="mb-40"
           >
             <div className="mb-12">
-              <span className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-3 block">07</span>
+              <span className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-3 block">08</span>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 {t('Workflow in practice', '实际工作流')}
               </h2>
@@ -1188,7 +1320,7 @@ export default function AINativeDesignFrameworkPage() {
           >
             <div className="grid md:grid-cols-12 gap-12">
               <div className="md:col-span-4 md:sticky md:top-32 self-start">
-                <span className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-3 block">08</span>
+                <span className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-3 block">09</span>
                 <h2 className="text-3xl md:text-4xl font-bold mb-4">
                   {t('Branch & deploy', '分支与部署')}
                 </h2>
@@ -1265,7 +1397,7 @@ export default function AINativeDesignFrameworkPage() {
             className="mb-32"
           >
             <div className="mb-12">
-              <span className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-3 block">09</span>
+              <span className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-3 block">10</span>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 {t('Outlook', '展望')}
               </h2>
