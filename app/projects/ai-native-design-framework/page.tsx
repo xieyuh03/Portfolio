@@ -931,13 +931,14 @@ export default function AINativeDesignFrameworkPage() {
                   <p className="text-[10px] uppercase tracking-[0.22em] text-gray-500 mb-7">
                     {t('Time to prototype', '出设计 Prototype')}
                   </p>
-                  <div className="flex items-baseline justify-center gap-3 mb-6">
+                  <div className="flex items-baseline justify-center gap-3 mb-6 whitespace-nowrap">
                     <span className="text-2xl md:text-3xl text-gray-500 line-through font-light tabular-nums">
                       {t('1–2 h', '1–2 小时')}
                     </span>
                     <span className="text-gray-600 text-xl">→</span>
-                    <span className="text-4xl md:text-5xl font-bold text-white tabular-nums">
-                      {t('30 min', '30 分钟')}
+                    <span className="font-bold text-white tabular-nums">
+                      <span className="text-4xl md:text-5xl">30</span>
+                      <span className="text-2xl md:text-3xl ml-1.5">{t('min', '分钟')}</span>
                     </span>
                   </div>
                   <p className="text-sm text-blue-300 font-medium">{t('~3× speed-up', '约 3× 提速')}</p>
@@ -948,13 +949,14 @@ export default function AINativeDesignFrameworkPage() {
                   <p className="text-[10px] uppercase tracking-[0.22em] text-gray-500 mb-7">
                     {t('Per meeting', '单次 Meeting')}
                   </p>
-                  <div className="flex items-baseline justify-center gap-3 mb-6">
+                  <div className="flex items-baseline justify-center gap-3 mb-6 whitespace-nowrap">
                     <span className="text-2xl md:text-3xl text-gray-500 line-through font-light tabular-nums">
                       {t('30 min', '30 分钟')}
                     </span>
                     <span className="text-gray-600 text-xl">→</span>
-                    <span className="text-4xl md:text-5xl font-bold text-white tabular-nums">
-                      {t('15 min', '15 分钟')}
+                    <span className="font-bold text-white tabular-nums">
+                      <span className="text-4xl md:text-5xl">15</span>
+                      <span className="text-2xl md:text-3xl ml-1.5">{t('min', '分钟')}</span>
                     </span>
                   </div>
                   <p className="text-sm text-blue-300 font-medium">{t('Comms ×2', '沟通效率 ×2')}</p>
