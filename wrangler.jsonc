@@ -1,0 +1,10 @@
+{
+  // Cloudflare Workers static-assets deployment for the Next.js static export.
+  // `npm run build` outputs to ./out, which Wrangler serves as a static site.
+  "name": "portfolio",
+  "compatibility_date": "2024-11-01",
+  "assets": {
+    "directory": "./out",
+    "not_found_handling": "404-page"
+  }
+}

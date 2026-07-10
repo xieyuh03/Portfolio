@@ -9,7 +9,7 @@ import FluidBackground from '@/components/FluidBackground';
 import TiltWrapper from '@/components/effects/TiltWrapper';
 import { useLanguage } from '@/lib/LanguageContext';
 
-const basePath = process.env.NODE_ENV === 'production' ? '/Portfolio' : '';
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 type LocalizedText = { en: string; zh: string };
 

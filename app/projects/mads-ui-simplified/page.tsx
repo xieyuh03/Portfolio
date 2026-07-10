@@ -8,7 +8,7 @@ import Navigation from '@/components/Navigation';
 import FluidBackground from '@/components/FluidBackground';
 import { useLanguage } from '@/lib/LanguageContext';
 
-const basePath = process.env.NODE_ENV === 'production' ? '/Portfolio' : '';
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 const componentsEN = [
   { name: 'ActionCard', desc: 'Dashboard quick-action card with icon and description', img: 'action card.png' },

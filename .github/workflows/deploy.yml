@@ -32,6 +32,10 @@ jobs:
 
       - name: Build with Next.js
         run: npm run build
+        env:
+          # GitHub Pages serves the site under /Portfolio; inject the prefix here.
+          # Cloudflare Pages does NOT set this var, so its build uses the root path.
+          NEXT_PUBLIC_BASE_PATH: /Portfolio
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

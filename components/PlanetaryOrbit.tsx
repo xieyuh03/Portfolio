@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 
-// Get base path for GitHub Pages
-const basePath = process.env.NODE_ENV === 'production' ? '/Portfolio' : '';
+// Get base path (injected via NEXT_PUBLIC_BASE_PATH at build time)
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 interface Planet {
   name: string;

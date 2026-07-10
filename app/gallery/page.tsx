@@ -6,8 +6,8 @@ import CustomCursor from '@/components/CustomCursor';
 import CircularGallery from '@/components/effects/CircularGallery';
 import { useLanguage } from '@/lib/LanguageContext';
 
-// GitHub Pages 部署用 basePath="/Portfolio"，本地 dev 时为空
-const BASE = process.env.NODE_ENV === 'production' ? '/Portfolio' : '';
+// 部署前缀由 NEXT_PUBLIC_BASE_PATH 注入（GitHub Pages="/Portfolio"；Cloudflare Pages/本地=空）
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 type DeckId = 'wumiao' | 'shici';
 

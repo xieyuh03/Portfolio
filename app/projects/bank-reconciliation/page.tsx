@@ -4,8 +4,8 @@ import Link from 'next/link';
 import Navigation from '@/components/Navigation';
 import { motion } from 'framer-motion';
 
-// Helper to handle basePath for GitHub Pages
-const basePath = process.env.NODE_ENV === 'production' ? '/Portfolio' : '';
+// Base path injected via NEXT_PUBLIC_BASE_PATH at build time
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 // Animation variants
 const fadeUp  = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } };

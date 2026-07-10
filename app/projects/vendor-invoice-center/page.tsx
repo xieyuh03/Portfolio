@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Navigation from '@/components/Navigation';
 import { motion } from 'framer-motion';
 
-const basePath = process.env.NODE_ENV === 'production' ? '/Portfolio' : '';
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 const img = (path: string) => `${basePath}/images/vendor-invoice-center/${path}`;
 
 const fadeUp  = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } };

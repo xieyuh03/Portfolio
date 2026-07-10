@@ -11,8 +11,9 @@ const nextConfig = {
   // Enable static export for GitHub Pages
   output: 'export',
 
-  // Set base path for GitHub Pages (only in production)
-  basePath: process.env.NODE_ENV === 'production' ? '/Portfolio' : '',
+  // Base path is injected via NEXT_PUBLIC_BASE_PATH at build time.
+  // GitHub Pages -> "/Portfolio"; Cloudflare Pages / local dev -> empty.
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
 
   // GH Pages 只能按 folder/index.html 解析路径，必须开启
   trailingSlash: true,
