@@ -259,7 +259,6 @@ type FlowIcon =
   | 'teams'
   | 'vscode'
   | 'github'
-  | 'claude'
   | 'ai'
   | 'storybook';
 type FlowNode = { role: string; title: string; note: string; icon: FlowIcon; toolLabel: string };
@@ -282,16 +281,16 @@ const beforeFlowZH: FlowNode[] = [
 
 const afterFlowEN: FlowNode[] = [
   { role: 'PM', title: 'Brief in repo', note: 'docs/mads/briefs/', icon: 'github', toolLabel: 'GitHub' },
-  { role: 'Designer', title: 'Skills + refs', note: 'Custom skill, same repo', icon: 'vscode', toolLabel: 'VS Code · Claude' },
-  { role: 'AI', title: 'Generate + iterate', note: 'Spec → code → review', icon: 'vscode', toolLabel: 'VS Code · Claude' },
+  { role: 'Designer', title: 'Skills + refs', note: 'Custom skill, same repo', icon: 'vscode', toolLabel: 'VS Code · Copilot' },
+  { role: 'AI', title: 'Generate + iterate', note: 'Spec → code → review', icon: 'vscode', toolLabel: 'VS Code · Copilot' },
   { role: 'Branch', title: 'Auto-deploy preview', note: 'Push → branch URL', icon: 'github', toolLabel: 'GitHub Actions' },
   { role: 'Engineer', title: 'Read or reuse', note: 'Code already exists', icon: 'vscode', toolLabel: 'VS Code' },
 ];
 
 const afterFlowZH: FlowNode[] = [
   { role: 'PM', title: '仓库内 Brief', note: 'docs/mads/briefs/', icon: 'github', toolLabel: 'GitHub' },
-  { role: '设计师', title: 'Skill + References', note: '同一 repo · 自定义 skill', icon: 'vscode', toolLabel: 'VS Code · Claude' },
-  { role: 'AI', title: '生成与迭代', note: 'Spec → 代码 → 审查', icon: 'vscode', toolLabel: 'VS Code · Claude' },
+  { role: '设计师', title: 'Skill + References', note: '同一 repo · 自定义 skill', icon: 'vscode', toolLabel: 'VS Code · Copilot' },
+  { role: 'AI', title: '生成与迭代', note: 'Spec → 代码 → 审查', icon: 'vscode', toolLabel: 'VS Code · Copilot' },
   { role: '分支', title: '自动部署预览', note: 'Push → 分支 URL', icon: 'github', toolLabel: 'GitHub Actions' },
   { role: '工程师', title: '读或复用', note: '代码已经存在', icon: 'vscode', toolLabel: 'VS Code' },
 ];
@@ -367,14 +366,6 @@ function ToolIcon({ name }: { name: FlowIcon }) {
         <div className="w-11 h-11 rounded-lg bg-[#0d1117] border border-white/10 flex items-center justify-center shrink-0 shadow-sm">
           <svg viewBox="0 0 24 24" className="w-6 h-6" fill="white" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.5-1.4-1.4-1.7-1.4-1.7-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.3-3.2-.2-.4-.6-1.6.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.7 1.6.2 2.8.1 3.2.8.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3" />
-          </svg>
-        </div>
-      );
-    case 'claude':
-      return (
-        <div className="w-11 h-11 rounded-lg bg-[#cc785c] flex items-center justify-center shrink-0 shadow-sm">
-          <svg viewBox="0 0 24 24" className="w-6 h-6" fill="white" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L13 9.5 20 12 13 14.5 12 22 11 14.5 4 12 11 9.5z" />
           </svg>
         </div>
       );
@@ -515,7 +506,7 @@ export default function AINativeDesignFrameworkPage() {
                     {t('Stack', '技术栈')}
                   </div>
                   <div className="text-white text-lg">
-                    React · Fluent UI · Storybook · Claude Code · GitHub Actions
+                    React · Fluent UI · Storybook · GitHub Copilot · GitHub Actions
                   </div>
                 </div>
               </div>

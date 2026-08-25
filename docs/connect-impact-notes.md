@@ -608,7 +608,7 @@
 
 **Goal 2 — Exploring Design Opportunities & Strengthening Team Collaboration（原文）：**
 
-> *Vibe Coding / MADS* — Aligned project direction with **Alina Lin**, unifying her Figma component library work with my code-first workflow **under the MADS framework**. Built a unified MADS skill and **published to Skill Hub**. **Led architecture decisions: established a modular two-tier orchestrator model based on Claude Code (skill-first, subagent-assisted)**, targeting expansion to other design teams (e.g. Li Qiao's team) and PM teams.
+> *Vibe Coding / MADS* — Aligned project direction with **Alina Lin**, unifying her Figma component library work with my code-first workflow **under the MADS framework**. Built a unified MADS skill and **published to Skill Hub**. **Led architecture decisions: established a modular two-tier orchestrator model based on GitHub Copilot Agent Skills (skill-first, subagent-assisted)**, targeting expansion to other design teams (e.g. Li Qiao's team) and PM teams.
 > **Impact:**
 > · **Multiple PMs created their own branches in the MADS repo** — evolving from personal exploration to **cross-role adoption**.
 > · Contributed to the establishment and evolvement of **Studio 8's skill hub** project.
@@ -622,7 +622,7 @@
 
 **Goal 3 — Continuous Learning & Sharing（原文）：**
 
-> *AI Transformation + Vibe Coding* — Shared topics including **GitHub AI-native workflow setup, Claude Code memory architecture, cross-platform agent differences, skill modularization, and Storybook component library setup** — through bi-weeklies, Teams chats, and dedicated workshops. Participated in Studio 8 DC Meet-ups; communicated with research team on potential skill integration.
+> *AI Transformation + Vibe Coding* — Shared topics including **GitHub AI-native workflow setup, Copilot repository instructions and Agent Skills architecture, cross-platform agent differences, skill modularization, and Storybook component library setup** — through bi-weeklies, Teams chats, and dedicated workshops. Participated in Studio 8 DC Meet-ups; communicated with research team on potential skill integration.
 > **Impact:** **Helped the Outlook team set up a Storybook component library, improving design-to-code handoff.** MADS skill sharing **sparked lively discussion at DC Meet-up**.
 
 > *AI-Driven Productivity* — **Replaced manual Figma design with code-generated prototypes**, establishing a new design workflow and a **GitHub branch-based collaboration model with PMs**. MADS agent continuously optimized; now used as the **primary daily design generation tool**. **Replaced traditional slide decks with code-generated web presentations**.
@@ -683,7 +683,7 @@
 4. **Connector Recommendation** — 接 Ran Tang 工作 + Neo Cheng 协作；**tenant admin 用户访谈区分 large centralized vs SMB distributed 模型**，进入 LT review。
 
 **MADS Design Agent —— 团队 foundational framework** ⭐⭐⭐
-5. **MADS 架构** — 基于 Claude Code 的 modular two-tier orchestrator（skill-first, subagent-assisted）。
+5. **MADS 架构** — 基于 GitHub Copilot Agent Skills 的 modular two-tier orchestrator（skill-first, subagent-assisted）。
 6. **与 Alina Lin 统一 framework** — Figma component library + code-first workflow 合流 under MADS。
 7. **跨角色采用** — **多个 PM 在 MADS repo 自建分支**；架构方法被 **Sandra Yu / Alina Lin 采纳**。
 8. **Studio 8 Skill Hub** — MADS skill 发布到 hub，贡献其建立与演进。
@@ -692,7 +692,7 @@
 **AI-native 工作流推广**
 10. **Outlook team Storybook 协助** — 帮其搭组件库，改进 design-to-code handoff。
 11. **新工作流落地** — code-generated prototypes 替代 Figma manual design；GitHub branch-based PM 协作；**web-based presentations 替代 slides**。
-12. **持续分享** — bi-weekly / Teams / workshop 上分享 GitHub AI-native workflow、Claude Code memory 架构、跨平台 agent 差异、skill 模块化、Storybook 等。
+12. **持续分享** — bi-weekly / Teams / workshop 上分享 GitHub AI-native workflow、Copilot repository instructions 与 Agent Skills 架构、跨平台 agent 差异、skill 模块化、Storybook 等。
 
 **关键能力/方法论沉淀：**
 
@@ -714,7 +714,7 @@
 
 > 主导 Copilot Connector 第一代 **Notification 体系 Phase 1** 设计，2026 年 5 月发布，填补长期存在的 connector status 可见性 gap；同期推进 Premium Data Provider 的 trial / BYOL / freemium 全流程设计，并与 **Josh Bersin** 等外部数据提供方完成三方对齐。
 
-> 主导 **MADS Design Agent** 的架构与落地 —— 基于 Claude Code 的 modular two-tier orchestrator (skill-first / subagent-assisted)，把团队设计工作流从 Figma manual 转向 code-first；架构方法**被 Sandra Yu、Alina Lin 等采纳**，多位 PM 在 repo 中自建分支，从个人探索升级为跨角色 framework。
+> 主导 **MADS Design Agent** 的架构与落地 —— 基于 GitHub Copilot Agent Skills 的 modular two-tier orchestrator (skill-first / subagent-assisted)，把团队设计工作流从 Figma manual 转向 code-first；架构方法**被 Sandra Yu、Alina Lin 等采纳**，多位 PM 在 repo 中自建分支，从个人探索升级为跨角色 framework。
 
 > 在 Microsoft 的 AI transformation 中扮演 **"how we design → how we work"** 的实践者：MADS Design Agent 已成为团队 foundational framework，被 **Jon Harris、Shanying、Rohan 与 Studio 8 DC group** 公开认可；同期帮助 Outlook 团队搭建 Storybook 组件库，把 AI-native 设计实践跨团队扩散。
 
@@ -770,7 +770,7 @@
 
 候选 B（AI-native 设计 + leadership 导向 — 最有故事性）：
 
-- 主导 **MADS Design Agent** 的架构与落地 —— 基于 Claude Code 的 modular two-tier orchestrator（skill-first / subagent-assisted），把团队设计工作流从 Figma manual 转向 code-first；架构方法被 **Sandra Yu、Alina Lin 等采纳**，多位 PM 在 repo 中自建分支，从个人探索升级为跨角色 framework，并被 **Jon Harris、Shanying、Rohan 与 Studio 8 DC group** 公开认可。
+- 主导 **MADS Design Agent** 的架构与落地 —— 基于 GitHub Copilot Agent Skills 的 modular two-tier orchestrator（skill-first / subagent-assisted），把团队设计工作流从 Figma manual 转向 code-first；架构方法被 **Sandra Yu、Alina Lin 等采纳**，多位 PM 在 repo 中自建分支，从个人探索升级为跨角色 framework，并被 **Jon Harris、Shanying、Rohan 与 Studio 8 DC group** 公开认可。
 - 在公司 reorg 后 2 周完成 D365 Finance handover 并 ramp up 到 **Copilot Connector / Extensibility**；早期主导 Wave 1/2/3 三轮发布的设计与视频交付（个人产出占设计团队 **50%**），通过 video template + ClipChamp 工作流把视频编辑时间从 5-6h 降至 1-2h（**累计 -70~80%**）；同期主导 **Admin Setup UX design sprint** 并直达 LT 演讲，2025 H2 晋升下一 level。
 - 把 AI-native 设计实践从个人探索推进到团队范式 —— 用 code-generated prototype 替代 Figma manual design，与 PM 建立 GitHub branch-based 协作 model；MADS agent 把页面生成时间从 hours 压到 minutes 成为日常主力工具；同期帮 **Outlook 团队搭建 Storybook 组件库**，推动跨团队 design-to-code handoff 实践扩散。
 

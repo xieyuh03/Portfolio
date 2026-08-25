@@ -1,26 +1,26 @@
 # 个人作品集网站
 
-一个现代化、炫酷的个人作品集网站，使用 Next.js 14、React、TypeScript 和 Sanity CMS 构建。
+一个现代化、炫酷的个人作品集网站，使用 Next.js 16、React、TypeScript 和 Sanity CMS 构建。
 
 ## ✨ 特性
 
 - 🎨 **炫酷的视觉效果**：流体粒子动画、自定义光标、平滑过渡
-- ⚡ **高性能**：基于 Next.js 14 App Router，支持 SSG 和 SSR
+- ⚡ **高性能**：基于 Next.js 16 App Router 和静态导出，适合部署到 GitHub Pages / Cloudflare Workers
 - 📱 **响应式设计**：完美适配各种设备尺寸
 - 🎭 **优雅动画**：使用 Framer Motion 实现流畅的页面动画
 - 📝 **内容管理**：集成 Sanity CMS，可视化管理项目和经历
-- 🚀 **易于部署**：一键部署到 Vercel
+- 🚀 **易于部署**：支持 GitHub Pages 自动部署，也可用 Wrangler 部署到 Cloudflare Workers
 
 ## 🛠️ 技术栈
 
-- **前端框架**: Next.js 14 (App Router)
+- **前端框架**: Next.js 16 (App Router)
 - **UI 库**: React 19
 - **样式**: Tailwind CSS
 - **动画**: Framer Motion
 - **3D 效果**: Three.js
 - **CMS**: Sanity
 - **语言**: TypeScript
-- **部署**: Vercel
+- **部署**: GitHub Pages / Cloudflare Workers 静态站点
 
 ## 📦 项目结构
 
@@ -147,25 +147,32 @@ npm run dev
 
 ## 🚀 部署
 
-### 部署到 Vercel（推荐）
+项目当前使用 `next.config.mjs` 中的 `output: 'export'` 生成静态站点，构建产物位于 `out/`。
 
-1. 将代码推送到 GitHub
-2. 访问 [Vercel](https://vercel.com)
-3. 导入你的 GitHub 仓库
-4. 添加环境变量（与 .env.local 相同）
-5. 点击部署
+### 部署到 GitHub Pages
 
-Vercel 会自动：
-- 构建你的项目
-- 生成生产环境 URL
-- 在每次推送时自动重新部署
+仓库已包含 GitHub Actions 配置：`.github/workflows/deploy.yml`。
+
+每次推送到 `main` 分支时，工作流会：
+- 安装依赖
+- 设置 `NEXT_PUBLIC_BASE_PATH=/Portfolio`
+- 运行 `npm run build`
+- 上传 `out/` 并发布到 GitHub Pages
+
+### 部署到 Cloudflare Workers
+
+仓库已包含 `wrangler.jsonc`，会将 `out/` 作为静态资源目录。
+
+```bash
+npm run build
+npx wrangler deploy
+```
+
+Cloudflare 根路径部署通常不需要设置 `NEXT_PUBLIC_BASE_PATH`。
 
 ### 绑定自定义域名
 
-在 Vercel 项目设置中：
-1. 进入 "Domains"
-2. 添加你的域名
-3. 按照指示配置 DNS
+可在 GitHub Pages 或 Cloudflare 的域名设置中添加自定义域名，并按平台提示配置 DNS。
 
 ## 📱 页面说明
 

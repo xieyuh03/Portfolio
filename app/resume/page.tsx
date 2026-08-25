@@ -91,10 +91,10 @@ const experienceZH: Job[] = [
             推动 <M>20+</M> Copilot Connectors 跨 4 个发布波次准时上线公测；主导设计并交付 Connector Setup OAuth 2.0 简化版至正式发布，setup 时间从数小时缩短至数分钟、推动团队 incoming <K>ICM 减半</K>；主导 Notification 设计，填补 connector 状态长期可见性缺失。
           </>,
           <>
-            主导 <K>MADS Design Agent</K> 的架构与落地，基于 Claude Code 和 GitHub Copilot 框架将团队设计工作流从 Figma 手工操作转向代码优先，页面生成时间从数小时缩短至数分钟；架构被多位设计师与产品经理采纳并自建分支，<K>从个人探索升级为团队基础框架</K>。
+            主导 <K>MADS Design Agent</K> 的架构与落地，基于 GitHub Copilot 与仓库内 Agent Skills 框架将团队设计工作流从 Figma 手工操作转向代码优先，页面生成时间从数小时缩短至数分钟；架构被多位设计师与产品经理采纳并自建分支，<K>从个人探索升级为团队基础框架</K>。
           </>,
           <>
-            推动 AI 原生设计实践跨团队扩散：与产品经理建立 GitHub 分支协作模式升级设计到工程的交付；系统性输出 Claude Code 架构与 AI 工作流实践，赋能其他产品设计团队搭建组件库、落地代码优先设计体系。
+            推动 AI 原生设计实践跨团队扩散：与产品经理建立 GitHub 分支协作模式升级设计到工程的交付；系统性输出 GitHub Copilot Agent Skills 架构与 AI 工作流实践，赋能其他产品设计团队搭建组件库、落地代码优先设计体系。
           </>,
         ],
       },
@@ -170,7 +170,7 @@ const skillsZH: SkillRow[] = [
   },
   {
     label: '工具',
-    items: ['Claude Code', 'GitHub Copilot', 'Figma', 'Photoshop', 'Illustrator'],
+    items: ['GitHub Copilot', 'Figma', 'Photoshop', 'Illustrator'],
   },
   { label: '编程', items: ['Python', 'HTML+CSS', 'JavaScript', 'Arduino'] },
   { label: '3D', items: ['Solidworks', 'Auto CAD', 'Unigraphic NX', 'Unity'] },
@@ -195,10 +195,10 @@ const experienceEN: Job[] = [
             Drove <M>20+</M> Copilot Connectors to public preview across 4 release waves; shipped Connector Setup OAuth 2.0 simplified GA, cutting setup time from hours to minutes and <K>halving incoming ICM count</K>; shipped first-gen Notification, closing a long-standing connector status visibility gap.
           </>,
           <>
-            Led <K>MADS Design Agent</K> on Claude Code and GitHub Copilot, shifting design workflow from manual Figma to code-first; page generation cut from hours to minutes; adopted by multiple designers and PMs across their own branches, <K>becoming a team-wide foundational framework</K>.
+            Led <K>MADS Design Agent</K> on GitHub Copilot and repository-native Agent Skills, shifting design workflow from manual Figma to code-first; page generation cut from hours to minutes; adopted by multiple designers and PMs across their own branches, <K>becoming a team-wide foundational framework</K>.
           </>,
           <>
-            Established a GitHub branch-based collaboration model with PMs for design-to-engineering handoff; shared Claude Code architecture and AI workflow practices, helping other design teams build component libraries and adopt code-first design systems.
+            Established a GitHub branch-based collaboration model with PMs for design-to-engineering handoff; shared GitHub Copilot Agent Skills architecture and AI workflow practices, helping other design teams build component libraries and adopt code-first design systems.
           </>,
         ],
       },
@@ -277,7 +277,7 @@ const skillsEN: SkillRow[] = [
   },
   {
     label: 'Tools',
-    items: ['Claude Code', 'GitHub Copilot', 'Figma', 'Photoshop', 'Illustrator'],
+    items: ['GitHub Copilot', 'Figma', 'Photoshop', 'Illustrator'],
   },
   { label: 'Code', items: ['Python', 'HTML+CSS', 'JavaScript', 'Arduino'] },
   { label: '3D', items: ['Solidworks', 'Auto CAD', 'Unigraphic NX', 'Unity'] },

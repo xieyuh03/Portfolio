@@ -395,7 +395,7 @@ export default function MADSUIPage() {
                 </div>
                 <div>
                   <div className="text-gray-500 mb-2 text-sm uppercase tracking-wider">{t('Stack', '技术栈')}</div>
-                  <div className="text-white text-lg">React · Fluent UI · Storybook · Claude Code</div>
+                  <div className="text-white text-lg">React · Fluent UI · Storybook · GitHub Copilot</div>
                 </div>
               </div>
 
@@ -928,19 +928,19 @@ export default function MADSUIPage() {
               <div>
                 <p className="text-xs text-gray-500 uppercase tracking-wider mb-1.5">{t('Next step', '下一步')}</p>
                 <p className="text-white font-semibold text-base mb-1.5">
-                  {t('Restructure into a Claude Skill', '重构为 Claude Skill')}
+                  {t('Restructure into a Copilot Agent Skill', '重构为 Copilot Agent Skill')}
                 </p>
                 <p className="text-gray-400 text-sm leading-relaxed">
                   {t(
-                    'Split and restructure the MD file following the Claude Skill format — trigger conditions, context injection, phase instructions, and quality checks as dedicated sections that auto-invoke on every run.',
-                    '将 MD 文件拆分并按照 Claude Skill 格式重构——将触发条件、上下文注入、分阶段指令和质量检查分别整理为独立模块，每次运行时自动调用。'
+                    'Split and restructure the MD file following the GitHub Copilot Agent Skills format — trigger conditions, context injection, phase instructions, and quality checks as dedicated sections that can be invoked on every run.',
+                    '将 MD 文件拆分并按照 GitHub Copilot Agent Skills 格式重构——将触发条件、上下文注入、分阶段指令和质量检查分别整理为独立模块，每次运行时均可调用。'
                   )}
                 </p>
               </div>
             </motion.div>
           </motion.section>
 
-          {/* ── Claude Skill ─────────────────────────────────────── */}
+          {/* ── Copilot Agent Skill ──────────────────────────────── */}
           <motion.section
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -950,12 +950,12 @@ export default function MADSUIPage() {
           >
             <div className="grid md:grid-cols-12 gap-12">
               <div className="md:col-span-4 md:sticky md:top-32 self-start">
-                <h2 className="text-sm uppercase tracking-wider text-gray-500 mb-4">The Claude Skill</h2>
+                <h2 className="text-sm uppercase tracking-wider text-gray-500 mb-4">The Copilot Agent Skill</h2>
                 <div className="h-px w-12 bg-gradient-to-r from-white/50 to-transparent mb-8" />
                 <p className="text-gray-300 text-base leading-relaxed">
                   {t(
-                    'The accumulated learnings were distilled into a structured Claude skill — auto-invoked whenever UI restoration work begins, enforcing standards on every run.',
-                    '积累的经验被提炼成结构化的 Claude Skill——在 UI 还原工作开始时自动触发，每次运行都严格执行规范。'
+                    'The accumulated learnings were distilled into a structured Copilot Agent Skill — discovered from the repository and invoked for UI restoration work to enforce standards on every run.',
+                    '积累的经验被提炼成结构化的 Copilot Agent Skill——由仓库自动发现，并在 UI 还原任务中调用，确保每次运行都严格执行规范。'
                   )}
                 </p>
               </div>
@@ -970,7 +970,7 @@ export default function MADSUIPage() {
                 >
                   <p className="text-gray-500 text-sm uppercase tracking-wider mb-4">{t('Skill structure', 'Skill 文件结构')}</p>
                   <div className="space-y-1.5 text-gray-300">
-                    <div className="text-blue-400">.claude/skills/mads-ui-restoration/</div>
+                    <div className="text-blue-400">.github/skills/mads-ui-restoration/</div>
                     <div className="pl-4 text-gray-400">├── <span className="text-white">SKILL.md</span> <span className="text-gray-500 text-sm ml-2">— {t('agent entry point, auto-triggered', '入口文件，自动触发')}</span></div>
                     <div className="pl-4 text-gray-400">├── <span className="text-white">README.md</span></div>
                     <div className="pl-4 text-gray-400">├── <span className="text-white">DEPENDENCIES.md</span></div>

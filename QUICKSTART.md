@@ -82,7 +82,7 @@ portfolio-website/
 
 ## 🚀 准备部署？
 
-### 简单 3 步部署到 Vercel：
+### 简单 3 步部署到 GitHub Pages：
 
 \`\`\`bash
 # 1. 推送到 GitHub
@@ -92,9 +92,9 @@ git commit -m "My awesome portfolio"
 git remote add origin https://github.com/你的用户名/portfolio.git
 git push -u origin main
 
-# 2. 访问 vercel.com，导入 GitHub 仓库
+# 2. 在 GitHub 仓库 Settings → Pages 中启用 GitHub Actions 部署
 
-# 3. 点击 Deploy，完成！
+# 3. 推送到 main 后，仓库内的 GitHub Actions 会自动构建并发布 out/
 \`\`\`
 
 详细部署教程见 [DEPLOYMENT.md](DEPLOYMENT.md)
@@ -132,7 +132,7 @@ npm run lint     # 代码检查
 
 ### 稍后配置：
 - 📝 配置 Sanity CMS（可视化管理内容）
-- 🌐 部署到 Vercel（免费）
+- 🌐 部署到 GitHub Pages 或 Cloudflare Workers
 - 🎨 绑定自定义域名（可选）
 
 ---

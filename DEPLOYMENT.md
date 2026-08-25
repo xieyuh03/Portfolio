@@ -21,8 +21,9 @@
    - 进入 **API** 设置
    - 在 **CORS Origins** 中添加：
      - `http://localhost:3000`（本地开发）
-     - `https://your-domain.vercel.app`（生产环境，部署后填入）
-     - `https://*.vercel.app`（Vercel 预览部署）
+     - `https://你的用户名.github.io`（GitHub Pages 用户站点）
+     - `https://你的用户名.github.io/Portfolio`（GitHub Pages 项目站点）
+     - `https://your-domain.com`（自定义域名，部署后填入）
 
 2. 创建 API Token：
    - 进入 **API** → **Tokens**
@@ -97,7 +98,7 @@ npm run dev
 
 ---
 
-## 🌐 部署到 Vercel
+## 🌐 部署到 GitHub Pages
 
 ### 步骤 1：推送代码到 GitHub
 
@@ -119,23 +120,19 @@ git branch -M main
 git push -u origin main
 \`\`\`
 
-### 步骤 2：导入到 Vercel
+### 步骤 2：启用 GitHub Pages
 
-1. 访问 [https://vercel.com](https://vercel.com)
-2. 使用 GitHub 账号登录
-3. 点击 "Add New..." → "Project"
-4. 选择你的 GitHub 仓库
-5. 配置项目：
-   - Framework Preset: **Next.js**
-   - Root Directory: `./`
-   - Build Command: `npm run build`
-   - Output Directory: `.next`
+1. 打开 GitHub 仓库页面
+2. 进入 **Settings** → **Pages**
+3. 在 **Build and deployment** 中选择 **GitHub Actions**
+
+仓库已包含 `.github/workflows/deploy.yml`，推送到 `main` 后会自动运行构建并发布 `out/`。
 
 ### 步骤 3：添加环境变量
 
-在 Vercel 项目配置中：
+在 GitHub Actions 仓库配置中：
 
-1. 进入 **Settings** → **Environment Variables**
+1. 进入 **Settings** → **Secrets and variables** → **Actions**
 2. 添加以下变量：
 
 \`\`\`
@@ -146,18 +143,33 @@ SANITY_API_TOKEN=你的API令牌
 
 ### 步骤 4：部署
 
-1. 点击 **Deploy**
-2. 等待构建完成（约 1-2 分钟）
+1. 推送到 `main`
+2. 等待 GitHub Actions 构建完成（约 1-2 分钟）
 3. 部署成功后会得到一个 URL，例如：
-   - `https://your-portfolio-abc123.vercel.app`
+   - `https://你的用户名.github.io/Portfolio/`
 
 ### 步骤 5：更新 Sanity CORS
 
 回到 Sanity 控制台，在 CORS Origins 中添加你的生产 URL：
 
 \`\`\`
-https://your-portfolio-abc123.vercel.app
+https://你的用户名.github.io/Portfolio/
 \`\`\`
+
+GitHub Actions 会在构建时设置 `NEXT_PUBLIC_BASE_PATH=/Portfolio`，让静态资源路径匹配 GitHub Pages 的项目路径。
+
+---
+
+## ☁️ 部署到 Cloudflare Workers
+
+项目已包含 `wrangler.jsonc`，会将 Next.js 静态导出的 `out/` 目录作为 Workers 静态资源部署。
+
+\`\`\`bash
+npm run build
+npx wrangler deploy
+\`\`\`
+
+Cloudflare 根路径部署通常不需要设置 `NEXT_PUBLIC_BASE_PATH`。如果部署到子路径，可按实际路径设置该环境变量后再构建。
 
 ---
 
@@ -170,14 +182,11 @@ https://your-portfolio-abc123.vercel.app
 - [GoDaddy](https://www.godaddy.com)
 - [阿里云](https://wanwang.aliyun.com)
 
-### 绑定到 Vercel
+### 绑定自定义域名
 
-1. 在 Vercel 项目中，进入 **Settings** → **Domains**
-2. 添加你的域名（例如 `yourname.com`）
-3. 按照提示配置 DNS 记录：
-   - **A Record**: `76.76.21.21`
-   - **CNAME Record**: `cname.vercel-dns.com`
-4. 等待 DNS 生效（可能需要 24-48 小时）
+1. 在 GitHub Pages 或 Cloudflare 中添加你的域名（例如 `yourname.com`）
+2. 按平台提示配置 DNS 记录
+3. 等待 DNS 生效（可能需要 24-48 小时）
 
 ---
 
@@ -206,7 +215,7 @@ npm run dev
 
 ## 🔄 自动部署
 
-每次推送代码到 GitHub main 分支时，Vercel 会自动：
+每次推送代码到 GitHub main 分支时，GitHub Actions 会自动：
 1. 拉取最新代码
 2. 运行构建
 3. 部署新版本
@@ -217,10 +226,9 @@ npm run dev
 
 ## 📊 监控和分析
 
-### Vercel Analytics
+### 平台分析
 
-1. 在 Vercel 项目中，进入 **Analytics**
-2. 查看访问量、性能指标等
+可使用 Cloudflare Web Analytics、GitHub Pages 外接分析服务，或自行接入 Google Analytics。
 
 ### Google Analytics（可选）
 
@@ -233,7 +241,7 @@ npm run dev
 ### 问题 1：部署失败
 
 **解决方案**：
-- 检查 Vercel 构建日志
+- 检查 GitHub Actions 或 Wrangler 构建日志
 - 确保所有依赖都在 `package.json` 中
 - 本地运行 `npm run build` 测试
 
@@ -241,7 +249,7 @@ npm run dev
 
 **解决方案**：
 - 变量名必须以 `NEXT_PUBLIC_` 开头（客户端使用）
-- 在 Vercel 重新部署项目
+- 重新运行 GitHub Actions，或重新执行 `npx wrangler deploy`
 
 ### 问题 3：Sanity 内容不显示
 

@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Vibe Project Template",
+  "description": "项目卡片数据模板",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "number",
+      "description": "唯一标识符，比现有最大 id 大 1"
+    },
+    "title": {
+      "type": "string",
+      "description": "项目标题，简洁有力（5-8 字中文或 3-5 词英文）",
+      "minLength": 3,
+      "maxLength": 50,
+      "examples": [
+        "Planetary Orbit Animation",
+        "流动的光影 - 光线追踪实验",
+        "Breathing Cards - 呼吸感交互"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "description": "项目描述，50-80 字，突出创意和设计亮点",
+      "minLength": 50,
+      "maxLength": 150,
+      "examples": [
+        "探索太阳系八大行星的轨道美学，通过动态渐变轨迹和差异化运动节奏营造视觉深度感，点击可切换旋转方向体验不同视角"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "description": "技术和设计标签，3-5 个（设计类 2-3 个 + 技术类 1-2 个）",
+      "minItems": 3,
+      "maxItems": 5,
+      "items": {
+        "type": "string"
+      },
+      "examples": [
+        ["Motion Design", "Interactive Animation", "React"],
+        ["Visual Design", "Glassmorphism", "Design System", "Figma"],
+        ["Interaction Design", "Micro-interactions", "Framer Motion"]
+      ]
+    },
+    "year": {
+      "type": "string",
+      "description": "项目年份（YYYY 格式）",
+      "pattern": "^[0-9]{4}$",
+      "examples": ["2024", "2023"]
+    },
+    "image": {
+      "type": "string",
+      "description": "封面图片 URL（Unsplash）或本地路径",
+      "format": "uri",
+      "examples": [
+        "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&q=80",
+        "/images/projects/my-project.jpg"
+      ]
+    }
+  },
+  "required": ["id", "title", "description", "tags", "year", "image"],
+  "additionalProperties": false
+}

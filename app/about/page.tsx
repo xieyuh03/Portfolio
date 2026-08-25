@@ -86,7 +86,7 @@ const experienceZH: Company[] = [
             kind: 'project',
             content: (
               <>
-                <Hi>主导 MADS Design Agent 的架构与落地</Hi>，基于 Claude Code 和 GitHub Copilot 框架，把团队设计工作流从 Figma manual 转向 code-first，页面生成时间从数小时缩短至数分钟；架构被多位设计师与 PM 采纳并在 repo 中自建分支，<Hi>从个人探索升级为团队 foundational framework</Hi>。
+                <Hi>主导 MADS Design Agent 的架构与落地</Hi>，基于 GitHub Copilot 与仓库内 Agent Skills 框架，把团队设计工作流从 Figma manual 转向 code-first，页面生成时间从数小时缩短至数分钟；架构被多位设计师与 PM 采纳并在 repo 中自建分支，<Hi>从个人探索升级为团队 foundational framework</Hi>。
               </>
             ),
           },
@@ -94,7 +94,7 @@ const experienceZH: Company[] = [
             kind: 'collab',
             content: (
               <>
-                <Hi>推动 AI-native 设计实践跨团队扩散</Hi>，与 PM 建立 GitHub branch-based 协作 model 升级 design-engineering handoff；系统性输出 Claude Code 架构与 AI workflow 实践，赋能其他产品设计团队搭建组件库、落地 code-first 设计体系，把个人探索转化为团队 AI transformation 动能。
+                <Hi>推动 AI-native 设计实践跨团队扩散</Hi>，与 PM 建立 GitHub branch-based 协作 model 升级 design-engineering handoff；系统性输出 GitHub Copilot Agent Skills 架构与 AI workflow 实践，赋能其他产品设计团队搭建组件库、落地 code-first 设计体系，把个人探索转化为团队 AI transformation 动能。
               </>
             ),
           },
@@ -234,7 +234,7 @@ const skillGroupsZH: SkillGroup[] = [
   },
   {
     title: '设计工具',
-    items: ['Figma', 'Claude Code', 'GitHub Copilot', 'Photoshop', 'Illustrator'],
+    items: ['Figma', 'GitHub Copilot', 'Photoshop', 'Illustrator'],
   },
   { title: '编程技能', items: ['Python', 'HTML+CSS', 'JavaScript', 'Arduino'] },
   { title: '3D 设计', items: ['Solidworks', 'Auto CAD', 'Unigraphic NX', 'Unity'] },
@@ -279,7 +279,7 @@ const experienceEN: Company[] = [
             kind: 'project',
             content: (
               <>
-                <Hi>Led architecture and rollout of MADS Design Agent</Hi> — built on Claude Code and GitHub Copilot frameworks, shifting the team&apos;s design workflow from Figma manual to code-first, cutting page generation from hours to minutes; the architecture was adopted by multiple designers and PMs with their own branches in the repo, <Hi>evolving from personal exploration into a team-wide foundational framework</Hi>.
+                <Hi>Led architecture and rollout of MADS Design Agent</Hi> — built on GitHub Copilot and repository-native Agent Skills, shifting the team&apos;s design workflow from Figma manual to code-first, cutting page generation from hours to minutes; the architecture was adopted by multiple designers and PMs with their own branches in the repo, <Hi>evolving from personal exploration into a team-wide foundational framework</Hi>.
               </>
             ),
           },
@@ -287,7 +287,7 @@ const experienceEN: Company[] = [
             kind: 'collab',
             content: (
               <>
-                <Hi>Spread AI-native design practices across teams</Hi> — established a GitHub branch-based collaboration model with PMs to upgrade design-engineering handoff; systematically shared Claude Code architecture and AI workflow practices, enabling other product design teams to build component libraries and adopt a code-first design system, turning personal exploration into team-wide AI transformation momentum.
+                <Hi>Spread AI-native design practices across teams</Hi> — established a GitHub branch-based collaboration model with PMs to upgrade design-engineering handoff; systematically shared GitHub Copilot Agent Skills architecture and AI workflow practices, enabling other product design teams to build component libraries and adopt a code-first design system, turning personal exploration into team-wide AI transformation momentum.
               </>
             ),
           },
@@ -433,7 +433,7 @@ const skillGroupsEN: SkillGroup[] = [
   },
   {
     title: 'Design Tools',
-    items: ['Figma', 'Claude Code', 'GitHub Copilot', 'Photoshop', 'Illustrator'],
+    items: ['Figma', 'GitHub Copilot', 'Photoshop', 'Illustrator'],
   },
   { title: 'Programming', items: ['Python', 'HTML+CSS', 'JavaScript', 'Arduino'] },
   { title: '3D Design', items: ['Solidworks', 'Auto CAD', 'Unigraphic NX', 'Unity'] },
