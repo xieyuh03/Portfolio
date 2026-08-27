@@ -27,14 +27,14 @@ type Project = {
 };
 
 type ProjectCategory = {
-  title: string;
+  title: LocalizedText;
   projects: Project[];
 };
 
 // Featured project data
 const projectCategories: ProjectCategory[] = [
   {
-    title: 'AI Agent',
+    title: { en: 'AI Agent', zh: 'AI 智能体' },
     projects: [
       {
         id: 9,
@@ -75,8 +75,44 @@ const projectCategories: ProjectCategory[] = [
     ],
   },
   {
-    title: 'Product design',
+    title: { en: 'Product design', zh: '产品设计' },
     projects: [
+      {
+        id: 12,
+        title: 'Enterprise Connector Health Center',
+        description: {
+          en: 'Evolved fragmented connector alerts into a proactive health-management experience that helps administrators monitor, diagnose, and resolve issues—with validation prioritizing trustworthy signals and actionable guidance.',
+          zh: '将分散的连接器告警演进为主动健康管理体验，帮助管理员监控、诊断并修复问题；通过验证，将可信信号与可执行指导确立为核心优先级。',
+        },
+        tags: [
+          { en: '0→1 Product Design', zh: '0→1 产品设计' },
+          { en: 'Customer Research', zh: '客户研究' },
+          { en: 'Admin Experience', zh: '管理员体验' },
+          { en: 'Enterprise AI', zh: '企业 AI' },
+        ],
+        year: '2026',
+        image: `${basePath}/images/connector-health-center/thumbnail.svg`,
+        imageSize: 'cover',
+        href: '/projects/connector-health-center',
+      },
+      {
+        id: 11,
+        title: 'Unified Enterprise Connector Experience',
+        description: {
+          en: 'Reframed a fragmented enterprise connector ecosystem around a data-source-first model, unifying discovery, setup, and lifecycle management without hiding differences that change administrator actions.',
+          zh: '将碎片化的企业连接器体验重构为“数据源优先”的产品模型，在保留关键差异的同时，统一多种能力的发现、设置与生命周期管理。',
+        },
+        tags: [
+          { en: 'Systems Design', zh: '系统设计' },
+          { en: 'Information Architecture', zh: '信息架构' },
+          { en: 'Product Strategy', zh: '产品策略' },
+          { en: 'Enterprise AI', zh: '企业 AI' },
+        ],
+        year: '2026',
+        image: `${basePath}/images/unified-connector-experience/thumbnail.svg`,
+        imageSize: 'cover',
+        href: '/projects/unified-connector-experience',
+      },
       {
         id: 6,
         title: 'Modern Bank Reconciliation',
@@ -113,7 +149,7 @@ const projectCategories: ProjectCategory[] = [
     ],
   },
   {
-    title: 'Vibe coding',
+    title: { en: 'Vibe coding', zh: 'Vibe Coding' },
     projects: [
       {
         id: 5,
@@ -282,14 +318,14 @@ export default function ProjectsPage() {
           {/* Categorized Two-Column Layout */}
           <div className="space-y-20">
             {projectCategories.map((category, categoryIndex) => (
-              <section key={category.title}>
+              <section key={category.title.en}>
                 <motion.div
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: categoryIndex * 0.1 }}
                   className="flex items-center gap-4 mb-8"
                 >
-                  <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">{category.title}</h2>
+                  <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">{category.title[lang]}</h2>
                   <div className="h-px flex-1 bg-white/10" />
                 </motion.div>
 

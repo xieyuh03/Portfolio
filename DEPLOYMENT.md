@@ -21,16 +21,10 @@
    - 进入 **API** 设置
    - 在 **CORS Origins** 中添加：
      - `http://localhost:3000`（本地开发）
-     - `https://你的用户名.github.io`（GitHub Pages 用户站点）
-     - `https://你的用户名.github.io/Portfolio`（GitHub Pages 项目站点）
+     - `https://你的用户名.github.io`（GitHub Pages；Origin 不包含仓库路径）
      - `https://your-domain.com`（自定义域名，部署后填入）
 
-2. 创建 API Token：
-   - 进入 **API** → **Tokens**
-   - 点击 "Add API token"
-   - 名称：`Portfolio Website`
-   - 权限：`Editor`
-   - 复制生成的 token（只显示一次！）
+当前网站只读取公开数据集，不需要 API Token。仅当后续增加写入或受保护数据读取功能时，再创建最小权限 token；不要把 token 暴露为 `NEXT_PUBLIC_` 变量。
 
 #### 设置本地环境变量
 
@@ -45,7 +39,6 @@ cp .env.local.example .env.local
 \`\`\`env
 NEXT_PUBLIC_SANITY_PROJECT_ID=你的ProjectID
 NEXT_PUBLIC_SANITY_DATASET=production
-SANITY_API_TOKEN=你的API令牌
 \`\`\`
 
 #### 导入 Schema 到 Sanity
@@ -132,31 +125,34 @@ git push -u origin main
 
 在 GitHub Actions 仓库配置中：
 
-1. 进入 **Settings** → **Secrets and variables** → **Actions**
-2. 添加以下变量：
+1. 进入 **Settings** → **Secrets and variables** → **Actions** → **Variables**
+2. 添加以下 Repository variables：
 
 \`\`\`
 NEXT_PUBLIC_SANITY_PROJECT_ID=你的ProjectID
 NEXT_PUBLIC_SANITY_DATASET=production
-SANITY_API_TOKEN=你的API令牌
 \`\`\`
+
+工作流会在 `Build with Next.js` 步骤中将这两个 Repository variables 显式映射到构建环境。当前静态站点构建不使用 Sanity Editor token，因此不要添加 `SANITY_API_TOKEN`。
 
 ### 步骤 4：部署
 
 1. 推送到 `main`
 2. 等待 GitHub Actions 构建完成（约 1-2 分钟）
 3. 部署成功后会得到一个 URL，例如：
-   - `https://你的用户名.github.io/Portfolio/`
+   - `https://你的用户名.github.io/你的仓库名/`
 
 ### 步骤 5：更新 Sanity CORS
 
 回到 Sanity 控制台，在 CORS Origins 中添加你的生产 URL：
 
 \`\`\`
-https://你的用户名.github.io/Portfolio/
+https://你的用户名.github.io
 \`\`\`
 
-GitHub Actions 会在构建时设置 `NEXT_PUBLIC_BASE_PATH=/Portfolio`，让静态资源路径匹配 GitHub Pages 的项目路径。
+浏览器的 `Origin` 只包含 scheme、host 和 port，不包含 `/你的仓库名/` 路径。
+
+GitHub Actions 会根据实际、区分大小写的仓库名动态设置 `NEXT_PUBLIC_BASE_PATH=/你的仓库名`。如果仓库本身是 `你的用户名.github.io` 用户站点，工作流会使用空 base path。
 
 ---
 

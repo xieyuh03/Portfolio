@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#06111D"/>
+      <stop offset="1" stop-color="#0A1B29"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1160 160) rotate(130) scale(620 720)">
+      <stop stop-color="#22D3EE" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#22D3EE" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow" x="-80" y="-80" width="1760" height="1060" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="34" stdDeviation="34" flood-color="#000814" flood-opacity=".5"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#glow)"/>
+  <circle cx="150" cy="760" r="320" fill="#2563EB" fill-opacity=".08"/>
+  <g filter="url(#shadow)">
+    <rect x="185" y="112" width="1230" height="676" rx="34" fill="#081521" stroke="#6EE7F9" stroke-opacity=".18" stroke-width="2"/>
+    <path d="M185 178H1415" stroke="white" stroke-opacity=".1" stroke-width="2"/>
+    <circle cx="230" cy="145" r="7" fill="white" fill-opacity=".22"/>
+    <circle cx="254" cy="145" r="7" fill="white" fill-opacity=".14"/>
+    <circle cx="278" cy="145" r="7" fill="white" fill-opacity=".08"/>
+    <rect x="215" y="208" width="72" height="550" rx="20" fill="white" fill-opacity=".025" stroke="white" stroke-opacity=".07"/>
+    <rect x="231" y="230" width="40" height="40" rx="12" fill="#67E8F9"/>
+    <path d="M242 250H260M251 241V259" stroke="#07131E" stroke-width="3" stroke-linecap="round"/>
+    <rect x="232" y="310" width="38" height="38" rx="10" fill="#22D3EE" fill-opacity=".14" stroke="#67E8F9" stroke-opacity=".35"/>
+    <rect x="232" y="370" width="38" height="38" rx="10" fill="white" fill-opacity=".035"/>
+    <rect x="232" y="430" width="38" height="38" rx="10" fill="white" fill-opacity=".035"/>
+    <rect x="322" y="221" width="460" height="22" rx="11" fill="white" fill-opacity=".9"/>
+    <rect x="322" y="257" width="270" height="10" rx="5" fill="white" fill-opacity=".22"/>
+    <rect x="322" y="303" width="306" height="118" rx="18" fill="white" fill-opacity=".035" stroke="white" stroke-opacity=".09"/>
+    <rect x="646" y="303" width="306" height="118" rx="18" fill="white" fill-opacity=".035" stroke="white" stroke-opacity=".09"/>
+    <rect x="970" y="303" width="306" height="118" rx="18" fill="white" fill-opacity=".035" stroke="white" stroke-opacity=".09"/>
+    <circle cx="358" cy="339" r="8" fill="#6EE7B7"/>
+    <rect x="381" y="330" width="92" height="9" rx="4.5" fill="white" fill-opacity=".28"/>
+    <rect x="347" y="361" width="54" height="33" rx="8" fill="#6EE7B7" fill-opacity=".12"/>
+    <rect x="421" y="370" width="130" height="10" rx="5" fill="white" fill-opacity=".65"/>
+    <circle cx="682" cy="339" r="8" fill="#FCD34D"/>
+    <rect x="705" y="330" width="112" height="9" rx="4.5" fill="white" fill-opacity=".28"/>
+    <rect x="671" y="361" width="54" height="33" rx="8" fill="#FCD34D" fill-opacity=".12"/>
+    <rect x="745" y="370" width="130" height="10" rx="5" fill="white" fill-opacity=".65"/>
+    <circle cx="1006" cy="339" r="8" fill="#FDA4AF"/>
+    <rect x="1029" y="330" width="96" height="9" rx="4.5" fill="white" fill-opacity=".28"/>
+    <rect x="995" y="361" width="54" height="33" rx="8" fill="#FDA4AF" fill-opacity=".12"/>
+    <rect x="1069" y="370" width="130" height="10" rx="5" fill="white" fill-opacity=".65"/>
+    <rect x="322" y="445" width="600" height="282" rx="20" fill="white" fill-opacity=".025" stroke="white" stroke-opacity=".08"/>
+    <rect x="352" y="476" width="138" height="11" rx="5.5" fill="white" fill-opacity=".36"/>
+    <rect x="352" y="510" width="540" height="146" rx="12" fill="#06111D"/>
+    <path d="M370 626L430 596L490 606L550 544L610 568L670 526L730 552L790 508L850 534" stroke="#67E8F9" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M370 626L430 596L490 606L550 544L610 568L670 526L730 552L790 508L850 534V640H370V626Z" fill="#22D3EE" fill-opacity=".08"/>
+    <circle cx="790" cy="508" r="8" fill="#FCD34D" stroke="#081521" stroke-width="4"/>
+    <rect x="950" y="445" width="326" height="282" rx="20" fill="#22D3EE" fill-opacity=".045" stroke="#67E8F9" stroke-opacity=".16"/>
+    <rect x="980" y="476" width="112" height="10" rx="5" fill="#67E8F9" fill-opacity=".75"/>
+    <rect x="980" y="514" width="236" height="16" rx="8" fill="white" fill-opacity=".78"/>
+    <rect x="980" y="544" width="210" height="9" rx="4.5" fill="white" fill-opacity=".22"/>
+    <rect x="980" y="563" width="228" height="9" rx="4.5" fill="white" fill-opacity=".15"/>
+    <rect x="980" y="611" width="154" height="42" rx="12" fill="#67E8F9"/>
+    <path d="M1003 632H1104M1094 622L1104 632L1094 642" stroke="#07131E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="185" y="835" fill="white" fill-opacity=".92" font-family="Arial, sans-serif" font-size="30" font-weight="700" letter-spacing="1">ENTERPRISE CONNECTOR HEALTH CENTER</text>
+  <text x="1108" y="835" fill="#67E8F9" fill-opacity=".9" font-family="Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="3">MONITOR · ALERT · DIAGNOSE · FIX</text>
+</svg>

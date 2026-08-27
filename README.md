@@ -72,8 +72,9 @@ cp .env.local.example .env.local
 \`\`\`env
 NEXT_PUBLIC_SANITY_PROJECT_ID=你的项目ID
 NEXT_PUBLIC_SANITY_DATASET=production
-SANITY_API_TOKEN=你的API令牌
 \`\`\`
+
+当前网站只读取公开数据集，不需要 Sanity API Token。
 
 #### 初始化 Sanity Studio（可选）
 
@@ -155,7 +156,8 @@ npm run dev
 
 每次推送到 `main` 分支时，工作流会：
 - 安装依赖
-- 设置 `NEXT_PUBLIC_BASE_PATH=/Portfolio`
+- 根据实际仓库名设置 `NEXT_PUBLIC_BASE_PATH`
+- 注入已配置的 Sanity Repository variables
 - 运行 `npm run build`
 - 上传 `out/` 并发布到 GitHub Pages
 

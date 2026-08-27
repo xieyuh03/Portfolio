@@ -12,7 +12,7 @@ const nextConfig = {
   output: 'export',
 
   // Base path is injected via NEXT_PUBLIC_BASE_PATH at build time.
-  // GitHub Pages -> "/Portfolio"; Cloudflare Pages / local dev -> empty.
+  // GitHub project Pages -> "/<repository-name>"; root deployments -> empty.
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
 
   // GH Pages 只能按 folder/index.html 解析路径，必须开启

@@ -89,7 +89,7 @@ portfolio-website/
 git init
 git add .
 git commit -m "My awesome portfolio"
-git remote add origin https://github.com/你的用户名/portfolio.git
+git remote add origin https://github.com/你的用户名/你的仓库名.git
 git push -u origin main
 
 # 2. 在 GitHub 仓库 Settings → Pages 中启用 GitHub Actions 部署

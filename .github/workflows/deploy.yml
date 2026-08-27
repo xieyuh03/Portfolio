@@ -30,12 +30,21 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Configure GitHub Pages base path
+        shell: bash
+        run: |
+          repository_name="${GITHUB_REPOSITORY#*/}"
+          if [[ "$repository_name" == "${GITHUB_REPOSITORY_OWNER}.github.io" ]]; then
+            echo "NEXT_PUBLIC_BASE_PATH=" >> "$GITHUB_ENV"
+          else
+            echo "NEXT_PUBLIC_BASE_PATH=/$repository_name" >> "$GITHUB_ENV"
+          fi
+
       - name: Build with Next.js
         run: npm run build
         env:
-          # GitHub Pages serves the site under /Portfolio; inject the prefix here.
-          # Cloudflare Pages does NOT set this var, so its build uses the root path.
-          NEXT_PUBLIC_BASE_PATH: /Portfolio
+          NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ vars.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+          NEXT_PUBLIC_SANITY_DATASET: ${{ vars.NEXT_PUBLIC_SANITY_DATASET }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
