@@ -19,18 +19,23 @@ export default function Navigation() {
     { name: t('About', '关于'), path: '/about' },
   ];
 
-  const lightBgPages = ['/projects/bank-reconciliation', '/projects/vendor-invoice-center'];
+  const lightBgPages = [
+    '/projects/bank-reconciliation',
+    '/projects/vendor-invoice-center',
+    '/projects/connector-health-center',
+    '/projects/unified-connector-experience',
+  ];
   const isLightBg = lightBgPages.some(p => pathname.startsWith(p));
 
-  const textBase   = isLightBg ? 'text-gray-400 hover:text-gray-900' : 'text-white/70 hover:text-white';
+  const textBase   = isLightBg ? 'text-gray-500 hover:text-gray-900' : 'text-white/70 hover:text-white';
   const textActive = isLightBg ? 'text-gray-900' : 'text-white';
   const iconColor  = isLightBg ? 'text-gray-700' : 'text-white';
   const underline  = isLightBg ? 'bg-gray-800'   : 'bg-white';
 
   const navContent = (
-    <ul className="flex items-center gap-16">
+    <ul className="flex items-center gap-6 sm:gap-10 md:gap-16">
       {navItems.map((item) => {
-        const isActive = pathname === item.path;
+        const isActive = pathname === item.path || (item.path === '/projects' && pathname.startsWith('/projects/'));
         const isHovered = hoveredPath === item.path;
 
         return (
@@ -60,7 +65,7 @@ export default function Navigation() {
                 </div>
               ) : (
                 <div className="relative py-1">
-                  <span className={`text-sm font-light tracking-wide transition-all duration-300 ${
+                  <span className={`whitespace-nowrap text-xs font-light tracking-wide transition-all duration-300 sm:text-sm ${
                     isActive ? textActive : textBase
                   }`}>
                     {item.name}
@@ -88,14 +93,14 @@ export default function Navigation() {
   );
 
   return (
-    <div className="fixed top-8 left-0 right-0 z-50 flex justify-center px-6">
+    <div className="fixed left-0 right-0 top-20 z-50 flex justify-center px-3 sm:top-8 sm:px-6">
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ y: -20 }}
+        animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
         {isLightBg ? (
-          <nav className="backdrop-blur-xl rounded-full border border-gray-200/60 bg-white/70 shadow-lg px-16 py-4">
+          <nav className="rounded-full border border-gray-200/60 bg-white/70 px-5 py-3 shadow-lg backdrop-blur-xl sm:px-10 sm:py-4 md:px-16">
             {navContent}
           </nav>
         ) : (
@@ -112,7 +117,7 @@ export default function Navigation() {
             redOffset={0}
             greenOffset={10}
             blueOffset={20}
-            style={{ padding: '1rem 4rem' }}
+            className="px-5 py-3 sm:px-10 sm:py-4 md:px-16"
           >
             {navContent}
           </GlassSurface>

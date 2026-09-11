@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useState, type ReactNode } from 'react';
 import Navigation from '@/components/Navigation';
+import { ReadingProgress } from '@/components/case-study/PresentationCaseStudy';
 import { useLanguage, type Lang } from '@/lib/LanguageContext';
 
 type LocalizedText = { en: string; zh: string };
@@ -267,8 +268,8 @@ function Reveal({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: reduceMotion ? 0 : 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={reduceMotion ? false : { y: 22 }}
+      whileInView={{ y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
       transition={{ duration: reduceMotion ? 0 : 0.6, delay: reduceMotion ? 0 : delay, ease: [0.22, 1, 0.36, 1] }}
       className={className}
@@ -282,21 +283,24 @@ function SectionIntro({
   eyebrow,
   title,
   body,
+  dark = false,
 }: {
   eyebrow: string;
   title: string;
   body?: string;
+  dark?: boolean;
 }) {
   return (
-    <Reveal className="max-w-3xl">
-      <div className="mb-5 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">
-        <span className="h-px w-8 bg-cyan-300/70" />
-        {eyebrow}
+    <Reveal className="max-w-4xl">
+      <div className={`mb-6 flex items-center gap-3 font-mono text-[11px] font-semibold uppercase tracking-[0.22em] ${dark ? 'text-white/45' : 'text-[#8e949e]'}`}>
+        <span className="text-[#1267d6]">{eyebrow.split(' · ')[0]}</span>
+        <span className={`h-px w-9 ${dark ? 'bg-white/20' : 'bg-[#c9cdd4]'}`} />
+        <span>{eyebrow.split(' · ').slice(1).join(' · ')}</span>
       </div>
-      <h2 className="text-3xl font-semibold leading-tight tracking-[-0.03em] text-white md:text-5xl">
+      <h2 className={`text-[clamp(2.4rem,5vw,4.15rem)] font-[720] leading-[0.98] tracking-[-0.052em] ${dark ? 'text-white' : 'text-[#111318]'}`}>
         {title}
       </h2>
-      {body && <p className="mt-6 text-base leading-8 text-slate-300 md:text-lg">{body}</p>}
+      {body && <p className={`mt-7 max-w-3xl text-base leading-8 md:text-[19px] ${dark ? 'text-white/58' : 'text-[#626872]'}`}>{body}</p>}
     </Reveal>
   );
 }
@@ -492,9 +496,14 @@ function ExperienceDemo({ lang }: { lang: Lang }) {
             <p className="mt-2 text-sm leading-6 text-slate-200">{selected.guidance[lang]}</p>
           </div>
 
-          <div className="mt-6 inline-flex items-center gap-2 rounded-lg bg-cyan-300 px-4 py-2.5 text-sm font-semibold text-[#06111d]">
-            {lang === 'zh' ? '打开连接设置' : 'Open connection settings'}
-            <span aria-hidden="true">→</span>
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-5">
+            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+              {lang === 'zh' ? '交接目标' : 'Handoff target'}
+            </span>
+            <span className="inline-flex items-center gap-2 text-sm font-semibold text-cyan-200">
+              {lang === 'zh' ? '连接设置' : 'Connection settings'}
+              <span aria-hidden="true">→</span>
+            </span>
           </div>
         </div>
       </div>
@@ -507,21 +516,22 @@ export default function ConnectorHealthCenterPage() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#050b12] text-white">
+    <div className="min-h-screen overflow-x-hidden bg-[#f7f8fa] text-[#111318]">
+      <ReadingProgress label={t('Case study reading progress', '案例阅读进度')} />
       <Navigation />
 
       <main>
-        <section className="relative isolate overflow-hidden px-6 pb-24 pt-32 md:pb-32 md:pt-40">
+        <section className="relative isolate overflow-hidden px-6 pb-24 pt-36 md:pb-32 md:pt-44">
           <div className="pointer-events-none absolute inset-0 -z-10">
-            <div className="absolute left-[4%] top-20 h-[420px] w-[420px] rounded-full bg-cyan-400/10 blur-[120px]" />
-            <div className="absolute right-[-8%] top-[28%] h-[520px] w-[520px] rounded-full bg-blue-500/10 blur-[140px]" />
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/25 to-transparent" />
+            <div className="absolute left-[-8%] top-20 h-[420px] w-[420px] rounded-full bg-[#1267d6]/[0.055] blur-[120px]" />
+            <div className="absolute right-[-8%] top-[25%] h-[520px] w-[520px] rounded-full bg-[#1267d6]/[0.07] blur-[150px]" />
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#1267d6]/20 to-transparent" />
           </div>
 
-          <div className="mx-auto max-w-7xl">
+          <div className="mx-auto max-w-[1160px]">
             <Link
               href="/projects"
-              className="mb-12 inline-flex items-center gap-2 text-sm text-slate-400 transition hover:text-white"
+              className="mb-14 inline-flex items-center gap-2 text-sm font-medium text-[#626872] transition hover:text-[#1267d6]"
             >
               <span aria-hidden="true">←</span>
               {t('All projects', '全部项目')}
@@ -533,33 +543,37 @@ export default function ConnectorHealthCenterPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: reduceMotion ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }}
               >
-                <div className="mb-6 flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300">
+                <div className="mb-7 flex flex-wrap items-center gap-3 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-[#1267d6]">
                   <span>{t('Product design', '产品设计')}</span>
-                  <span className="h-1 w-1 rounded-full bg-cyan-300/50" />
+                  <span className="h-1 w-1 rounded-full bg-[#1267d6]/40" />
                   <span>{t('Enterprise operations', '企业运维')}</span>
-                  <span className="h-1 w-1 rounded-full bg-cyan-300/50" />
+                  <span className="h-1 w-1 rounded-full bg-[#1267d6]/40" />
                   <span>2026</span>
                 </div>
-                <h1 className="max-w-2xl text-5xl font-semibold leading-[0.98] tracking-[-0.055em] text-white md:text-7xl lg:text-[82px]">
-                  {t('From alerts to action.', '从收到告警，到真正解决问题。')}
+                <h1 className={`max-w-2xl font-[720] leading-[0.94] tracking-[-0.065em] text-[#111318] ${lang === 'zh' ? 'text-[clamp(2.35rem,6vw,5.2rem)]' : 'text-[clamp(3.4rem,7.2vw,5.875rem)]'}`}>
+                  {lang === 'zh' ? (
+                    <>从收到告警，<br />到真正解决问题。</>
+                  ) : (
+                    <>From alerts<br />to action.</>
+                  )}
                 </h1>
-                <p className="mt-8 max-w-xl text-lg leading-8 text-slate-300 md:text-xl">
+                <p className="mt-8 max-w-xl text-lg leading-8 text-[#626872] md:text-[21px]">
                   {t(
                     'I helped evolve connector notifications into a proactive health-management loop where administrators can monitor status, understand failures, and move directly toward resolution.',
                     '我推动连接器通知从单向提醒演进为主动健康管理闭环，让管理员能够监控状态、理解故障，并直接进入修复路径。'
                   )}
                 </p>
 
-                <div className="mt-10 grid max-w-xl grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10">
+                <div className="mt-10 grid max-w-xl grid-cols-2 gap-px overflow-hidden rounded-[24px] border border-[#dfe2e7] bg-[#dfe2e7]">
                   {[
                     { label: t('Role', '角色'), value: t('Product designer', '产品设计师') },
                     { label: t('Scope', '范围'), value: t('Definition to validation', '从产品定义到验证') },
                     { label: t('Focus', '重点'), value: t('Trust + actionability', '可信与可行动') },
                     { label: t('Status', '状态'), value: t('Validated direction', '已验证方向') },
                   ].map((item) => (
-                    <div key={item.label} className="bg-[#07101a] p-4 md:p-5">
-                      <div className="text-[10px] uppercase tracking-[0.16em] text-slate-600">{item.label}</div>
-                      <div className="mt-2 text-sm font-medium text-slate-200">{item.value}</div>
+                    <div key={item.label} className="bg-white p-4 md:p-5">
+                      <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#8e949e]">{item.label}</div>
+                      <div className="mt-2 text-sm font-semibold text-[#111318]">{item.value}</div>
                     </div>
                   ))}
                 </div>
@@ -574,8 +588,8 @@ export default function ConnectorHealthCenterPage() {
               </motion.div>
             </div>
 
-            <div className="mt-10 flex items-center gap-3 text-xs text-slate-600">
-              <span className="flex h-5 w-5 items-center justify-center rounded-full border border-white/10" aria-hidden="true">i</span>
+            <div className="mt-10 flex items-center gap-3 font-mono text-[11px] text-[#8e949e]">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full border border-[#c9cdd4]" aria-hidden="true">i</span>
               {t(
                 'Public case study. Interfaces, names, and data are intentionally abstracted.',
                 '公开案例版本。界面、名称与数据均经过抽象化处理。'
@@ -584,8 +598,8 @@ export default function ConnectorHealthCenterPage() {
           </div>
         </section>
 
-        <section className="border-y border-white/10 bg-white/[0.025] px-6 py-24 md:py-32">
-          <div className="mx-auto max-w-7xl">
+        <section className="border-t border-[#dfe2e7] bg-white px-6 py-24 md:py-32 lg:py-36">
+          <div className="mx-auto max-w-[1160px]">
             <SectionIntro
               eyebrow={t('01 · Operational reality', '01 · 运营现实')}
               title={t(
@@ -600,18 +614,18 @@ export default function ConnectorHealthCenterPage() {
 
             <div className="mt-14 grid gap-5 md:grid-cols-3">
               {operationalGaps.map((gap, index) => (
-                <Reveal key={gap.number} delay={index * 0.08} className="rounded-2xl border border-white/10 bg-[#07111c] p-6 md:p-7">
-                  <div className="text-xs font-semibold text-cyan-300/70">{gap.number}</div>
-                  <h3 className="mt-8 text-xl font-semibold text-white">{gap.title[lang]}</h3>
-                  <p className="mt-4 text-base leading-7 text-slate-400">{gap.body[lang]}</p>
+                <Reveal key={gap.number} delay={index * 0.08} className="rounded-[24px] border border-[#dfe2e7] bg-[#f7f8fa] p-6 md:p-7">
+                  <div className="font-mono text-xs font-semibold text-[#1267d6]">{gap.number}</div>
+                  <h3 className="mt-8 text-xl font-semibold text-[#111318]">{gap.title[lang]}</h3>
+                  <p className="mt-4 text-base leading-7 text-[#626872]">{gap.body[lang]}</p>
                 </Reveal>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="px-6 py-24 md:py-32">
-          <div className="mx-auto max-w-7xl">
+        <section className="border-t border-[#dfe2e7] bg-[#f7f8fa] px-6 py-24 md:py-32 lg:py-36">
+          <div className="mx-auto max-w-[1160px]">
             <SectionIntro
               eyebrow={t('02 · Product evolution', '02 · 产品演进')}
               title={t('The scope changed when the user task became clearer.', '当用户任务变清晰，产品范围也随之改变。')}
@@ -622,23 +636,24 @@ export default function ConnectorHealthCenterPage() {
             />
 
             <div className="relative mt-16 grid gap-6 lg:grid-cols-3">
-              <div className="absolute left-[16.7%] right-[16.7%] top-7 hidden h-px bg-gradient-to-r from-cyan-300/15 via-cyan-300/60 to-cyan-300/15 lg:block" />
+              <div className="absolute left-[16.7%] right-[16.7%] top-7 hidden h-px bg-[#c9cdd4] lg:block" />
               {evolution.map((stage, index) => (
                 <Reveal key={stage.step} delay={index * 0.1} className="relative">
-                  <div className="mb-7 flex h-14 w-14 items-center justify-center rounded-full border border-cyan-300/35 bg-[#07141f] text-sm font-semibold text-cyan-200 shadow-[0_0_30px_rgba(34,211,238,0.12)]">
+                  <div className="mb-7 flex h-14 w-14 items-center justify-center rounded-full border border-[#c9cdd4] bg-white font-mono text-sm font-semibold text-[#1267d6] shadow-[0_10px_30px_rgba(17,19,24,0.06)]">
                     {stage.step}
                   </div>
-                  <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-6">
-                    <span className="text-xs font-semibold uppercase tracking-[0.15em] text-cyan-300">{stage.label[lang]}</span>
-                    <h3 className="mt-3 text-2xl font-semibold text-white">{stage.title[lang]}</h3>
-                    <p className="mt-4 text-base leading-7 text-slate-400">{stage.body[lang]}</p>
+                  <div className={`rounded-[24px] border p-6 ${index === 2 ? 'border-[#171a21] bg-[#171a21] text-white shadow-[0_20px_50px_rgba(17,19,24,0.14)]' : 'border-[#dfe2e7] bg-white'}`}>
+                    <span className={`font-mono text-[11px] font-semibold uppercase tracking-[0.15em] ${index === 2 ? 'text-[#70a9f5]' : 'text-[#1267d6]'}`}>{stage.label[lang]}</span>
+                    <h3 className={`mt-3 text-2xl font-semibold ${index === 2 ? 'text-white' : 'text-[#111318]'}`}>{stage.title[lang]}</h3>
+                    <p className={`mt-4 text-base leading-7 ${index === 2 ? 'text-white/60' : 'text-[#626872]'}`}>{stage.body[lang]}</p>
                   </div>
                 </Reveal>
               ))}
             </div>
 
-            <Reveal className="mt-12 rounded-2xl border border-cyan-300/15 bg-cyan-300/[0.04] p-7 md:p-9">
-              <p className="max-w-4xl text-xl font-medium leading-9 text-slate-100 md:text-2xl">
+            <Reveal className="mt-12 rounded-[28px] border border-[#2a2e37] bg-[#171a21] p-7 shadow-[0_24px_70px_rgba(17,19,24,0.16)] md:p-10">
+              <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-[#70a9f5]">{t('The shift', '关键转折')}</div>
+              <p className="mt-6 max-w-4xl text-2xl font-medium leading-[1.2] tracking-[-0.03em] text-white md:text-3xl">
                 {t(
                   'The problem was not “we need more notifications.” It was “administrators need a continuous path from risk to resolution.”',
                   '真正的问题不是“我们需要更多通知”，而是“管理员需要一条从发现风险到完成修复的连续路径”。'
@@ -648,33 +663,34 @@ export default function ConnectorHealthCenterPage() {
           </div>
         </section>
 
-        <section className="border-y border-white/10 bg-[#07101a] px-6 py-24 md:py-32">
-          <div className="mx-auto max-w-7xl">
+        <section className="border-t border-black/10 bg-[#171a21] px-6 py-24 text-white md:py-32 lg:py-36">
+          <div className="mx-auto max-w-[1160px]">
             <SectionIntro
               eyebrow={t('03 · Evidence', '03 · 证据')}
               title={t('The direction came from converging evidence—not a dashboard trend.', '方向来自多层证据，而不是对仪表盘形式的偏好。')}
+              dark
             />
 
-            <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 lg:grid-cols-3">
+            <div className="mt-14 grid gap-px overflow-hidden rounded-[24px] border border-white/12 bg-white/12 lg:grid-cols-3">
               {evidence.map((item, index) => (
-                <Reveal key={item.label.en} delay={index * 0.08} className="bg-[#08131f] p-7 md:p-8">
-                  <span className="text-xs font-semibold uppercase tracking-[0.15em] text-cyan-300">{item.label[lang]}</span>
+                <Reveal key={item.label.en} delay={index * 0.08} className="bg-[#171a21] p-7 md:p-8">
+                  <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70a9f5]">{item.label[lang]}</span>
                   <h3 className="mt-5 text-xl font-semibold leading-7 text-white">{item.title[lang]}</h3>
-                  <p className="mt-4 text-base leading-7 text-slate-400">{item.body[lang]}</p>
+                  <p className="mt-4 text-base leading-7 text-white/58">{item.body[lang]}</p>
                 </Reveal>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="relative overflow-hidden px-6 py-24 md:py-36">
-          <div className="pointer-events-none absolute left-1/2 top-1/2 h-[440px] w-[760px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-400/[0.055] blur-[130px]" />
+        <section className="relative overflow-hidden border-t border-white/10 bg-[#171a21] px-6 pb-28 pt-10 text-white md:pb-36">
+          <div className="pointer-events-none absolute left-1/2 top-1/2 h-[440px] w-[760px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#1267d6]/10 blur-[130px]" />
           <div className="relative mx-auto max-w-5xl text-center">
             <Reveal>
-              <div className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300">
+              <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-[#70a9f5]">
                 {t('The reframed question', '重新定义后的设计问题')}
               </div>
-              <h2 className="mt-8 text-3xl font-semibold leading-tight tracking-[-0.035em] text-white md:text-5xl lg:text-6xl">
+              <h2 className="mt-8 text-[clamp(2.5rem,5vw,4.15rem)] font-[720] leading-[1.02] tracking-[-0.052em] text-white">
                 {t(
                   'How might we help administrators detect risk early, understand why it happened, and move into resolution without rebuilding context?',
                   '我们如何帮助管理员更早发现风险、理解问题为何发生，并在无需重建上下文的情况下进入修复？'
@@ -684,34 +700,34 @@ export default function ConnectorHealthCenterPage() {
 
             <div className="mt-16 grid gap-4 text-left sm:grid-cols-2 lg:grid-cols-4">
               {loopSteps.map((step, index) => (
-                <Reveal key={step.number} delay={index * 0.08} className="group relative rounded-2xl border border-white/10 bg-white/[0.035] p-5">
+                <Reveal key={step.number} delay={index * 0.08} className="group relative rounded-[24px] border border-white/12 bg-white/[0.055] p-5">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-cyan-300/70">{step.number}</span>
-                    {index < loopSteps.length - 1 && <span className="text-cyan-300/50" aria-hidden="true">→</span>}
+                    <span className="font-mono text-xs text-[#70a9f5]">{step.number}</span>
+                    {index < loopSteps.length - 1 && <span className="text-[#70a9f5]" aria-hidden="true">→</span>}
                   </div>
                   <h3 className="mt-7 text-xl font-semibold text-white">{step.title[lang]}</h3>
-                  <p className="mt-3 text-sm leading-6 text-slate-400">{step.body[lang]}</p>
+                  <p className="mt-3 text-sm leading-6 text-white/55">{step.body[lang]}</p>
                 </Reveal>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="border-y border-white/10 bg-white/[0.025] px-6 py-24 md:py-32">
-          <div className="mx-auto max-w-7xl">
+        <section className="border-t border-[#dfe2e7] bg-white px-6 py-24 md:py-32 lg:py-36">
+          <div className="mx-auto max-w-[1160px]">
             <SectionIntro
               eyebrow={t('04 · Design principles', '04 · 设计原则')}
               title={t('The dashboard was not the product. Trust was.', '仪表盘不是产品本身，信任才是。')}
             />
             <div className="mt-14 grid gap-5 md:grid-cols-2">
               {principles.map((principle, index) => (
-                <Reveal key={principle.title.en} delay={(index % 2) * 0.08} className="flex gap-5 rounded-2xl border border-white/10 bg-[#07111c] p-6 md:p-7">
-                  <span className="flex h-9 w-9 flex-none items-center justify-center rounded-full border border-cyan-300/25 bg-cyan-300/[0.06] text-xs font-semibold text-cyan-200">
+                <Reveal key={principle.title.en} delay={(index % 2) * 0.08} className="flex gap-5 rounded-[24px] border border-[#dfe2e7] bg-[#f7f8fa] p-6 md:p-7">
+                  <span className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-[#c9cdd4] bg-white font-mono text-xs font-semibold text-[#1267d6]">
                     {String(index + 1).padStart(2, '0')}
                   </span>
                   <div>
-                    <h3 className="text-lg font-semibold text-white">{principle.title[lang]}</h3>
-                    <p className="mt-2 text-base leading-7 text-slate-400">{principle.body[lang]}</p>
+                    <h3 className="text-lg font-semibold text-[#111318]">{principle.title[lang]}</h3>
+                    <p className="mt-2 text-base leading-7 text-[#626872]">{principle.body[lang]}</p>
                   </div>
                 </Reveal>
               ))}
@@ -719,8 +735,8 @@ export default function ConnectorHealthCenterPage() {
           </div>
         </section>
 
-        <section className="px-6 py-24 md:py-32">
-          <div className="mx-auto max-w-7xl">
+        <section className="border-t border-[#dfe2e7] bg-[#f7f8fa] px-6 py-24 md:py-32 lg:py-36">
+          <div className="mx-auto max-w-[1160px]">
             <SectionIntro
               eyebrow={t('05 · Key decisions', '05 · 关键决策')}
               title={t('Four decisions changed the shape—and the priority—of the product.', '四项决策改变了产品的形态，也改变了优先级。')}
@@ -732,21 +748,21 @@ export default function ConnectorHealthCenterPage() {
 
             <div className="mt-16 space-y-6">
               {decisions.map((decision, index) => (
-                <Reveal key={decision.number} className="grid overflow-hidden rounded-[24px] border border-white/10 bg-[#07111c] lg:grid-cols-[0.7fr_1.3fr]">
-                  <div className="border-b border-white/10 p-7 md:p-9 lg:border-b-0 lg:border-r">
-                    <div className="text-xs font-semibold text-cyan-300/70">{decision.number}</div>
-                    <h3 className="mt-8 text-2xl font-semibold leading-tight text-white md:text-3xl">{decision.title[lang]}</h3>
-                    <p className="mt-5 text-base leading-7 text-slate-400">{decision.body[lang]}</p>
+                <Reveal key={decision.number} className="grid overflow-hidden rounded-[24px] border border-[#dfe2e7] bg-white shadow-[0_16px_40px_rgba(17,19,24,0.04)] lg:grid-cols-[0.72fr_1.28fr]">
+                  <div className="border-b border-[#dfe2e7] p-7 md:p-9 lg:border-b-0 lg:border-r">
+                    <div className="font-mono text-xs font-semibold text-[#1267d6]">{decision.number}</div>
+                    <h3 className="mt-8 text-2xl font-[680] leading-tight tracking-[-0.03em] text-[#111318] md:text-3xl">{decision.title[lang]}</h3>
+                    <p className="mt-5 text-base leading-7 text-[#626872]">{decision.body[lang]}</p>
                   </div>
-                  <div className="grid gap-px bg-white/10 sm:grid-cols-2">
-                    <div className="bg-[#08131f] p-7 md:p-9">
-                      <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">{t('Earlier direction', '原方向')}</span>
-                      <p className="mt-5 text-lg font-medium leading-7 text-slate-400">{decision.before[lang]}</p>
+                  <div className="grid gap-px bg-[#dfe2e7] sm:grid-cols-2">
+                    <div className="bg-[#f7f8fa] p-7 md:p-9">
+                      <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8e949e]">{t('Earlier direction', '原方向')}</span>
+                      <p className="mt-5 text-lg font-medium leading-7 text-[#626872]">{decision.before[lang]}</p>
                     </div>
-                    <div className="relative bg-cyan-300/[0.045] p-7 md:p-9">
-                      <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-cyan-300">{t('Design decision', '设计决策')}</span>
-                      <p className="mt-5 text-lg font-medium leading-7 text-white">{decision.after[lang]}</p>
-                      <span className="absolute bottom-6 right-7 text-cyan-300/30" aria-hidden="true">
+                    <div className="relative bg-[#edf4ff] p-7 md:p-9">
+                      <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1267d6]">{t('Design decision', '设计决策')}</span>
+                      <p className="mt-5 text-lg font-semibold leading-7 text-[#111318]">{decision.after[lang]}</p>
+                      <span className="absolute bottom-6 right-7 font-mono text-[#1267d6]/25" aria-hidden="true">
                         {String(index + 1).padStart(2, '0')}
                       </span>
                     </div>
@@ -757,8 +773,8 @@ export default function ConnectorHealthCenterPage() {
           </div>
         </section>
 
-        <section className="border-y border-white/10 bg-[#07101a] px-6 py-24 md:py-32">
-          <div className="mx-auto max-w-7xl">
+        <section className="border-t border-[#dfe2e7] bg-[#eef1f5] px-6 py-24 md:py-32 lg:py-36">
+          <div className="mx-auto max-w-[1160px]">
             <SectionIntro
               eyebrow={t('06 · Experience model', '06 · 体验模型')}
               title={t('Overview for posture. Detail for diagnosis. Management for action.', '总览用于判断态势，详情用于诊断，管理界面用于行动。')}
@@ -773,8 +789,8 @@ export default function ConnectorHealthCenterPage() {
           </div>
         </section>
 
-        <section className="px-6 py-24 md:py-32">
-          <div className="mx-auto max-w-7xl">
+        <section className="border-t border-[#dfe2e7] bg-white px-6 py-24 md:py-32 lg:py-36">
+          <div className="mx-auto max-w-[1160px]">
             <SectionIntro
               eyebrow={t('07 · Customer validation', '07 · 客户验证')}
               title={t('Validation did more than confirm the design. It changed what came first.', '验证不只是确认方案，它改变了什么应该优先。')}
@@ -782,16 +798,16 @@ export default function ConnectorHealthCenterPage() {
 
             <div className="mt-14 grid gap-5 lg:grid-cols-2">
               {validationInsights.map((insight, index) => (
-                <Reveal key={insight.heard.en} delay={(index % 2) * 0.08} className="rounded-2xl border border-white/10 bg-white/[0.025] p-6 md:p-8">
+                <Reveal key={insight.heard.en} delay={(index % 2) * 0.08} className="rounded-[24px] border border-[#dfe2e7] bg-[#f7f8fa] p-6 md:p-8">
                   <div className="grid gap-6 sm:grid-cols-[0.88fr_1.12fr]">
                     <div>
-                      <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">{t('What we heard', '我们听到的')}</span>
-                      <p className="mt-3 text-base font-medium leading-7 text-slate-200">{insight.heard[lang]}</p>
+                      <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8e949e]">{t('What we heard', '我们听到的')}</span>
+                      <p className="mt-3 text-base font-medium leading-7 text-[#111318]">{insight.heard[lang]}</p>
                     </div>
-                    <div className="border-t border-white/10 pt-5 sm:border-l sm:border-t-0 sm:pl-6 sm:pt-0">
-                      <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-cyan-300">{t('What it changed', '它改变了什么')}</span>
-                      <p className="mt-3 text-sm font-medium leading-6 text-white">{insight.learned[lang]}</p>
-                      <p className="mt-3 text-sm leading-6 text-slate-400">{insight.response[lang]}</p>
+                    <div className="border-t border-[#dfe2e7] pt-5 sm:border-l sm:border-t-0 sm:pl-6 sm:pt-0">
+                      <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1267d6]">{t('What it changed', '它改变了什么')}</span>
+                      <p className="mt-3 text-sm font-semibold leading-6 text-[#111318]">{insight.learned[lang]}</p>
+                      <p className="mt-3 text-sm leading-6 text-[#626872]">{insight.response[lang]}</p>
                     </div>
                   </div>
                 </Reveal>
@@ -800,8 +816,8 @@ export default function ConnectorHealthCenterPage() {
           </div>
         </section>
 
-        <section className="border-y border-white/10 bg-white/[0.025] px-6 py-24 md:py-32">
-          <div className="mx-auto max-w-7xl">
+        <section className="border-t border-[#dfe2e7] bg-[#eef1f5] px-6 py-24 md:py-32 lg:py-36">
+          <div className="mx-auto max-w-[1160px]">
             <SectionIntro
               eyebrow={t('08 · Current state', '08 · 当前状态')}
               title={t('A credible case study separates foundation, validated direction, and open work.', '可信的案例需要区分基础能力、已验证方向和开放问题。')}
@@ -811,8 +827,8 @@ export default function ConnectorHealthCenterPage() {
               {[
                 {
                   label: t('Foundation established', '已建立基础'),
-                  tone: 'border-emerald-300/20 bg-emerald-300/[0.045]',
-                  dot: 'bg-emerald-300',
+                  tone: 'border-[#b9dfce] bg-[#f2fbf6]',
+                  dot: 'bg-[#167a52]',
                   items: [
                     t('Proactive alert path for priority events', '优先级事件的主动告警路径'),
                     t('Subscription and notification foundations', '订阅与通知基础能力'),
@@ -821,8 +837,8 @@ export default function ConnectorHealthCenterPage() {
                 },
                 {
                   label: t('Validated direction', '已验证方向'),
-                  tone: 'border-cyan-300/20 bg-cyan-300/[0.045]',
-                  dot: 'bg-cyan-300',
+                  tone: 'border-[#b9d1f3] bg-[#edf4ff]',
+                  dot: 'bg-[#1267d6]',
                   items: [
                     t('Overview-centered information architecture', '以 Overview 为中心的信息架构'),
                     t('Monitor → Alert → Diagnose → Fix framework', '监控 → 告警 → 诊断 → 修复框架'),
@@ -831,8 +847,8 @@ export default function ConnectorHealthCenterPage() {
                 },
                 {
                   label: t('Open questions', '开放问题'),
-                  tone: 'border-amber-300/20 bg-amber-300/[0.035]',
-                  dot: 'bg-amber-300',
+                  tone: 'border-[#e7d7a8] bg-[#fffaf0]',
+                  dot: 'bg-[#a76b00]',
                   items: [
                     t('Customer-facing metric semantics', '面向客户的指标语义'),
                     t('Telemetry accuracy and coverage', '遥测准确性与覆盖范围'),
@@ -840,15 +856,15 @@ export default function ConnectorHealthCenterPage() {
                   ],
                 },
               ].map((group, index) => (
-                <Reveal key={group.label} delay={index * 0.08} className={`rounded-2xl border p-6 md:p-7 ${group.tone}`}>
+                <Reveal key={group.label} delay={index * 0.08} className={`rounded-[24px] border p-6 md:p-7 ${group.tone}`}>
                   <div className="flex items-center gap-3">
                     <span className={`h-2.5 w-2.5 rounded-full ${group.dot}`} />
-                    <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-white">{group.label}</h3>
+                    <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-[#111318]">{group.label}</h3>
                   </div>
                   <ul className="mt-7 space-y-4">
                     {group.items.map((item) => (
-                      <li key={item} className="flex gap-3 text-sm leading-6 text-slate-300">
-                        <span className="mt-2 h-1 w-1 flex-none rounded-full bg-white/40" />
+                      <li key={item} className="flex gap-3 text-sm leading-6 text-[#626872]">
+                        <span className="mt-2 h-1 w-1 flex-none rounded-full bg-[#626872]/50" />
                         {item}
                       </li>
                     ))}
@@ -859,17 +875,17 @@ export default function ConnectorHealthCenterPage() {
           </div>
         </section>
 
-        <section className="relative overflow-hidden px-6 py-28 md:py-40">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.08),transparent_52%)]" />
-          <Reveal className="relative mx-auto max-w-5xl text-center">
-            <div className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300">{t('Reflection', '反思')}</div>
-            <blockquote className="mt-8 text-3xl font-semibold leading-tight tracking-[-0.035em] text-white md:text-5xl">
+        <section className="relative overflow-hidden border-t border-black/10 bg-[#171a21] px-6 py-28 text-white md:py-40">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(18,103,214,0.16),transparent_52%)]" />
+          <Reveal className="relative mx-auto max-w-[1000px] text-center">
+            <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-[#70a9f5]">{t('09 · Reflection', '09 · 反思')}</div>
+            <blockquote className="mt-8 text-[clamp(2.25rem,5vw,4.3rem)] font-[680] leading-[1.03] tracking-[-0.052em] text-white">
               {t(
                 'The core of an enterprise health experience is not the dashboard. It is whether administrators trust the signal, understand the impact, and know what to do next.',
                 '企业健康体验的核心不是仪表盘，而是管理员是否相信信号、理解影响，并知道下一步该做什么。'
               )}
             </blockquote>
-            <p className="mx-auto mt-8 max-w-3xl text-base leading-8 text-slate-400 md:text-lg">
+            <p className="mx-auto mt-8 max-w-3xl text-base leading-8 text-white/58 md:text-lg">
               {t(
                 'Telemetry semantics, historical context, and the remediation handoff are not implementation details around the experience—they are the experience.',
                 '遥测语义、历史上下文和修复交接并不是体验外围的实现细节，它们共同构成了体验本身。'
@@ -878,15 +894,15 @@ export default function ConnectorHealthCenterPage() {
           </Reveal>
         </section>
 
-        <footer className="border-t border-white/10 px-6 py-10">
-          <div className="mx-auto flex max-w-7xl flex-col justify-between gap-5 sm:flex-row sm:items-center">
-            <Link href="/projects" className="inline-flex items-center gap-2 text-sm text-slate-400 transition hover:text-white">
+        <footer className="border-t border-white/10 bg-[#171a21] px-6 py-10 text-white">
+          <div className="mx-auto flex max-w-[1160px] flex-col justify-between gap-5 sm:flex-row sm:items-center">
+            <Link href="/projects" className="inline-flex items-center gap-2 text-sm text-white/55 transition hover:text-white">
               <span aria-hidden="true">←</span>
               {t('Back to all projects', '返回全部项目')}
             </Link>
             <Link
               href="/projects/unified-connector-experience"
-              className="inline-flex items-center gap-2 text-sm font-medium text-cyan-200 transition hover:text-cyan-100"
+              className="inline-flex items-center gap-2 text-sm font-medium text-[#70a9f5] transition hover:text-white"
             >
               {t('Next: Unified connector experience', '下一个：统一连接器体验')}
               <span aria-hidden="true">→</span>

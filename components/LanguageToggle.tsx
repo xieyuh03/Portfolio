@@ -4,7 +4,12 @@ import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/lib/LanguageContext';
 
 const HIDDEN_ON = ['/resume'];
-const LIGHT_BG_PATHS = ['/projects/bank-reconciliation', '/projects/vendor-invoice-center'];
+const LIGHT_BG_PATHS = [
+  '/projects/bank-reconciliation',
+  '/projects/vendor-invoice-center',
+  '/projects/connector-health-center',
+  '/projects/unified-connector-experience',
+];
 
 export default function LanguageToggle() {
   const { lang, setLang } = useLanguage();
@@ -21,7 +26,7 @@ export default function LanguageToggle() {
   const inactiveCls = isLightBg ? 'text-gray-500 hover:text-black' : 'text-gray-400 hover:text-white';
 
   return (
-    <div className="fixed top-6 right-6 z-[60] print:hidden">
+    <div className="fixed right-4 top-4 z-[60] print:hidden sm:right-6 sm:top-6">
       <div className={wrapper}>
         <button
           onClick={() => setLang('en')}

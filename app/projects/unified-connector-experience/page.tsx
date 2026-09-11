@@ -1,16 +1,19 @@
 'use client';
 
-import {
-  motion,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-} from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import Navigation from "@/components/Navigation";
-import FluidBackground from "@/components/FluidBackground";
+import {
+  Chapter,
+  EditorialCard,
+  MetaGrid,
+  NumberBadge,
+  ReadingProgress,
+  Reveal,
+  SectionHeading,
+  StatementBand,
+} from "@/components/case-study/PresentationCaseStudy";
 import { useLanguage } from "@/lib/LanguageContext";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
@@ -485,144 +488,172 @@ const statusGroups = [
   },
 ];
 
+
 function useLocalized() {
   const { lang, t } = useLanguage();
   return { lang, t, pick: (value: Localized) => value[lang] };
 }
 
-function Fade({
-  children,
-  className = "",
-  delay = 0,
-}: {
-  children: ReactNode;
-  className?: string;
-  delay?: number;
-}) {
-  const reduceMotion = useReducedMotion();
+function BackToProjects() {
+  const { t } = useLanguage();
   return (
-    <motion.div
-      initial={reduceMotion ? false : { opacity: 0, y: 28 }}
-      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.65, delay }}
-      className={className}
-    >
-      {children}
-    </motion.div>
+    <Reveal className="mb-12">
+      <Link
+        href="/projects"
+        className="inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#626872] transition-colors hover:text-[#1267d6] motion-reduce:transition-none"
+      >
+        <span aria-hidden="true">←</span>
+        {t("All Projects", "所有项目")}
+      </Link>
+    </Reveal>
   );
 }
 
-function SectionHeader({
-  index,
-  eyebrow,
-  title,
-  body,
-}: {
-  index: string;
-  eyebrow: Localized;
-  title: Localized;
-  body?: Localized;
-}) {
-  const { pick } = useLocalized();
-  return (
-    <div className="md:col-span-4 md:sticky md:top-32 self-start">
-      <span className="text-xs uppercase tracking-[0.24em] text-cyan-300/70 mb-3 block">
-        {index}
-      </span>
-      <p className="text-sm uppercase tracking-[0.2em] text-gray-500 mb-4">
-        {pick(eyebrow)}
-      </p>
-      <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight mb-5">
-        {pick(title)}
-      </h2>
-      <div className="h-px w-14 bg-gradient-to-r from-cyan-300/70 to-transparent" />
-      {body && (
-        <p className="mt-6 text-gray-400 leading-relaxed text-base">
-          {pick(body)}
-        </p>
-      )}
-    </div>
-  );
-}
-
-function Shell({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <div className="rounded-[1.75rem] border border-white/10 bg-slate-950/70 shadow-2xl shadow-cyan-950/20 overflow-hidden">
-      <div className="flex items-center justify-between px-5 py-3 border-b border-white/10 bg-white/[0.03]">
-        <div className="flex gap-2" aria-hidden="true">
-          <span className="h-2.5 w-2.5 rounded-full bg-red-300/70" />
-          <span className="h-2.5 w-2.5 rounded-full bg-amber-300/70" />
-          <span className="h-2.5 w-2.5 rounded-full bg-emerald-300/70" />
-        </div>
-        <p className="text-xs uppercase tracking-[0.2em] text-gray-500">
-          {title}
-        </p>
-      </div>
-      {children}
-    </div>
-  );
-}
-
-function CapabilityPill({ children }: { children: ReactNode }) {
-  return (
-    <span className="rounded-full border border-cyan-300/25 bg-cyan-300/10 px-3 py-1 text-xs text-cyan-100">
-      {children}
-    </span>
-  );
-}
-
-function StatusBadge({ state }: { state: CapabilityState }) {
+function StatusBadge({ state, dark = false }: { state: CapabilityState; dark?: boolean }) {
   const { lang } = useLanguage();
-  const className = {
-    Available: "border-blue-300/30 bg-blue-400/10 text-blue-100",
-    Enabled: "border-emerald-300/30 bg-emerald-400/10 text-emerald-100",
-    "Needs user sign-in": "border-amber-300/30 bg-amber-400/10 text-amber-100",
-    Preview: "border-violet-300/30 bg-violet-400/10 text-violet-100",
-  }[state];
   const label: Record<CapabilityState, Localized> = {
     Available: { en: "Available", zh: "可用" },
     Enabled: { en: "Enabled", zh: "已启用" },
     "Needs user sign-in": { en: "Needs user sign-in", zh: "需要用户登录" },
     Preview: { en: "Preview", zh: "预览" },
   };
+  const palette: Record<CapabilityState, string> = {
+    Available: dark
+      ? "border-[#70a9f5]/40 bg-[#1267d6]/20 text-[#d8e9ff]"
+      : "border-[#1267d6]/22 bg-[#edf4ff] text-[#1267d6]",
+    Enabled: dark
+      ? "border-emerald-300/30 bg-emerald-300/12 text-emerald-100"
+      : "border-emerald-600/18 bg-emerald-50 text-emerald-700",
+    "Needs user sign-in": dark
+      ? "border-amber-300/35 bg-amber-300/12 text-amber-100"
+      : "border-amber-600/20 bg-amber-50 text-amber-700",
+    Preview: dark
+      ? "border-violet-300/35 bg-violet-300/12 text-violet-100"
+      : "border-violet-600/18 bg-violet-50 text-violet-700",
+  };
+
   return (
-    <span
-      className={`rounded-full border px-2.5 py-1 text-[11px] font-medium ${className}`}
-    >
+    <span className={`inline-flex rounded-full border px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] ${palette[state]}`}>
       {label[state][lang]}
     </span>
   );
 }
 
-function ConnectorCard({
-  name,
-  dense = false,
-}: {
-  name: string;
-  dense?: boolean;
-}) {
+function CapabilityPill({ children, dark = false }: { children: ReactNode; dark?: boolean }) {
+  return (
+    <span
+      className={`rounded-full border px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] ${
+        dark
+          ? "border-white/14 bg-white/[0.06] text-white/72"
+          : "border-[#c9cdd4] bg-white text-[#626872]"
+      }`}
+    >
+      {children}
+    </span>
+  );
+}
+
+function SourceGlyph({ name, dark = false }: { name: string; dark?: boolean }) {
+  return (
+    <div
+      className={`grid h-11 w-11 shrink-0 place-items-center rounded-2xl border font-mono text-xs font-semibold ${
+        dark
+          ? "border-white/12 bg-white/[0.07] text-white"
+          : "border-[#dfe2e7] bg-[#f7f8fa] text-[#1267d6]"
+      }`}
+      aria-hidden="true"
+    >
+      {name.slice(0, 2).toUpperCase()}
+    </div>
+  );
+}
+
+function ConnectorCard({ name, dense = false, dark = false }: { name: string; dense?: boolean; dark?: boolean }) {
   const { t } = useLanguage();
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.045] p-4">
+    <div
+      className={`rounded-[20px] border p-4 ${
+        dark
+          ? "border-white/12 bg-white/[0.055]"
+          : "border-[#dfe2e7] bg-white shadow-[0_12px_30px_rgba(17,19,24,0.04)]"
+      }`}
+    >
       <div className="mb-4 flex items-center gap-3">
-        <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-cyan-300/30 to-blue-500/20 text-xs font-bold text-white">
-          {name.slice(0, 2).toUpperCase()}
-        </div>
+        <SourceGlyph name={name} dark={dark} />
         <div>
-          <h3 className="text-sm font-semibold text-white">{name}</h3>
-          <p className="text-xs text-gray-500">
-            {dense
-              ? t("Technical connector", "技术连接器")
-              : t("Data source", "数据源")}
+          <h3 className={`text-sm font-semibold ${dark ? "text-white" : "text-[#111318]"}`}>{name}</h3>
+          <p className={`text-xs ${dark ? "text-white/45" : "text-[#8e949e]"}`}>
+            {dense ? t("Technical connector", "技术连接器") : t("Data source", "数据源")}
           </p>
         </div>
       </div>
       <div className="flex flex-wrap gap-2">
-        <CapabilityPill>{t("Search", "检索")}</CapabilityPill>
-        {!dense && <CapabilityPill>{t("Sync", "同步")}</CapabilityPill>}
-        {!dense && <CapabilityPill>{t("Skill", "技能")}</CapabilityPill>}
+        <CapabilityPill dark={dark}>{t("Search", "检索")}</CapabilityPill>
+        {!dense && <CapabilityPill dark={dark}>{t("Sync", "同步")}</CapabilityPill>}
+        {!dense && <CapabilityPill dark={dark}>{t("Skill", "技能")}</CapabilityPill>}
       </div>
+    </div>
+  );
+}
+
+function CapabilityRows({ dark = false }: { dark?: boolean }) {
+  const { lang, t } = useLanguage();
+  const rows = [
+    {
+      title: capabilityLibrary.realtime.name,
+      value: capabilityLibrary.realtime.value,
+      state: "Enabled" as CapabilityState,
+      dependency: { en: "User account required", zh: "需要用户账户" },
+      action: { en: "Manage", zh: "管理" },
+    },
+    {
+      title: capabilityLibrary.index.name,
+      value: capabilityLibrary.index.value,
+      state: "Available" as CapabilityState,
+      dependency: { en: "Admin consent", zh: "管理员授权" },
+      action: { en: "Start setup", zh: "开始设置" },
+    },
+    {
+      title: capabilityLibrary.skill.name,
+      value: capabilityLibrary.skill.value,
+      state: "Preview" as CapabilityState,
+      dependency: { en: "Uses connected source", zh: "依赖已连接来源" },
+      action: { en: "Review scope", zh: "查看范围" },
+    },
+  ];
+
+  return (
+    <div className="space-y-3">
+      {rows.map((row) => (
+        <div
+          key={row.title.en}
+          className={`rounded-[18px] border p-4 ${
+            dark ? "border-white/12 bg-[#171a21]" : "border-[#dfe2e7] bg-[#f7f8fa]"
+          }`}
+        >
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h4 className={`font-semibold ${dark ? "text-white" : "text-[#111318]"}`}>{row.title[lang]}</h4>
+              <p className={`mt-1 text-sm leading-6 ${dark ? "text-white/56" : "text-[#626872]"}`}>{row.value[lang]}</p>
+            </div>
+            <StatusBadge state={row.state} dark={dark} />
+          </div>
+          <div className={`mt-4 grid gap-3 text-sm sm:grid-cols-2 ${dark ? "text-white/70" : "text-[#626872]"}`}>
+            <div className={`rounded-2xl border p-3 ${dark ? "border-white/10 bg-white/[0.045]" : "border-[#dfe2e7] bg-white"}`}>
+              <span className={`block font-mono text-[10px] uppercase tracking-[0.16em] ${dark ? "text-white/38" : "text-[#8e949e]"}`}>
+                {t("Dependency", "依赖")}
+              </span>
+              <span>{row.dependency[lang]}</span>
+            </div>
+            <div className={`rounded-2xl border p-3 ${dark ? "border-white/10 bg-white/[0.045]" : "border-[#dfe2e7] bg-white"}`}>
+              <span className={`block font-mono text-[10px] uppercase tracking-[0.16em] ${dark ? "text-white/38" : "text-[#8e949e]"}`}>
+                {t("Next action", "下一步操作")}
+              </span>
+              <span>{row.action[lang]}</span>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
@@ -630,195 +661,244 @@ function ConnectorCard({
 function HeroVisual({ thumbnailSrc }: { thumbnailSrc: string }) {
   const { t } = useLanguage();
   return (
-    <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-cyan-400/10 via-slate-900/80 to-blue-500/10 p-4 md:p-6">
-      <div
-        className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-cyan-300/20 blur-3xl"
-        aria-hidden="true"
-      />
-      <Image
-        src={thumbnailSrc}
-        alt={t(
-          "Abstract interface showing one data source entry with multiple capability rows",
-          "一个数据源入口承载多项能力的抽象界面",
-        )}
-        width={1600}
-        height={1100}
-        className="relative w-full rounded-[1.4rem] border border-white/10 bg-slate-950/60"
-        priority
-      />
-      <div className="relative mt-4 grid grid-cols-3 gap-3 text-center text-xs text-gray-300">
-        <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
-          {t("Discover", "发现")}
-        </div>
-        <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
-          {t("Compare", "比较")}
-        </div>
-        <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
-          {t("Manage", "管理")}
+    <Reveal delay={0.08}>
+      <div className="rounded-[28px] border border-[#dfe2e7] bg-white p-4 shadow-[0_30px_80px_rgba(17,19,24,0.10)] md:p-5">
+        <Image
+          src={thumbnailSrc}
+          alt={t(
+            "Editorial diagram showing fragmented connectors converging into one source object and modular capabilities",
+            "碎片连接器汇聚为一个数据源对象和模块化能力的编辑式示意图",
+          )}
+          width={1600}
+          height={1100}
+          className="w-full rounded-[22px] border border-[#dfe2e7] bg-[#f7f8fa]"
+          priority
+        />
+        <div className="mt-4 grid grid-cols-3 gap-2 text-center font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#626872] sm:gap-3">
+          <div className="rounded-2xl border border-[#dfe2e7] bg-[#f7f8fa] p-3">{t("Converge", "汇聚")}</div>
+          <div className="rounded-2xl border border-[#dfe2e7] bg-[#f7f8fa] p-3">{t("Object", "对象")}</div>
+          <div className="rounded-2xl border border-[#dfe2e7] bg-[#f7f8fa] p-3">{t("Modules", "模块")}</div>
         </div>
       </div>
-    </div>
+    </Reveal>
+  );
+}
+
+function ConvergenceModel() {
+  const { lang, t } = useLanguage();
+  return (
+    <Reveal>
+      <div className="rounded-[28px] border border-[#dfe2e7] bg-white p-5 shadow-[0_18px_46px_rgba(17,19,24,0.055)] md:p-7">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8e949e]">
+            {t("Convergence model", "汇聚模型")}
+          </p>
+          <p className="text-sm text-[#626872]">
+            {t("connector entries → source object → capability modules", "连接器入口 → 来源对象 → 能力模块")}
+          </p>
+        </div>
+        <div className="grid gap-5 lg:grid-cols-[0.9fr_90px_1fr_90px_1.15fr] lg:items-center">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+            {beforeEntries.slice(0, 4).map((entry) => (
+              <div key={entry.en} className="rounded-2xl border border-[#dfe2e7] bg-[#f7f8fa] p-4">
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#8e949e]">{t("Fragment", "碎片")}</p>
+                <p className="mt-2 font-semibold text-[#111318]">{entry[lang]}</p>
+              </div>
+            ))}
+          </div>
+          <div className="relative hidden h-px bg-[#c9cdd4] lg:block" aria-hidden="true">
+            <span className="absolute left-1/2 top-1/2 grid h-9 w-9 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-[#171a21] text-white">→</span>
+          </div>
+          <div className="rounded-[24px] border border-[#1267d6]/30 bg-[#edf4ff] p-5">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1267d6]">
+              {t("Stable object", "稳定对象")}
+            </p>
+            <div className="mt-5 flex items-center gap-4">
+              <SourceGlyph name={t("Customer Records", "客户记录")} />
+              <div>
+                <h3 className="text-2xl font-[720] tracking-[-0.035em] text-[#111318]">
+                  {t("Customer Records", "客户记录")}
+                </h3>
+                <p className="mt-1 text-sm text-[#626872]">{t("One source-level entry", "一个数据源级入口")}</p>
+              </div>
+            </div>
+            <div className="mt-6 flex flex-wrap gap-2">
+              <CapabilityPill>{t("Search", "检索")}</CapabilityPill>
+              <CapabilityPill>{t("Sync", "同步")}</CapabilityPill>
+              <CapabilityPill>{t("Skill", "技能")}</CapabilityPill>
+            </div>
+          </div>
+          <div className="relative hidden h-px bg-[#c9cdd4] lg:block" aria-hidden="true">
+            <span className="absolute left-1/2 top-1/2 grid h-9 w-9 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-[#1267d6] text-white">→</span>
+          </div>
+          <div className="rounded-[24px] border border-[#dfe2e7] bg-[#f7f8fa] p-4">
+            <CapabilityRows />
+          </div>
+        </div>
+      </div>
+    </Reveal>
   );
 }
 
 function BeforeAfter() {
   const { lang, t } = useLanguage();
-  const [mode, setMode] = useState<"before" | "after">("before");
-  const isBefore = mode === "before";
   return (
-    <div className="space-y-5">
-      <div
-        className="inline-flex rounded-full border border-white/10 bg-white/[0.04] p-1"
-        role="group"
-        aria-label={t("Before and after view selector", "前后对比视图选择")}
-      >
-        {(["before", "after"] as const).map((item) => (
-          <button
-            key={item}
-            type="button"
-            aria-pressed={mode === item}
-            onClick={() => setMode(item)}
-            className={`rounded-full px-5 py-2 text-sm transition-colors motion-reduce:transition-none ${mode === item ? "bg-cyan-300 text-slate-950" : "text-gray-300 hover:text-white"}`}
-          >
-            {item === "before" ? t("Before", "改版前") : t("After", "改版后")}
-          </button>
-        ))}
-      </div>
-      <Shell
-        title={
-          isBefore
-            ? t("Fragmented entries", "碎片化入口")
-            : t("Unified source model", "统一数据源模型")
-        }
-      >
-        <div className="min-h-[420px] p-5 md:p-7">
-          {isBefore ? (
+    <Reveal>
+      <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
+        <EditorialCard className="bg-[#f7f8fa] shadow-none">
+          <div className="mb-5 flex items-center justify-between gap-4">
             <div>
-              <div className="mb-5 rounded-2xl border border-red-300/20 bg-red-400/10 p-4">
-                <p className="text-sm font-semibold text-red-100">
-                  {t(
-                    "Problem: one source appears as many unrelated starting points.",
-                    "问题：一个来源变成多个看似无关的起点。",
-                  )}
-                </p>
-                <p className="mt-1 text-xs text-red-100/70">
-                  {t(
-                    "Text labels accompany color cues for accessibility.",
-                    "颜色提示同时配合文字标签，便于无障碍理解。",
-                  )}
-                </p>
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {beforeEntries.map((entry) => (
-                  <ConnectorCard key={entry.en} name={entry[lang]} dense />
-                ))}
-              </div>
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8e949e]">{t("Before", "改版前")}</p>
+              <h3 className="mt-2 text-2xl font-[720] tracking-[-0.035em] text-[#111318]">
+                {t("Fragmented entries", "碎片化入口")}
+              </h3>
             </div>
-          ) : (
-            <div className="grid items-stretch gap-5 lg:grid-cols-[0.95fr_1.25fr]">
-              <div className="rounded-3xl border border-cyan-300/20 bg-cyan-300/10 p-5">
-                <p className="mb-3 text-xs uppercase tracking-[0.2em] text-cyan-100/70">
-                  {t("Data source", "数据源")}
-                </p>
-                <ConnectorCard name={t("Customer Records", "客户记录")} />
-                <p className="mt-5 text-sm leading-relaxed text-cyan-50/80">
-                  {t(
-                    "The catalog now represents the stable object first; tags summarize capability availability without splitting the entry.",
-                    "目录优先呈现稳定对象；标签只概览能力可用性，不再拆分入口。",
-                  )}
-                </p>
-              </div>
-              <div className="rounded-3xl border border-white/10 bg-white/[0.035] p-5">
-                <p className="mb-4 text-xs uppercase tracking-[0.2em] text-gray-500">
-                  {t("Capability panel", "能力面板")}
-                </p>
-                <div className="space-y-3">
-                  {[
-                    {
-                      title: { en: "Real-time retrieval", zh: "实时检索" },
-                      state: "Enabled" as CapabilityState,
-                    },
-                    {
-                      title: { en: "Background indexing", zh: "后台索引" },
-                      state: "Available" as CapabilityState,
-                    },
-                    {
-                      title: { en: "Guided skill", zh: "引导式技能" },
-                      state: "Preview" as CapabilityState,
-                    },
-                  ].map((row) => (
-                    <div
-                      key={row.title.en}
-                      className="rounded-2xl border border-white/10 bg-slate-950/50 p-4"
-                    >
-                      <div className="flex flex-wrap items-center justify-between gap-3">
-                        <h4 className="font-semibold text-white">
-                          {row.title[lang]}
-                        </h4>
-                        <StatusBadge state={row.state} />
-                      </div>
-                      <p className="mt-2 text-sm text-gray-400">
-                        {t(
-                          "Value, dependency, and next action are readable before setup begins.",
-                          "在开始设置前即可理解价值、依赖和下一步操作。",
-                        )}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            <NumberBadge>01</NumberBadge>
+          </div>
+          <p className="mb-5 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-800">
+            {t(
+              "Problem: one source appears as many unrelated starting points. Text labels accompany color cues for accessibility.",
+              "问题：一个来源变成多个看似无关的起点。颜色提示同时配合文字标签，便于无障碍理解。",
+            )}
+          </p>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {beforeEntries.map((entry) => (
+              <ConnectorCard key={entry.en} name={entry[lang]} dense />
+            ))}
+          </div>
+        </EditorialCard>
+
+        <EditorialCard>
+          <div className="mb-5 flex items-center justify-between gap-4">
+            <div>
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1267d6]">{t("After", "改版后")}</p>
+              <h3 className="mt-2 text-2xl font-[720] tracking-[-0.035em] text-[#111318]">
+                {t("Unified source model", "统一数据源模型")}
+              </h3>
             </div>
-          )}
-        </div>
-      </Shell>
+            <NumberBadge>02</NumberBadge>
+          </div>
+          <div className="rounded-[24px] border border-[#1267d6]/24 bg-[#edf4ff] p-5">
+            <p className="mb-3 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1267d6]">
+              {t("Data source", "数据源")}
+            </p>
+            <ConnectorCard name={t("Customer Records", "客户记录")} />
+            <p className="mt-5 text-sm leading-6 text-[#626872]">
+              {t(
+                "The catalog represents the stable object first; tags summarize capability availability without splitting the entry.",
+                "目录优先呈现稳定对象；标签只概览能力可用性，不再拆分入口。",
+              )}
+            </p>
+          </div>
+          <div className="mt-4 rounded-[24px] border border-[#dfe2e7] bg-[#f7f8fa] p-4">
+            <p className="mb-4 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8e949e]">
+              {t("Capability panel", "能力面板")}
+            </p>
+            <CapabilityRows />
+          </div>
+        </EditorialCard>
+      </div>
+    </Reveal>
+  );
+}
+
+function ProblemLayers() {
+  const { pick } = useLocalized();
+  return (
+    <div className="grid gap-4 md:grid-cols-3">
+      {problemLayers.map((p, index) => (
+        <Reveal key={p.title.en} delay={index * 0.04}>
+          <EditorialCard className="h-full">
+            <NumberBadge>0{index + 1}</NumberBadge>
+            <h3 className="mt-6 text-xl font-semibold tracking-[-0.02em] text-[#111318]">{pick(p.title)}</h3>
+            <p className="mt-3 text-sm leading-7 text-[#626872]">{pick(p.body)}</p>
+          </EditorialCard>
+        </Reveal>
+      ))}
     </div>
   );
 }
 
-function DecisionCard({ decision }: { decision: (typeof decisions)[number] }) {
+function EvidenceGrid() {
+  const { pick } = useLocalized();
+  return (
+    <div className="grid gap-5 md:grid-cols-3">
+      {evidence.map((item, index) => (
+        <Reveal key={item.label.en} delay={index * 0.04}>
+          <EditorialCard className="h-full bg-[#f7f8fa] shadow-none">
+            <div className="mb-6 flex items-start justify-between gap-4">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1267d6]">{pick(item.label)}</p>
+              <NumberBadge>0{index + 1}</NumberBadge>
+            </div>
+            <h3 className="text-xl font-semibold tracking-[-0.02em] text-[#111318]">{pick(item.title)}</h3>
+            <p className="mt-4 text-sm leading-7 text-[#626872]">{pick(item.body)}</p>
+          </EditorialCard>
+        </Reveal>
+      ))}
+    </div>
+  );
+}
+
+function PrinciplesGrid() {
+  const { pick } = useLocalized();
+  return (
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {principles.map((principle, index) => (
+        <Reveal key={principle.title.en} delay={index * 0.03}>
+          <EditorialCard className="h-full">
+            <div className="mb-7 flex items-center justify-between gap-4">
+              <NumberBadge>0{index + 1}</NumberBadge>
+              <span className="h-px flex-1 bg-[#dfe2e7]" aria-hidden="true" />
+            </div>
+            <h3 className="text-xl font-semibold tracking-[-0.02em] text-[#111318]">{pick(principle.title)}</h3>
+            <p className="mt-3 text-sm leading-7 text-[#626872]">{pick(principle.body)}</p>
+          </EditorialCard>
+        </Reveal>
+      ))}
+    </div>
+  );
+}
+
+function DecisionCard({ decision, index }: { decision: (typeof decisions)[number]; index: number }) {
   const { t, pick } = useLocalized();
   return (
-    <div className="rounded-[1.75rem] border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.025] p-6 md:p-8">
-      <div className="mb-6 flex flex-wrap items-center gap-3">
-        <span className="grid h-10 w-10 place-items-center rounded-2xl bg-cyan-300 font-bold text-slate-950">
-          {decision.code}
-        </span>
-        <h3 className="text-2xl font-bold text-white">
-          {pick(decision.title)}
-        </h3>
-      </div>
-      <div className="grid gap-4 lg:grid-cols-[1fr_1.1fr]">
-        <div className="rounded-2xl border border-white/10 bg-slate-950/50 p-5">
-          <p className="mb-2 text-xs uppercase tracking-[0.18em] text-gray-500">
-            {t("Observation", "观察")}
-          </p>
-          <p className="leading-relaxed text-gray-300">
-            {pick(decision.observation)}
-          </p>
+    <Reveal delay={index * 0.05}>
+      <EditorialCard dark className="h-full">
+        <div className="mb-7 flex flex-wrap items-center gap-4">
+          <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#1267d6] font-mono text-sm font-semibold text-white">
+            {decision.code}
+          </span>
+          <h3 className="text-2xl font-[720] leading-tight tracking-[-0.035em] text-white">{pick(decision.title)}</h3>
         </div>
-        <div className="rounded-2xl border border-white/10 bg-slate-950/50 p-5">
-          <p className="mb-3 text-xs uppercase tracking-[0.18em] text-gray-500">
-            {t("Explored options", "探索方案")}
-          </p>
-          <ul className="space-y-2 text-sm text-gray-300">
-            {decision.explored.map((option, i) => (
-              <li key={option.en} className="flex gap-3">
-                <span className="text-gray-500">{i + 1}</span>
-                <span>{pick(option)}</span>
-              </li>
-            ))}
-          </ul>
+        <div className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="rounded-[20px] border border-white/10 bg-[#111318] p-5">
+            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">
+              {t("Observation", "观察")}
+            </p>
+            <p className="mt-3 text-sm leading-7 text-white/68">{pick(decision.observation)}</p>
+          </div>
+          <div className="rounded-[20px] border border-white/10 bg-[#111318] p-5">
+            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">
+              {t("Explored options", "探索方案")}
+            </p>
+            <ul className="mt-3 space-y-2 text-sm leading-6 text-white/68">
+              {decision.explored.map((option, optionIndex) => (
+                <li key={option.en} className="flex gap-3">
+                  <span className="font-mono text-white/32">{optionIndex + 1}</span>
+                  <span>{pick(option)}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-      </div>
-      <div className="mt-4 rounded-2xl border border-emerald-300/20 bg-emerald-400/10 p-5">
-        <p className="mb-2 text-xs uppercase tracking-[0.18em] text-emerald-100/70">
-          {t("Decision", "决策")}
-        </p>
-        <p className="leading-relaxed text-emerald-50">
-          {pick(decision.decision)}
-        </p>
-      </div>
-    </div>
+        <div className="mt-4 rounded-[20px] border border-[#70a9f5]/24 bg-[#1267d6]/16 p-5">
+          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#70a9f5]">
+            {t("Decision", "决策")}
+          </p>
+          <p className="mt-3 text-base leading-7 text-white">{pick(decision.decision)}</p>
+        </div>
+      </EditorialCard>
+    </Reveal>
   );
 }
 
@@ -827,34 +907,59 @@ function JourneyMap() {
   return (
     <div className="grid gap-4 lg:grid-cols-4">
       {journey.map((item, index) => (
-        <div
-          key={item.step}
-          className="relative rounded-3xl border border-white/10 bg-white/[0.035] p-5"
-        >
-          {index < journey.length - 1 && (
-            <div
-              className="absolute -right-2 top-12 hidden h-px w-4 bg-cyan-300/40 lg:block"
-              aria-hidden="true"
-            />
-          )}
-          <div className="mb-5 flex items-center justify-between gap-3">
-            <span className="text-3xl font-bold text-white/20">
-              {item.step}
-            </span>
-            <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-gray-400">
-              {pick(item.density)}
-            </span>
-          </div>
-          <h3 className="mb-2 text-xl font-semibold text-white">
-            {pick(item.title)}
-          </h3>
-          <p className="mb-3 text-cyan-100">{pick(item.task)}</p>
-          <p className="text-sm leading-relaxed text-gray-400">
-            {pick(item.detail)}
-          </p>
-        </div>
+        <Reveal key={item.step} delay={index * 0.04}>
+          <EditorialCard className="relative h-full bg-white">
+            {index < journey.length - 1 && (
+              <div className="absolute -right-2 top-10 hidden h-px w-4 bg-[#c9cdd4] lg:block" aria-hidden="true" />
+            )}
+            <div className="mb-8 flex items-center justify-between gap-3">
+              <NumberBadge>{item.step}</NumberBadge>
+              <span className="rounded-full border border-[#dfe2e7] bg-[#f7f8fa] px-3 py-1 text-xs text-[#626872]">
+                {pick(item.density)}
+              </span>
+            </div>
+            <h3 className="text-xl font-semibold tracking-[-0.02em] text-[#111318]">{pick(item.title)}</h3>
+            <p className="mt-2 font-semibold text-[#1267d6]">{pick(item.task)}</p>
+            <p className="mt-4 text-sm leading-7 text-[#626872]">{pick(item.detail)}</p>
+          </EditorialCard>
+        </Reveal>
       ))}
     </div>
+  );
+}
+
+function LoopDiagram() {
+  const { t } = useLanguage();
+  const steps = [
+    { label: t("Source", "来源"), value: t("What am I connecting?", "我在连接什么？") },
+    { label: t("Capabilities", "能力"), value: t("What can it do?", "它能做什么？") },
+    { label: t("State", "状态"), value: t("What is ready now?", "当前什么可用？") },
+    { label: t("Action", "行动"), value: t("What should I do next?", "下一步做什么？") },
+  ];
+
+  return (
+    <Reveal>
+      <div className="rounded-[28px] border border-[#dfe2e7] bg-white p-5 md:p-7">
+        <div className="grid gap-0 overflow-hidden rounded-[24px] border border-[#dfe2e7] md:grid-cols-4">
+          {steps.map((step, index) => (
+            <div key={step.label} className="relative border-b border-[#dfe2e7] bg-[#f7f8fa] p-5 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0">
+              {index < steps.length - 1 && (
+                <span className="absolute -right-3 top-8 z-10 hidden h-6 w-6 place-items-center rounded-full bg-[#171a21] text-xs text-white md:grid" aria-hidden="true">
+                  →
+                </span>
+              )}
+              <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8e949e]">{step.label}</p>
+              <p className="mt-8 text-lg font-semibold leading-6 tracking-[-0.02em] text-[#111318]">{step.value}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-5 flex items-center gap-4 text-sm text-[#626872]">
+          <span className="h-px flex-1 bg-[#c9cdd4]" aria-hidden="true" />
+          <span>{t("shared language carries context across surfaces", "共享语言让上下文跨页面延续")}</span>
+          <span className="text-xl text-[#1267d6]" aria-hidden="true">↩</span>
+        </div>
+      </div>
+    </Reveal>
   );
 }
 
@@ -862,563 +967,352 @@ function SystemMatrix() {
   const { lang, t, pick } = useLocalized();
   const [selected, setSelected] = useState(0);
   const scenario = scenarios[selected];
+
   return (
-    <div className="grid gap-6 lg:grid-cols-[0.9fr_1.2fr]">
-      <div className="rounded-[1.75rem] border border-white/10 bg-white/[0.035] p-4">
-        <p className="px-3 pb-3 text-xs uppercase tracking-[0.18em] text-gray-500">
-          {t("Scenario matrix", "场景矩阵")}
-        </p>
-        <div
-          className="space-y-2"
-          role="tablist"
-          aria-label={t("System scenario selector", "系统场景选择")}
-        >
-          {scenarios.map((item, index) => (
-            <button
-              key={item.name.en}
-              type="button"
-              role="tab"
-              aria-selected={selected === index}
-              onClick={() => setSelected(index)}
-              className={`w-full rounded-2xl border p-4 text-left transition-colors motion-reduce:transition-none ${selected === index ? "border-cyan-300/40 bg-cyan-300/10" : "border-white/10 bg-slate-950/35 hover:bg-white/[0.06]"}`}
-            >
-              <span className="block text-sm font-semibold text-white">
-                {pick(item.name)}
-              </span>
-              <span className="mt-1 block text-xs text-gray-400">
-                {pick(item.type)}
-              </span>
-              <span className="mt-3 block text-xs text-cyan-100/80">
-                {pick(item.purpose)}
-              </span>
-            </button>
-          ))}
-        </div>
-      </div>
-      <Shell title={pick(scenario.name)}>
-        <div className="p-5 md:p-6">
-          <div className="mb-5 rounded-2xl border border-white/10 bg-white/[0.035] p-5">
-            <p className="text-xs uppercase tracking-[0.18em] text-gray-500">
-              {pick(scenario.type)}
-            </p>
-            <h3 className="mt-2 text-2xl font-bold text-white">
-              {pick(scenario.name)}
-            </h3>
-            <p className="mt-2 text-sm text-gray-400">
-              {pick(scenario.purpose)}
-            </p>
+    <Reveal>
+      <div className="grid gap-6 lg:grid-cols-[0.86fr_1.14fr]">
+        <EditorialCard className="bg-[#f7f8fa] shadow-none">
+          <p className="mb-4 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8e949e]">
+            {t("Scenario matrix", "场景矩阵")}
+          </p>
+          <div className="space-y-2" role="group" aria-label={t("System scenario selector", "系统场景选择")}>
+            {scenarios.map((item, index) => (
+              <button
+                key={item.name.en}
+                type="button"
+                aria-pressed={selected === index}
+                onClick={() => setSelected(index)}
+                className={`w-full rounded-[18px] border p-4 text-left transition-colors motion-reduce:transition-none ${
+                  selected === index
+                    ? "border-[#1267d6]/36 bg-white text-[#111318] shadow-[0_10px_26px_rgba(18,103,214,0.08)]"
+                    : "border-[#dfe2e7] bg-white/60 text-[#626872] hover:bg-white"
+                }`}
+              >
+                <span className="block text-sm font-semibold">{pick(item.name)}</span>
+                <span className="mt-1 block text-xs text-[#8e949e]">{pick(item.type)}</span>
+                <span className="mt-3 block text-xs leading-5 text-[#1267d6]">{pick(item.purpose)}</span>
+              </button>
+            ))}
+          </div>
+        </EditorialCard>
+
+        <div className="rounded-[28px] border border-[#dfe2e7] bg-white p-5 shadow-[0_18px_46px_rgba(17,19,24,0.055)] md:p-6">
+          <div className="mb-5 rounded-[22px] border border-[#dfe2e7] bg-[#f7f8fa] p-5">
+            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8e949e]">{pick(scenario.type)}</p>
+            <h3 className="mt-2 text-3xl font-[720] tracking-[-0.04em] text-[#111318]">{pick(scenario.name)}</h3>
+            <p className="mt-2 text-sm leading-6 text-[#626872]">{pick(scenario.purpose)}</p>
           </div>
           <div className="space-y-3">
             {scenario.capabilities.map((capability) => (
-              <div
-                key={capability.name.en}
-                className="rounded-2xl border border-white/10 bg-slate-950/55 p-4"
-              >
-                <div className="flex flex-wrap items-center justify-between gap-3">
+              <div key={capability.name.en} className="rounded-[20px] border border-[#dfe2e7] bg-white p-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <h4 className="font-semibold text-white">
-                      {capability.name[lang]}
-                    </h4>
-                    <p className="mt-1 text-sm text-gray-400">
-                      {capability.value[lang]}
-                    </p>
+                    <h4 className="font-semibold text-[#111318]">{capability.name[lang]}</h4>
+                    <p className="mt-1 text-sm leading-6 text-[#626872]">{capability.value[lang]}</p>
                   </div>
                   <StatusBadge state={capability.state} />
                 </div>
                 <div className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
-                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
-                    <span className="block text-xs text-gray-500">
+                  <div className="rounded-2xl border border-[#dfe2e7] bg-[#f7f8fa] p-3">
+                    <span className="block font-mono text-[10px] uppercase tracking-[0.16em] text-[#8e949e]">
                       {t("Dependency", "依赖")}
                     </span>
-                    <span className="text-gray-200">
-                      {pick(capability.dependency)}
-                    </span>
+                    <span className="text-[#626872]">{pick(capability.dependency)}</span>
                   </div>
-                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
-                    <span className="block text-xs text-gray-500">
+                  <div className="rounded-2xl border border-[#dfe2e7] bg-[#f7f8fa] p-3">
+                    <span className="block font-mono text-[10px] uppercase tracking-[0.16em] text-[#8e949e]">
                       {t("Next action", "下一步操作")}
                     </span>
-                    <span className="text-gray-200">
-                      {pick(capability.action)}
-                    </span>
+                    <span className="text-[#626872]">{pick(capability.action)}</span>
                   </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
-      </Shell>
-    </div>
+      </div>
+    </Reveal>
   );
 }
 
-function StatusColumns() {
+function StatusColumns({ focus = "all" }: { focus?: "all" | "open" }) {
   const { pick } = useLocalized();
+  const groups = focus === "open" ? statusGroups.slice(2) : statusGroups;
   return (
-    <div className="grid gap-5 lg:grid-cols-3">
-      {statusGroups.map((group) => (
-        <div
-          key={group.title.en}
-          className="rounded-3xl border border-white/10 bg-white/[0.035] p-6"
-        >
-          <h3 className="mb-5 text-xl font-semibold text-white">
-            {pick(group.title)}
-          </h3>
-          <ul className="space-y-3 text-sm text-gray-300">
-            {group.items.map((item) => (
-              <li key={item.en} className="flex gap-3 leading-relaxed">
-                <span
-                  className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300"
-                  aria-hidden="true"
-                />
-                <span>{pick(item)}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+    <div className={`grid gap-5 ${focus === "open" ? "lg:grid-cols-1" : "lg:grid-cols-3"}`}>
+      {groups.map((group, groupIndex) => (
+        <Reveal key={group.title.en} delay={groupIndex * 0.04}>
+          <EditorialCard className="h-full">
+            <h3 className="mb-5 text-xl font-semibold tracking-[-0.02em] text-[#111318]">{pick(group.title)}</h3>
+            <ul className="space-y-3 text-sm leading-7 text-[#626872]">
+              {group.items.map((item) => (
+                <li key={item.en} className="flex gap-3">
+                  <span className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-[#1267d6]" aria-hidden="true" />
+                  <span>{pick(item)}</span>
+                </li>
+              ))}
+            </ul>
+          </EditorialCard>
+        </Reveal>
       ))}
     </div>
   );
 }
 
 export default function UnifiedConnectorExperiencePage() {
-  const { lang, t } = useLanguage();
-  const pick = (value: Localized) => value[lang];
-  const containerRef = useRef<HTMLDivElement>(null);
-  const reduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
-  const heroOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.12],
-    [1, reduceMotion ? 1 : 0],
-  );
-  const heroScale = useTransform(
-    scrollYProgress,
-    [0, 0.12],
-    [1, reduceMotion ? 1 : 0.97],
-  );
+  const { t } = useLanguage();
+  const { pick } = useLocalized();
   const thumbnailSrc = `${basePath}/images/unified-connector-experience/thumbnail.svg`;
 
   return (
     <>
-      <FluidBackground />
+      <ReadingProgress label={t("Reading progress", "阅读进度")} />
       <Navigation />
-      <main
-        ref={containerRef}
-        className="relative z-10 min-h-screen px-6 pb-24 pt-32 text-white"
-      >
-        <div className="mx-auto max-w-6xl">
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, x: -20 }}
-            animate={reduceMotion ? undefined : { opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-14"
-          >
-            <Link
-              href="/projects"
-              className="inline-flex items-center gap-2 text-sm text-gray-400 transition-colors hover:text-white motion-reduce:transition-none"
-            >
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-              {t("All Projects", "所有项目")}
-            </Link>
-          </motion.div>
-
-          <motion.section
-            style={{ opacity: heroOpacity, scale: heroScale }}
-            className="mb-36"
-          >
-            <div className="grid items-center gap-10 lg:grid-cols-[0.95fr_1.05fr]">
-              <motion.div
-                initial={reduceMotion ? false : { opacity: 0, y: 28 }}
-                animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-                transition={{ duration: 0.75 }}
-              >
-                <div className="mb-8 flex items-center gap-3">
-                  <div className="h-px w-12 bg-gradient-to-r from-cyan-300/80 to-transparent" />
-                  <span className="text-sm uppercase tracking-[0.2em] text-gray-400">
-                    {t("Systems Design · Enterprise AI", "系统设计 · 企业 AI")}
-                  </span>
-                </div>
-                <h1 className="mb-7 text-5xl font-bold leading-[0.94] tracking-tight md:text-7xl">
-                  Unified Enterprise
-                  <br />
-                  <span className="text-cyan-300">Connector Experience</span>
-                </h1>
-                <p className="mb-8 max-w-3xl text-2xl font-light italic leading-relaxed text-gray-200 md:text-3xl">
-                  {t(
-                    "One data source. One entry point. Multiple capabilities.",
-                    "一个数据源，一个入口，多种能力。",
-                  )}
-                </p>
-                <p className="max-w-2xl text-lg leading-relaxed text-gray-400">
-                  {t(
-                    "I redesigned how enterprise administrators discover, compare, configure, and manage multiple connection capabilities under the same data source—without hiding differences that change their actions.",
-                    "我重新设计了企业管理员发现、比较、配置并持续管理同一数据源下多种连接能力的方式，同时保留会改变操作的真实差异。",
-                  )}
-                </p>
-              </motion.div>
-              <motion.div
-                initial={reduceMotion ? false : { opacity: 0, y: 28 }}
-                animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-                transition={{ duration: 0.75, delay: 0.08 }}
-              >
-                <HeroVisual thumbnailSrc={thumbnailSrc} />
-              </motion.div>
-            </div>
-            <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {meta.map((item) => (
-                <div
-                  key={item.label.en}
-                  className="rounded-2xl border border-white/10 bg-white/[0.035] p-5"
-                >
-                  <p className="mb-2 text-xs uppercase tracking-[0.18em] text-gray-500">
-                    {pick(item.label)}
-                  </p>
-                  <p className="text-sm leading-relaxed text-gray-200">
-                    {pick(item.value)}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </motion.section>
-
-          <Fade className="mb-36 grid gap-12 md:grid-cols-12">
-            <SectionHeader
-              index="01"
-              eyebrow={{ en: "Why now", zh: "为什么现在" }}
-              title={{
-                en: "More capabilities created more entry points—but not more clarity.",
-                zh: "更多能力带来了更多入口，却没有带来更清晰的体验。",
-              }}
-              body={{
-                en: "The work was not a visual clean-up. It was a product-model problem caused by growth.",
-                zh: "这不是一次视觉整理，而是能力增长引发的产品模型问题。",
-              }}
-            />
-            <div className="md:col-span-8">
-              <p className="mb-8 text-lg leading-relaxed text-gray-300">
+      <main className="min-h-screen bg-[#f7f8fa] text-[#111318]">
+        <Chapter id="top" tone="surface" className="pt-36 md:pt-44 lg:pt-48">
+          <BackToProjects />
+          <div className="grid items-center gap-12 lg:grid-cols-[0.92fr_1.08fr]">
+            <Reveal>
+              <div className="mb-7 flex items-center gap-3 font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8e949e]">
+                <span className="h-px w-10 bg-[#c9cdd4]" aria-hidden="true" />
+                <span>{t("Systems Design · Enterprise AI", "系统设计 · 企业 AI")}</span>
+              </div>
+              <h1 className="max-w-4xl text-[clamp(3.3rem,7.4vw,6.9rem)] font-[720] leading-[0.92] tracking-[-0.07em] text-[#111318]">
+                Unified Enterprise <span className="text-[#1267d6]">Connector</span> Experience
+              </h1>
+              <p className="mt-8 max-w-2xl text-[clamp(1.45rem,2.5vw,2.05rem)] font-medium leading-[1.22] tracking-[-0.035em] text-[#171a21]">
+                {t("One data source. One entry point. Multiple capabilities.", "一个数据源，一个入口，多种能力。")}
+              </p>
+              <p className="mt-6 max-w-2xl text-base leading-8 text-[#626872] md:text-lg">
                 {t(
-                  "As enterprise AI platforms added new ways to connect business data, a single source could support live retrieval, background indexing, user-owned sync, organization-owned sync, and guided workflows. The existing model turned each technical capability into a separate connector entry.",
-                  "随着企业 AI 平台增加更多连接业务数据的方式，同一个来源可能同时支持实时检索、后台索引、用户级同步、组织级同步和引导式工作流。原有模型把每种技术能力都表现为独立连接器入口。",
+                  "I redesigned how enterprise administrators discover, compare, configure, and manage multiple connection capabilities under the same data source—without hiding differences that change their actions.",
+                  "我重新设计了企业管理员发现、比较、配置并持续管理同一数据源下多种连接能力的方式，同时保留会改变操作的真实差异。",
                 )}
               </p>
+            </Reveal>
+            <HeroVisual thumbnailSrc={thumbnailSrc} />
+          </div>
+          <Reveal className="mt-12">
+            <MetaGrid items={meta.map((item) => ({ label: pick(item.label), value: pick(item.value) }))} />
+          </Reveal>
+        </Chapter>
+
+        <Chapter id="bottleneck" tone="paper">
+          <div className="grid gap-12 lg:grid-cols-[0.38fr_0.62fr]">
+            <SectionHeading
+              index="01"
+              eyebrow={t("Bottleneck", "瓶颈")}
+              title={t(
+                "More capabilities created more entry points—but not more clarity.",
+                "更多能力带来了更多入口，却没有带来更清晰的体验。",
+              )}
+              body={t(
+                "The work was not a visual clean-up. It was a product-model problem caused by growth.",
+                "这不是一次视觉整理，而是能力增长引发的产品模型问题。",
+              )}
+            />
+            <div>
+              <Reveal>
+                <p className="mb-8 text-lg leading-8 text-[#626872]">
+                  {t(
+                    "As enterprise AI platforms added new ways to connect business data, a single source could support live retrieval, background indexing, user-owned sync, organization-owned sync, and guided workflows. The existing model turned each technical capability into a separate connector entry.",
+                    "随着企业 AI 平台增加更多连接业务数据的方式，同一个来源可能同时支持实时检索、后台索引、用户级同步、组织级同步和引导式工作流。原有模型把每种技术能力都表现为独立连接器入口。",
+                  )}
+                </p>
+              </Reveal>
               <div className="grid gap-3 md:grid-cols-5">
                 {whyChain.map((item, index) => (
-                  <div
-                    key={item.en}
-                    className="relative rounded-2xl border border-white/10 bg-white/[0.035] p-4"
-                  >
-                    <span className="mb-4 block text-2xl font-bold text-white/20">
-                      {index + 1}
-                    </span>
-                    <p className="text-sm leading-relaxed text-gray-200">
-                      {pick(item)}
-                    </p>
-                    {index < whyChain.length - 1 && (
-                      <span
-                        className="absolute -right-2 top-1/2 hidden h-px w-4 bg-cyan-300/40 md:block"
-                        aria-hidden="true"
-                      />
-                    )}
-                  </div>
+                  <Reveal key={item.en} delay={index * 0.03}>
+                    <div className="relative h-full rounded-[20px] border border-[#dfe2e7] bg-white p-4">
+                      <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8e949e]">0{index + 1}</p>
+                      <p className="mt-8 text-sm font-semibold leading-6 text-[#111318]">{pick(item)}</p>
+                      {index < whyChain.length - 1 && (
+                        <span className="absolute -right-2 top-1/2 hidden h-px w-4 bg-[#c9cdd4] md:block" aria-hidden="true" />
+                      )}
+                    </div>
+                  </Reveal>
                 ))}
               </div>
             </div>
-          </Fade>
-
-          <Fade className="mb-36 grid gap-12 md:grid-cols-12">
-            <SectionHeader
-              index="02"
-              eyebrow={{ en: "Before / After", zh: "改版前 / 改版后" }}
-              title={{
-                en: "The object changed from connectors to data sources.",
-                zh: "顶层对象从连接器变成数据源。",
-              }}
-              body={{
-                en: "The abstract UI below uses sanitized examples only. It shows the structural shift, not unreleased product screens.",
-                zh: "下方为脱敏抽象界面，只展示结构变化，不使用未发布产品截图。",
-              }}
+          </div>
+          <div className="mt-14">
+            <SectionHeading
+              index="01A"
+              eyebrow={t("Before / After", "改版前 / 改版后")}
+              title={t("The object changed from connectors to data sources.", "顶层对象从连接器变成数据源。")}
+              body={t(
+                "The abstract UI below uses sanitized examples only. It shows the structural shift, not unreleased product screens.",
+                "下方为脱敏抽象界面，只展示结构变化，不使用未发布产品截图。",
+              )}
             />
-            <div className="md:col-span-8">
+            <div className="mt-10">
               <BeforeAfter />
-              <div className="mt-6 grid gap-4 md:grid-cols-3">
-                {problemLayers.map((p) => (
-                  <div
-                    key={p.title.en}
-                    className="rounded-2xl border border-white/10 bg-white/[0.035] p-5"
-                  >
-                    <h3 className="mb-2 font-semibold text-white">
-                      {pick(p.title)}
-                    </h3>
-                    <p className="text-sm leading-relaxed text-gray-400">
-                      {pick(p.body)}
-                    </p>
-                  </div>
-                ))}
-              </div>
             </div>
-          </Fade>
+          </div>
+        </Chapter>
 
-          <Fade className="mb-36">
-            <div className="mb-10 max-w-3xl">
-              <span className="text-xs uppercase tracking-[0.24em] text-cyan-300/70">
-                03
-              </span>
-              <h2 className="mt-3 text-3xl font-bold text-white md:text-4xl">
-                {t("Evidence and constraints", "证据与约束")}
-              </h2>
-              <p className="mt-4 leading-relaxed text-gray-400">
-                {t(
-                  "Raw internal inputs are translated into public insights: user behavior, product scalability, and technical constraints.",
-                  "内部原始材料被转译为可公开洞察：用户行为、产品扩展性与技术约束。",
-                )}
-              </p>
-            </div>
-            <div className="grid gap-5 md:grid-cols-3">
-              {evidence.map((item, index) => (
-                <div
-                  key={item.label.en}
-                  className="rounded-3xl border border-white/10 bg-white/[0.035] p-6 md:p-7"
-                >
-                  <div className="mb-5 flex items-center justify-between gap-4">
-                    <span className="text-xs uppercase tracking-[0.18em] text-cyan-200/70">
-                      {pick(item.label)}
-                    </span>
-                    <span className="grid h-9 w-9 place-items-center rounded-full border border-white/10 text-sm text-white/70">
-                      0{index + 1}
-                    </span>
-                  </div>
-                  <h3 className="mb-3 text-xl font-semibold text-white">
-                    {pick(item.title)}
-                  </h3>
-                  <p className="leading-relaxed text-gray-400">
-                    {pick(item.body)}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </Fade>
-
-          <Fade className="mb-36 grid gap-12 md:grid-cols-12">
-            <SectionHeader
-              index="04"
-              eyebrow={{ en: "Reframe", zh: "问题重定义" }}
-              title={{
-                en: "Not “How do we reduce cards?”",
-                zh: "不是“如何减少卡片？”",
-              }}
-              body={{
-                en: "Reducing entries could hide complexity. The design problem had to preserve complexity only when it changed administrator decisions.",
-                zh: "减少入口可能只是隐藏复杂度。真正的问题是只在复杂度会改变管理员决策时呈现它。",
-              }}
+        <Chapter id="gap" tone="surface">
+          <div className="grid gap-12 lg:grid-cols-[0.36fr_0.64fr]">
+            <SectionHeading
+              index="02"
+              eyebrow={t("Gap", "断点")}
+              title={t("The visible issue was duplicate cards. The real gap was decision continuity.", "表面问题是卡片重复，真实断点是决策连续性。")}
+              body={t(
+                "Discovery, understanding, and lifecycle work were split, so administrators had to reconstruct context before taking the next action.",
+                "发现、理解和生命周期工作被拆开，管理员必须在下一步行动前重新拼接上下文。",
+              )}
             />
-            <div className="md:col-span-8">
-              <div className="rounded-[2rem] border border-cyan-300/20 bg-gradient-to-br from-cyan-300/10 to-blue-500/10 p-7 md:p-10">
-                <p className="mb-4 text-sm uppercase tracking-[0.2em] text-cyan-100/70">
-                  {t("Design proposition", "设计命题")}
-                </p>
-                <blockquote className="text-2xl font-light leading-relaxed text-white md:text-4xl">
-                  {t(
-                    "How might we make multiple connection capabilities feel like one coherent, scalable, and manageable system—without hiding technical differences that change the work?",
-                    "如何在不掩盖真实技术差异的前提下，让多种连接能力在管理员眼中形成一个统一、可扩展、可管理的系统？",
-                  )}
-                </blockquote>
-              </div>
-              <div className="mt-6 grid gap-3 md:grid-cols-2">
-                {[
-                  {
-                    en: "One stable entry per data source.",
-                    zh: "同一数据源拥有一个稳定入口。",
-                  },
-                  {
-                    en: "Capability value is understandable before technical type.",
-                    zh: "先理解能力价值，再理解技术类型。",
-                  },
-                  {
-                    en: "Uneven capability sets do not break the IA.",
-                    zh: "不均衡能力组合不打破信息架构。",
-                  },
-                  {
-                    en: "Discovery, setup, and management stay connected.",
-                    zh: "发现、设置与管理保持连续。",
-                  },
-                ].map((i) => (
-                  <div
-                    key={i.en}
-                    className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 text-sm text-gray-300"
-                  >
-                    {pick(i)}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Fade>
-
-          <Fade className="mb-36">
-            <div className="mb-10 grid gap-8 md:grid-cols-12">
-              <SectionHeader
-                index="05"
-                eyebrow={{ en: "Principles", zh: "设计原则" }}
-                title={{
-                  en: "A rubric for judging every option.",
-                  zh: "用一套标准判断每个方案。",
-                }}
-              />
-              <p className="text-lg leading-relaxed text-gray-300 md:col-span-8">
-                {t(
-                  "Before drawing detailed screens, I made the evaluation criteria explicit so “unified” would not become a vague visual goal.",
-                  "在绘制细节页面前，我先明确评估标准，避免“统一”变成模糊的视觉目标。",
-                )}
-              </p>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {principles.map((p, index) => (
-                <div
-                  key={p.title.en}
-                  className="rounded-3xl border border-white/10 bg-white/[0.035] p-6"
-                >
-                  <span className="mb-5 block text-2xl font-bold text-white/20">
-                    0{index + 1}
-                  </span>
-                  <h3 className="mb-3 text-xl font-semibold text-white">
-                    {pick(p.title)}
-                  </h3>
-                  <p className="text-sm leading-relaxed text-gray-400">
-                    {pick(p.body)}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </Fade>
-
-          <Fade className="mb-36 grid gap-12 md:grid-cols-12">
-            <SectionHeader
-              index="06"
-              eyebrow={{ en: "Key decisions", zh: "关键决策" }}
-              title={{
-                en: "Three decisions that changed the product direction.",
-                zh: "三组真正改变产品方向的决策。",
-              }}
-              body={{
-                en: "The detailed decision set is grouped into three public narratives: object model, capability model, and lifecycle model.",
-                zh: "细节决策在公开页面中收敛为三条主线：对象模型、能力模型和生命周期模型。",
-              }}
+            <ProblemLayers />
+          </div>
+          <div className="mt-14">
+            <SectionHeading
+              index="02A"
+              eyebrow={t("Evidence", "证据")}
+              title={t("Three evidence streams shaped the model.", "三类证据共同塑造模型。")}
+              body={t(
+                "Raw internal inputs are translated into public insights: user behavior, product scalability, and technical constraints.",
+                "内部原始材料被转译为可公开洞察：用户行为、产品扩展性与技术约束。",
+              )}
             />
-            <div className="space-y-5 md:col-span-8">
-              {decisions.map((d) => (
-                <DecisionCard key={d.code} decision={d} />
-              ))}
+            <div className="mt-10">
+              <EvidenceGrid />
             </div>
-          </Fade>
+          </div>
+          <Reveal className="mt-14">
+            <StatementBand label={t("Problem redefinition", "问题重定义")}>
+              {t(
+                "Not “How do we reduce cards?” How might we make multiple connection capabilities feel like one coherent, scalable, and manageable system—without hiding technical differences that change the work?",
+                "不是“如何减少卡片？”而是：如何在不掩盖真实技术差异的前提下，让多种连接能力在管理员眼中形成一个统一、可扩展、可管理的系统？",
+              )}
+            </StatementBand>
+          </Reveal>
+        </Chapter>
 
-          <Fade className="mb-36">
-            <div className="mb-10 max-w-3xl">
-              <span className="text-xs uppercase tracking-[0.24em] text-cyan-300/70">
-                07
-              </span>
-              <h2 className="mt-3 text-3xl font-bold text-white md:text-4xl">
-                {t("End-to-end experience", "端到端体验")}
-              </h2>
-              <p className="mt-4 leading-relaxed text-gray-400">
-                {t(
-                  "The final model connects a low-density discovery moment with high-density setup and lifecycle management.",
-                  "最终模型将低密度发现时刻与高密度设置和生命周期管理连接起来。",
-                )}
-              </p>
-            </div>
+        <Chapter id="loop" tone="paper">
+          <SectionHeading
+            index="03"
+            eyebrow={t("Loop", "闭环")}
+            title={t("A shared language carries the source across discovery, setup, and management.", "用共享语言让数据源贯穿发现、设置与管理。")}
+            body={t(
+              "Before drawing detailed screens, I made the evaluation criteria explicit so “unified” would not become a vague visual goal.",
+              "在绘制细节页面前，我先明确评估标准，避免“统一”变成模糊的视觉目标。",
+            )}
+          />
+          <div className="mt-10">
+            <PrinciplesGrid />
+          </div>
+          <div className="mt-14 grid gap-10 lg:grid-cols-[0.42fr_0.58fr] lg:items-start">
+            <SectionHeading
+              index="03A"
+              eyebrow={t("Journey", "旅程")}
+              title={t("Four surfaces, one mental model.", "四步旅程，一个心智模型。")}
+              body={t(
+                "The final model connects a low-density discovery moment with high-density setup and lifecycle management.",
+                "最终模型将低密度发现时刻与高密度设置和生命周期管理连接起来。",
+              )}
+            />
+            <LoopDiagram />
+          </div>
+          <div className="mt-10">
             <JourneyMap />
-          </Fade>
+          </div>
+        </Chapter>
 
-          <Fade className="mb-36 grid gap-12 md:grid-cols-12">
-            <SectionHeader
-              index="08"
-              eyebrow={{ en: "System model", zh: "系统模型" }}
-              title={{
-                en: "The structure flexes by scenario instead of multiplying screens.",
-                zh: "结构按场景伸缩，而不是不断复制页面。",
-              }}
-              body={{
-                en: "Four sanitized scenarios stress-test full, dual, constrained, and minimum capability combinations.",
-                zh: "四类脱敏场景验证完整、双责任、受约束和最小能力组合。",
-              }}
+        <Chapter id="decision" tone="dark">
+          <SectionHeading
+            index="04"
+            eyebrow={t("Decision", "决策")}
+            title={t("Three decisions changed the product direction.", "三组决策改变产品方向。")}
+            body={t(
+              "The detailed decision set is grouped into three public narratives: object model, capability model, and lifecycle model.",
+              "细节决策在公开页面中收敛为三条主线：对象模型、能力模型和生命周期模型。",
+            )}
+            dark
+          />
+          <div className="mt-10 grid gap-5 lg:grid-cols-3">
+            {decisions.map((decision, index) => (
+              <DecisionCard key={decision.code} decision={decision} index={index} />
+            ))}
+          </div>
+          <div className="mt-12">
+            <ConvergenceModel />
+          </div>
+        </Chapter>
+
+        <Chapter id="proof" tone="surface">
+          <div className="grid gap-12 lg:grid-cols-[0.36fr_0.64fr]">
+            <SectionHeading
+              index="05"
+              eyebrow={t("Proof", "验证")}
+              title={t("The structure flexes by scenario instead of multiplying screens.", "结构按场景伸缩，而不是不断复制页面。")}
+              body={t(
+                "Four sanitized scenarios stress-test full, dual, constrained, and minimum capability combinations.",
+                "四类脱敏场景验证完整、双责任、受约束和最小能力组合。",
+              )}
             />
-            <div className="md:col-span-8">
-              <SystemMatrix />
+            <SystemMatrix />
+          </div>
+          <div className="mt-14">
+            <SectionHeading
+              index="05A"
+              eyebrow={t("Validation & status", "验证与状态")}
+              title={t("Clear outcomes, clear boundaries.", "结果清楚，边界也清楚。")}
+              body={t(
+                "The work aligned a data-source-level experience model and produced a complete review-ready journey. It intentionally avoids claiming production efficiency gains that were not publicly validated.",
+                "这项工作对齐了数据源级体验模型，并形成可进入详细评审的完整旅程。页面刻意不声明尚未公开验证的生产效率提升。",
+              )}
+            />
+            <div className="mt-10">
+              <StatusColumns />
             </div>
-          </Fade>
+          </div>
+        </Chapter>
 
-          <Fade className="mb-36">
-            <div className="mb-10 grid gap-8 md:grid-cols-12">
-              <SectionHeader
-                index="09"
-                eyebrow={{ en: "Validation & status", zh: "验证与状态" }}
-                title={{
-                  en: "Clear outcomes, clear boundaries.",
-                  zh: "结果清楚，边界也清楚。",
-                }}
-              />
-              <p className="text-lg leading-relaxed text-gray-300 md:col-span-8">
-                {t(
-                  "The work aligned a data-source-level experience model and produced a complete review-ready journey. It intentionally avoids claiming production efficiency gains that were not publicly validated.",
-                  "这项工作对齐了数据源级体验模型，并形成可进入详细评审的完整旅程。页面刻意不声明尚未公开验证的生产效率提升。",
-                )}
-              </p>
+        <Chapter id="next" tone="paper">
+          <div className="grid gap-12 lg:grid-cols-[0.42fr_0.58fr]">
+            <SectionHeading
+              index="06"
+              eyebrow={t("Next", "下一步")}
+              title={t("A unified experience is not one that makes everything look the same.", "统一体验不是让所有连接器看起来相同。")}
+              body={t(
+                "It gives administrators a stable mental model—and reveals technical complexity only when it changes the next action.",
+                "它建立稳定的用户心智模型，并只在技术差异会改变下一步操作时让复杂度出现。",
+              )}
+            />
+            <div className="space-y-6">
+              <StatusColumns focus="open" />
+              <Reveal>
+                <EditorialCard>
+                  <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1267d6]">
+                    {t("Reflection", "反思")}
+                  </p>
+                  <blockquote className="mt-5 text-[clamp(1.6rem,3vw,2.7rem)] font-medium leading-[1.1] tracking-[-0.045em] text-[#111318]">
+                    {t(
+                      "The most valuable artifact was not a set of screens. It was a product system that keeps answering: what am I connecting, what can it do, what state is it in, and what should I do next?",
+                      "最有价值的产物不是几张页面，而是一套持续回答这些问题的产品系统：我正在连接什么、它能做什么、当前处于什么状态、下一步该做什么？",
+                    )}
+                  </blockquote>
+                  <div className="mt-8 flex flex-wrap gap-3">
+                    <Link
+                      href="/projects"
+                      className="inline-flex items-center gap-2 rounded-full border border-[#c9cdd4] px-5 py-3 text-sm font-semibold text-[#626872] transition-colors hover:border-[#1267d6] hover:text-[#1267d6] motion-reduce:transition-none"
+                    >
+                      <span aria-hidden="true">←</span>
+                      {t("Back to projects", "返回项目")}
+                    </Link>
+                    <Link
+                      href="/projects/connector-health-center"
+                      className="inline-flex items-center gap-2 rounded-full bg-[#1267d6] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#0f56b6] motion-reduce:transition-none"
+                    >
+                      {t("View Connector Health Center", "查看连接器健康中心")}
+                      <span aria-hidden="true">→</span>
+                    </Link>
+                  </div>
+                </EditorialCard>
+              </Reveal>
             </div>
-            <StatusColumns />
-          </Fade>
-
-          <Fade className="mb-24">
-            <div className="rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/[0.07] via-white/[0.03] to-cyan-300/10 p-7 md:p-10">
-              <p className="mb-4 text-xs uppercase tracking-[0.24em] text-cyan-300/70">
-                10 · {t("Reflection", "反思")}
-              </p>
-              <blockquote className="max-w-4xl text-2xl font-light leading-relaxed text-white md:text-4xl">
-                {t(
-                  "A unified experience is not one that makes everything look the same. It gives administrators a stable mental model—and reveals technical complexity only when it changes the next action.",
-                  "统一体验不是让所有连接器看起来相同，而是建立稳定的用户心智模型，并只在技术差异会改变下一步操作时让复杂度出现。",
-                )}
-              </blockquote>
-              <p className="mt-7 max-w-3xl leading-relaxed text-gray-400">
-                {t(
-                  "The most valuable artifact was not a set of screens. It was a product system that keeps answering: what am I connecting, what can it do, what state is it in, and what should I do next?",
-                  "最有价值的产物不是几张页面，而是一套持续回答这些问题的产品系统：我正在连接什么、它能做什么、当前处于什么状态、下一步该做什么？",
-                )}
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link
-                  href="/projects"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-3 text-sm text-gray-200 transition-colors hover:border-cyan-300/50 hover:text-white motion-reduce:transition-none"
-                >
-                  <span aria-hidden="true">←</span>
-                  {t("Back to projects", "返回项目")}
-                </Link>
-                <Link
-                  href="/projects/connector-health-center"
-                  className="inline-flex items-center gap-2 rounded-full bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-cyan-200 motion-reduce:transition-none"
-                >
-                  {t("View Connector Health Center", "查看连接器健康中心")}
-                  <span aria-hidden="true">→</span>
-                </Link>
-              </div>
-            </div>
-          </Fade>
-        </div>
+          </div>
+        </Chapter>
       </main>
     </>
   );

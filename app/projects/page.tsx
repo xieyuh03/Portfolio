@@ -24,6 +24,7 @@ type Project = {
   href: string;
   repoUrl?: string;
   cta?: LocalizedText;
+  presentationStyle?: boolean;
 };
 
 type ProjectCategory = {
@@ -94,6 +95,7 @@ const projectCategories: ProjectCategory[] = [
         image: `${basePath}/images/connector-health-center/thumbnail.svg`,
         imageSize: 'cover',
         href: '/projects/connector-health-center',
+        presentationStyle: true,
       },
       {
         id: 11,
@@ -112,6 +114,7 @@ const projectCategories: ProjectCategory[] = [
         image: `${basePath}/images/unified-connector-experience/thumbnail.svg`,
         imageSize: 'cover',
         href: '/projects/unified-connector-experience',
+        presentationStyle: true,
       },
       {
         id: 6,
@@ -333,23 +336,24 @@ export default function ProjectsPage() {
                   {category.projects.map((project, index) => {
                     const actionLabel = project.cta?.[lang] ?? t('View Case', '查看案例');
                     const isExternal = project.href.startsWith('http');
+                    const isEditorial = project.presentationStyle === true;
                     const card = (
                       <>
                         {/* Image Section */}
                         <div
-                          className="relative h-64 lg:h-72 overflow-hidden rounded-t-3xl transition-transform duration-700 group-hover:scale-105"
+                          className="relative h-64 overflow-hidden rounded-t-3xl transition-transform duration-700 group-hover:scale-[1.025] lg:h-72"
                           style={{
-                            backgroundColor: '#0a0a0a',
+                            backgroundColor: isEditorial ? '#f7f8fa' : '#0a0a0a',
                             backgroundImage: `url(${encodeURI(project.image)})`,
                             backgroundSize: project.imageSize ?? 'cover',
                             backgroundPosition: 'center center',
                             backgroundRepeat: 'no-repeat',
                           }}
                         >
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-                          <div className="absolute bottom-0 right-0 w-72 h-72 bg-gradient-to-tl from-purple-500/30 via-blue-500/20 to-transparent blur-3xl opacity-60 group-hover:opacity-100 transition-opacity duration-500"></div>
+                          <div className={`absolute inset-0 ${isEditorial ? 'bg-gradient-to-t from-black/25 via-transparent to-transparent' : 'bg-gradient-to-t from-black/80 via-black/40 to-transparent'}`}></div>
+                          <div className={`absolute bottom-0 right-0 h-72 w-72 bg-gradient-to-tl blur-3xl transition-opacity duration-500 group-hover:opacity-100 ${isEditorial ? 'from-[#1267d6]/16 via-[#1267d6]/5 to-transparent opacity-40' : 'from-purple-500/30 via-blue-500/20 to-transparent opacity-60'}`}></div>
                           <div className="absolute top-5 right-5">
-                            <span className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-sm border border-white/20">
+                            <span className={`rounded-full border px-4 py-2 text-sm backdrop-blur-md ${isEditorial ? 'border-black/10 bg-white/85 text-[#111318]' : 'border-white/20 bg-white/10 text-white'}`}>
                               {project.year}
                             </span>
                           </div>
@@ -358,7 +362,7 @@ export default function ProjectsPage() {
                         <div className="relative p-6 lg:p-8">
                           <div className="flex flex-wrap gap-2 mb-5">
                             {project.tags.map((tag) => (
-                              <span key={tag.en} className="px-3 py-1.5 text-xs bg-white/10 rounded-full border border-white/20 group-hover:border-white/40 transition-colors">
+                              <span key={tag.en} className={`rounded-full border px-3 py-1.5 text-xs transition-colors ${isEditorial ? 'border-[#1267d6]/25 bg-[#1267d6]/10 text-[#b9d6ff] group-hover:border-[#70a9f5]/60' : 'border-white/20 bg-white/10 group-hover:border-white/40'}`}>
                                 {tag[lang]}
                               </span>
                             ))}
@@ -375,7 +379,7 @@ export default function ProjectsPage() {
                                 href={project.href}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-3 px-5 py-3 bg-white text-black font-medium rounded-lg group-hover:bg-gray-100 transition-all duration-300"
+                                className={`inline-flex items-center gap-3 rounded-lg px-5 py-3 font-medium transition-all duration-300 ${isEditorial ? 'bg-[#1267d6] text-white group-hover:bg-[#2b78dc]' : 'bg-white text-black group-hover:bg-gray-100'}`}
                               >
                                 <span>{actionLabel}</span>
                                 <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -385,7 +389,7 @@ export default function ProjectsPage() {
                             ) : (
                               <Link
                                 href={project.href}
-                                className="inline-flex items-center gap-3 px-5 py-3 bg-white text-black font-medium rounded-lg group-hover:bg-gray-100 transition-all duration-300"
+                                className={`inline-flex items-center gap-3 rounded-lg px-5 py-3 font-medium transition-all duration-300 ${isEditorial ? 'bg-[#1267d6] text-white group-hover:bg-[#2b78dc]' : 'bg-white text-black group-hover:bg-gray-100'}`}
                               >
                                 <span>{actionLabel}</span>
                                 <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -417,7 +421,7 @@ export default function ProjectsPage() {
                           transition={{ duration: 0.6, delay: categoryIndex * 0.1 + index * 0.12 }}
                           className="group h-full"
                         >
-                          <div className="relative h-full bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 hover:border-white/30 transition-all duration-500 overflow-hidden">
+                          <div className={`relative h-full overflow-hidden rounded-3xl border backdrop-blur-sm transition-all duration-500 ${isEditorial ? 'border-[#1267d6]/25 bg-gradient-to-b from-[#1267d6]/[0.08] to-white/[0.035] hover:border-[#70a9f5]/70' : 'border-white/10 bg-white/5 hover:border-white/30'}`}>
                             {card}
                           </div>
                         </motion.div>
