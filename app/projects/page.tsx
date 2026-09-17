@@ -82,8 +82,8 @@ const projectCategories: ProjectCategory[] = [
         id: 12,
         title: 'Enterprise Connector Health Center',
         description: {
-          en: 'Evolved fragmented connector alerts into a proactive health-management experience that helps administrators monitor, diagnose, and resolve issues—with validation prioritizing trustworthy signals and actionable guidance.',
-          zh: '将分散的连接器告警演进为主动健康管理体验，帮助管理员监控、诊断并修复问题；通过验证，将可信信号与可执行指导确立为核心优先级。',
+          en: 'Reframed passive connector alerts into an operational path across Overview, diagnostic panels, connection management, and an AI-assisted recovery POC—iterated through five coded prototypes.',
+          zh: '将被动连接器告警重构为贯穿 Overview、诊断面板、连接管理与 AI 辅助修复概念验证的运营路径，并通过五轮代码原型持续迭代。',
         },
         tags: [
           { en: '0→1 Product Design', zh: '0→1 产品设计' },
@@ -92,7 +92,7 @@ const projectCategories: ProjectCategory[] = [
           { en: 'Enterprise AI', zh: '企业 AI' },
         ],
         year: '2026',
-        image: `${basePath}/images/connector-health-center/thumbnail.svg`,
+        image: `${basePath}/images/connector-health-center/current-overview.png`,
         imageSize: 'cover',
         href: '/projects/connector-health-center',
         presentationStyle: true,

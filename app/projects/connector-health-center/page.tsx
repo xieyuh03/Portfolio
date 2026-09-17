@@ -1,519 +1,445 @@
 'use client';
 
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import Link from 'next/link';
-import { motion, useReducedMotion } from 'framer-motion';
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 import Navigation from '@/components/Navigation';
-import { ReadingProgress } from '@/components/case-study/PresentationCaseStudy';
+import {
+  Chapter,
+  EditorialCard,
+  MetaGrid,
+  NumberBadge,
+  ReadingProgress,
+  Reveal,
+  SectionHeading,
+  StatementBand,
+} from '@/components/case-study/PresentationCaseStudy';
 import { useLanguage, type Lang } from '@/lib/LanguageContext';
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+const screenshotPath = (file: string) => `${basePath}/images/connector-health-center/${file}`;
+
 type LocalizedText = { en: string; zh: string };
+type MediaItem = {
+  src: string;
+  alt: LocalizedText;
+  label: LocalizedText;
+  caption: LocalizedText;
+};
 
-const operationalGaps = [
+const versions = [
   {
     number: '01',
-    title: { en: 'Manual monitoring', zh: '依赖人工巡检' },
-    body: {
-      en: 'Administrators had to piece together connector status across separate surfaces instead of starting from one reliable operational view.',
-      zh: '管理员需要在多个分散界面中拼接连接状态，而不是从一个可信的运维视图开始。',
+    date: '2026-08-04',
+    title: { en: 'Health dashboard', zh: '健康仪表盘' },
+    stage: { en: 'Foundation', zh: '基础模型' },
+    image: 'v1-health-dashboard.png',
+    changed: {
+      en: 'Created the first health dashboard with status cards, notifications, Gallery, and Your Connections.',
+      zh: '建立第一版健康仪表盘，将状态卡、通知、Gallery 和 Your Connections 放进同一体验。',
+    },
+    why: {
+      en: 'Establish the baseline information model for monitoring health and moving into setup.',
+      zh: '先建立监控连接健康并进入设置流程的基础信息模型。',
     },
   },
   {
     number: '02',
-    title: { en: 'Late awareness', zh: '问题发现太晚' },
-    body: {
-      en: 'A failure often became visible only after it affected downstream experiences, turning monitoring into reactive investigation.',
-      zh: '故障往往在影响下游体验后才被发现，健康监控因此变成被动排查。',
+    date: '2026-08-18',
+    title: { en: 'Notification triage', zh: '通知分诊' },
+    stage: { en: 'Actionable diagnosis', zh: '可行动诊断' },
+    image: 'v3-health-overview.png',
+    changed: {
+      en: 'Combined the responsibility split from V2 with a denser triage surface and remediation-focused details.',
+      zh: '把 V2 的职责拆分与更紧凑的分诊界面、面向修复的详情结构整合起来。',
+    },
+    why: {
+      en: 'Help administrators understand a signal quickly, while keeping corrective configuration in Your Connections.',
+      zh: '帮助管理员快速理解信号，同时把真正的配置修复保留在 Your Connections。',
     },
   },
   {
     number: '03',
-    title: { en: 'Broken handoff', zh: '诊断与修复脱节' },
-    body: {
-      en: 'An alert could describe an event, but it rarely preserved enough context to explain impact, probable cause, and the next action.',
-      zh: '告警可以描述事件，却很少保留足够上下文来说明影响、可能原因和下一步行动。',
+    date: '2026-08-25',
+    title: { en: 'Operational system', zh: '运营系统' },
+    stage: { en: 'Current · Interactive', zh: '当前版本 · 可交互' },
+    image: 'current-overview.png',
+    changed: {
+      en: 'Folded useful War Room concepts into the dashboard: adoption signals, limited-rollout status, diagnostic history, and an AI-assisted repair POC.',
+      zh: '把 War Room 中有价值的业务信息融入 Dashboard：采用信号、有限发布状态、诊断历史和 AI 辅助修复概念验证。',
     },
-  },
-] satisfies Array<{ number: string; title: LocalizedText; body: LocalizedText }>;
-
-const evolution = [
-  {
-    step: '01',
-    title: { en: 'Email notification', zh: '邮件告警' },
-    label: { en: 'Surface the event', zh: '让事件被看见' },
-    body: {
-      en: 'Start with proactive alerts for a small set of high-value operational failures and subscription controls.',
-      zh: '从少量高价值运营故障的主动提醒与订阅控制开始。',
-    },
-  },
-  {
-    step: '02',
-    title: { en: 'Notification system', zh: '通知系统' },
-    label: { en: 'Organize the signals', zh: '组织健康信号' },
-    body: {
-      en: 'Add history, lifecycle events, in-product visibility, and a consistent model for managing notifications.',
-      zh: '加入历史记录、生命周期事件、产品内可见性和一致的通知管理模型。',
-    },
-  },
-  {
-    step: '03',
-    title: { en: 'Health center', zh: '健康中心' },
-    label: { en: 'Close the action loop', zh: '闭合行动链路' },
-    body: {
-      en: 'Connect monitoring, alerting, diagnosis, and remediation so an administrator can move from signal to resolution.',
-      zh: '连接监控、告警、诊断与修复，让管理员能够从信号直接走向问题解决。',
-    },
-  },
-] satisfies Array<{ step: string; title: LocalizedText; label: LocalizedText; body: LocalizedText }>;
-
-const evidence = [
-  {
-    label: { en: 'Operational evidence', zh: '运营证据' },
-    title: { en: 'The work was repetitive and reactive', zh: '工作重复且被动' },
-    body: {
-      en: 'Administrators described repeatedly checking large connector estates and manually reconstructing what changed.',
-      zh: '管理员需要反复检查大量连接，并手动还原系统中发生了什么变化。',
-    },
-  },
-  {
-    label: { en: 'Product evidence', zh: '产品证据' },
-    title: { en: 'The roadmap was already outgrowing email', zh: '产品范围早已超出邮件' },
-    body: {
-      en: 'History, health metrics, in-product signals, and remediation guidance pointed to a broader operating model.',
-      zh: '历史事件、健康指标、产品内信号和修复指导共同指向一个更完整的运维模型。',
-    },
-  },
-  {
-    label: { en: 'Validation evidence', zh: '验证证据' },
-    title: { en: 'Trust and action mattered more than volume', zh: '可信与可行动比数量更重要' },
-    body: {
-      en: 'Administrator reviews consistently prioritized signal accuracy, clear metric semantics, historical context, and actionable guidance.',
-      zh: '管理员验证持续将信号准确性、清晰的指标语义、历史上下文和可执行指导放在首位。',
-    },
-  },
-] satisfies Array<{ label: LocalizedText; title: LocalizedText; body: LocalizedText }>;
-
-const loopSteps = [
-  {
-    number: '01',
-    title: { en: 'Monitor', zh: '监控' },
-    body: { en: 'Understand overall health and freshness.', zh: '理解整体健康状态与数据新鲜度。' },
-  },
-  {
-    number: '02',
-    title: { en: 'Alert', zh: '告警' },
-    body: { en: 'Surface the right signal to the right owner.', zh: '把正确的信号传递给正确的负责人。' },
-  },
-  {
-    number: '03',
-    title: { en: 'Diagnose', zh: '诊断' },
-    body: { en: 'Explain impact, history, and probable cause.', zh: '解释影响范围、历史与可能原因。' },
-  },
-  {
-    number: '04',
-    title: { en: 'Fix', zh: '修复' },
-    body: { en: 'Hand off context to the relevant action surface.', zh: '携带上下文进入对应的修复入口。' },
-  },
-] satisfies Array<{ number: string; title: LocalizedText; body: LocalizedText }>;
-
-const principles = [
-  {
-    title: { en: 'Trust before breadth', zh: '可信优先于功能广度' },
-    body: { en: 'A smaller set of dependable signals is more useful than a noisy dashboard.', zh: '少量可靠信号，比充满噪声的仪表盘更有价值。' },
-  },
-  {
-    title: { en: 'Action over awareness', zh: '行动优先于告知' },
-    body: { en: 'Every event should help an administrator decide, not simply announce a failure.', zh: '每个事件都应帮助管理员做决定，而不只是宣布故障。' },
-  },
-  {
-    title: { en: 'Overview before drilldown', zh: '先总览，再深入' },
-    body: { en: 'Start with operational posture, then reveal detail only when it changes the next step.', zh: '先建立运营态势，只在细节会改变下一步时逐步展开。' },
-  },
-  {
-    title: { en: 'Preserve context', zh: '保留操作上下文' },
-    body: { en: 'Connector, scope, history, and severity should survive the handoff into remediation.', zh: '连接对象、影响范围、历史与严重程度应被带入修复流程。' },
-  },
-] satisfies Array<{ title: LocalizedText; body: LocalizedText }>;
-
-const decisions = [
-  {
-    number: '01',
-    title: { en: 'Make Overview the operating surface', zh: '让 Overview 成为运维入口' },
-    before: { en: 'A dedicated notification destination', zh: '独立的通知目的地' },
-    after: { en: 'Health, events, and actions in one overview', zh: '健康状态、事件与行动汇聚在同一总览' },
-    body: {
-      en: 'A separate inbox split “what happened” from “is the system healthy?” Integrating signals into Overview made notification part of the operating model rather than another place to check.',
-      zh: '独立收件箱把“发生了什么”和“系统是否健康”割裂开。将信号整合进 Overview，让通知成为运维模型的一部分，而不是另一个需要巡检的位置。',
-    },
-  },
-  {
-    number: '02',
-    title: { en: 'Diagnose in context, remediate in place', zh: '在上下文中诊断，在正确位置修复' },
-    before: { en: 'Open a disconnected detail page', zh: '打开割裂的详情页面' },
-    after: { en: 'Use a side panel, then hand off with context', zh: '用侧边栏解释，再携带上下文完成交接' },
-    body: {
-      en: 'The detail panel keeps the administrator anchored in the health overview while explaining impact and next steps. Complex remediation remains in the management surface built for it.',
-      zh: '详情侧边栏让管理员停留在健康总览中理解影响和下一步；复杂修复仍由最适合承载它的管理界面完成。',
-    },
-  },
-  {
-    number: '03',
-    title: { en: 'Turn events into decisions', zh: '把事件变成决策信息' },
-    before: { en: 'Informational error text', zh: '只提供错误描述' },
-    after: { en: 'Issue, impact, context, guidance, destination', zh: '问题、影响、上下文、指导与目的地' },
-    body: {
-      en: 'The content model was expanded so every health event can answer what happened, who is affected, what is known, and where the administrator can act.',
-      zh: '事件内容模型被扩展为能够回答：发生了什么、影响谁、目前已知什么，以及管理员应该去哪里行动。',
-    },
-  },
-  {
-    number: '04',
-    title: { en: 'Treat accuracy as experience quality', zh: '把准确性视为体验质量' },
-    before: { en: 'Add more metrics and scenarios', zh: '继续增加指标与场景' },
-    after: { en: 'Clarify freshness, coverage, and confidence first', zh: '先明确新鲜度、覆盖范围与可信程度' },
-    body: {
-      en: 'Validation showed that false positives can erode trust faster than missing features. Telemetry semantics and data freshness therefore became product-design requirements.',
-      zh: '验证表明，误报破坏信任的速度可能快于功能缺失。因此，遥测语义和数据新鲜度也成为产品设计要求。',
+    why: {
+      en: 'Keep the IA stable while expanding the operational value of the same interactive prototype.',
+      zh: '保持信息架构稳定，同时在同一交互原型中扩展实际运营价值。',
     },
   },
 ] satisfies Array<{
   number: string;
+  date: string;
   title: LocalizedText;
-  before: LocalizedText;
-  after: LocalizedText;
-  body: LocalizedText;
+  stage: LocalizedText;
+  image: string;
+  changed: LocalizedText;
+  why: LocalizedText;
 }>;
 
-const validationInsights = [
+const validationChanges = [
   {
-    heard: { en: 'False positives make the entire view feel unreliable.', zh: '误报会让整个健康视图失去可信度。' },
-    learned: { en: 'Accuracy is a launch-critical experience requirement.', zh: '准确性是影响发布的体验要求。' },
-    response: { en: 'Expose freshness and coverage before expanding the metric set.', zh: '在扩展指标前，先表达数据新鲜度与覆盖范围。' },
+    evidence: {
+      en: 'False positives made the whole health view feel unreliable.',
+      zh: '误报会让整个健康视图失去可信度。',
+    },
+    decision: {
+      en: 'Treat telemetry accuracy and freshness as experience requirements.',
+      zh: '把遥测准确性和数据新鲜度视为体验要求。',
+    },
   },
   {
-    heard: { en: '“Needs attention” and open events did not tell one coherent story.', zh: '“需要关注”和未处理事件没有形成一致语义。' },
-    learned: { en: 'Counts need an explicit hierarchy and relationship.', zh: '计数需要明确的信息层级和对应关系。' },
-    response: { en: 'Define metric semantics before polishing dashboard visuals.', zh: '先定义指标语义，再完善仪表盘视觉。' },
+    evidence: {
+      en: '“Needs attention” and open notifications did not tell one coherent story.',
+      zh: '“需要关注”和未处理通知没有形成一致的故事。',
+    },
+    decision: {
+      en: 'Define metric hierarchy and count relationships before adding more cards.',
+      zh: '在增加更多卡片前，先定义指标层级和计数关系。',
+    },
   },
   {
-    heard: { en: 'An error description alone does not help resolve the issue.', zh: '只有错误描述无法帮助管理员解决问题。' },
-    learned: { en: 'Actionability is part of the event, not an optional add-on.', zh: '可执行性是事件模型的一部分，而不是附加能力。' },
-    response: { en: 'Add diagnostic context, guidance, and a clear remediation handoff.', zh: '补充诊断上下文、指导和明确的修复交接。' },
+    evidence: {
+      en: 'An error description alone did not help administrators recover.',
+      zh: '单独的错误描述无法帮助管理员完成恢复。',
+    },
+    decision: {
+      en: 'Make impact, sync context, next steps, and repair destination part of the notification.',
+      zh: '让影响、同步上下文、下一步和修复目的地成为通知本身的一部分。',
+    },
   },
-  {
-    heard: { en: 'History, partial failures, and routing matter in real operations.', zh: '历史、部分失败和告警路由对真实运维很重要。' },
-    learned: { en: 'A current-state snapshot cannot explain operational risk by itself.', zh: '单一当前状态无法独立解释运营风险。' },
-    response: { en: 'Keep history and routing visible as validated next problems—not shipped claims.', zh: '将历史与路由明确为已验证的后续问题，而不是包装成已交付能力。' },
-  },
-] satisfies Array<{ heard: LocalizedText; learned: LocalizedText; response: LocalizedText }>;
+] satisfies Array<{ evidence: LocalizedText; decision: LocalizedText }>;
 
-const demoEvents = [
-  {
-    severity: 'critical' as const,
-    title: { en: 'Search index freshness delayed', zh: '搜索索引更新延迟' },
-    source: { en: 'Knowledge workspace', zh: '知识工作区' },
-    time: { en: '12 min ago', zh: '12 分钟前' },
-    impact: { en: 'New content may not appear in search results.', zh: '最新内容可能暂时不会出现在搜索结果中。' },
-    context: { en: 'The latest scheduled crawl completed only part of the configured scope.', zh: '最近一次计划抓取仅完成了配置范围的一部分。' },
-    guidance: { en: 'Review the partial crawl, then retry after confirming source access.', zh: '检查部分抓取记录，确认源访问权限后重试。' },
-  },
-  {
-    severity: 'warning' as const,
-    title: { en: 'Authentication expires soon', zh: '身份验证即将到期' },
-    source: { en: 'Support portal', zh: '支持门户' },
-    time: { en: '2 hr ago', zh: '2 小时前' },
-    impact: { en: 'Future synchronization may stop if access is not renewed.', zh: '如果不续期访问权限，后续同步可能停止。' },
-    context: { en: 'The current credential remains valid for a limited period.', zh: '当前凭据仍然有效，但剩余时间有限。' },
-    guidance: { en: 'Notify the connection owner and renew access before expiration.', zh: '通知连接负责人，并在到期前续期访问权限。' },
-  },
-  {
-    severity: 'resolved' as const,
-    title: { en: 'Crawl volume returned to baseline', zh: '抓取量已恢复到基线' },
-    source: { en: 'Sales workspace', zh: '销售工作区' },
-    time: { en: 'Yesterday', zh: '昨天' },
-    impact: { en: 'No current user impact.', zh: '当前没有用户影响。' },
-    context: { en: 'A temporary source-side limit reduced throughput for one cycle.', zh: '数据源的临时限制曾导致一个周期的吞吐量下降。' },
-    guidance: { en: 'No action required. Keep the event for historical context.', zh: '无需操作，保留该事件用于历史上下文。' },
-  },
-];
-
-const severityStyle = {
-  critical: {
-    dot: 'bg-rose-400',
-    badge: 'border-rose-400/30 bg-rose-400/10 text-rose-200',
-    label: { en: 'Needs action', zh: '需要处理' },
-  },
-  warning: {
-    dot: 'bg-amber-300',
-    badge: 'border-amber-300/30 bg-amber-300/10 text-amber-100',
-    label: { en: 'Plan action', zh: '计划处理' },
-  },
-  resolved: {
-    dot: 'bg-emerald-300',
-    badge: 'border-emerald-300/30 bg-emerald-300/10 text-emerald-100',
-    label: { en: 'Resolved', zh: '已恢复' },
-  },
-} as const;
-
-function Reveal({
-  children,
+function ScreenshotFrame({
+  item,
+  lang,
+  onOpen,
+  priority = false,
   className = '',
-  delay = 0,
 }: {
-  children: ReactNode;
+  item: MediaItem;
+  lang: Lang;
+  onOpen: (item: MediaItem) => void;
+  priority?: boolean;
   className?: string;
-  delay?: number;
+}) {
+  return (
+    <figure className={`overflow-hidden rounded-[24px] border border-[#dfe2e7] bg-white shadow-[0_18px_50px_rgba(17,19,24,0.07)] ${className}`}>
+      <div className="flex items-center justify-between gap-4 border-b border-[#dfe2e7] px-4 py-3 md:px-5">
+        <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8e949e]">
+          {item.label[lang]}
+        </span>
+        <span className="text-xs text-[#8e949e]">{lang === 'zh' ? '点击放大' : 'Click to expand'}</span>
+      </div>
+      <button
+        type="button"
+        onClick={() => onOpen(item)}
+        className="group block w-full overflow-hidden bg-[#eef1f5] text-left focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#1267d6]"
+        aria-label={lang === 'zh' ? `放大查看：${item.alt.zh}` : `Expand image: ${item.alt.en}`}
+      >
+        <img
+          src={item.src}
+          alt={item.alt[lang]}
+          width={2160}
+          height={1440}
+          loading={priority ? 'eager' : 'lazy'}
+          decoding="async"
+          className="h-auto w-full transition-transform duration-500 group-hover:scale-[1.01] motion-reduce:transition-none"
+        />
+      </button>
+      <figcaption className="border-t border-[#dfe2e7] px-4 py-3 text-sm leading-6 text-[#626872] md:px-5">
+        {item.caption[lang]}
+      </figcaption>
+    </figure>
+  );
+}
+
+function Lightbox({
+  item,
+  lang,
+  onClose,
+}: {
+  item: MediaItem | null;
+  lang: Lang;
+  onClose: () => void;
 }) {
   const reduceMotion = useReducedMotion();
 
+  useEffect(() => {
+    if (!item) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [item, onClose]);
+
   return (
-    <motion.div
-      initial={reduceMotion ? false : { y: 22 }}
-      whileInView={{ y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: reduceMotion ? 0 : 0.6, delay: reduceMotion ? 0 : delay, ease: [0.22, 1, 0.36, 1] }}
-      className={className}
-    >
-      {children}
-    </motion.div>
+    <AnimatePresence>
+      {item && (
+        <motion.div
+          role="dialog"
+          aria-modal="true"
+          aria-label={item.alt[lang]}
+          initial={reduceMotion ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/88 p-3 backdrop-blur-sm md:p-8"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) onClose();
+          }}
+        >
+          <motion.div
+            initial={reduceMotion ? false : { opacity: 0, y: 18, scale: 0.985 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 12, scale: 0.99 }}
+            className="relative max-h-[95vh] max-w-[96vw]"
+          >
+            <button
+              type="button"
+              onClick={onClose}
+              className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/75 text-xl text-white backdrop-blur transition hover:bg-black"
+              aria-label={lang === 'zh' ? '关闭大图' : 'Close image'}
+            >
+              ×
+            </button>
+            <img
+              src={item.src}
+              alt={item.alt[lang]}
+              width={2160}
+              height={1440}
+              className="h-auto w-auto max-h-[88vh] max-w-[94vw] rounded-2xl object-contain shadow-2xl"
+            />
+            <div className="mx-auto mt-3 max-w-4xl text-center text-sm text-white/70">{item.caption[lang]}</div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
-function SectionIntro({
-  eyebrow,
-  title,
-  body,
-  dark = false,
+function VersionExplorer({
+  lang,
+  onOpen,
 }: {
-  eyebrow: string;
-  title: string;
-  body?: string;
-  dark?: boolean;
+  lang: Lang;
+  onOpen: (item: MediaItem) => void;
 }) {
-  return (
-    <Reveal className="max-w-4xl">
-      <div className={`mb-6 flex items-center gap-3 font-mono text-[11px] font-semibold uppercase tracking-[0.22em] ${dark ? 'text-white/45' : 'text-[#8e949e]'}`}>
-        <span className="text-[#1267d6]">{eyebrow.split(' · ')[0]}</span>
-        <span className={`h-px w-9 ${dark ? 'bg-white/20' : 'bg-[#c9cdd4]'}`} />
-        <span>{eyebrow.split(' · ').slice(1).join(' · ')}</span>
-      </div>
-      <h2 className={`text-[clamp(2.4rem,5vw,4.15rem)] font-[720] leading-[0.98] tracking-[-0.052em] ${dark ? 'text-white' : 'text-[#111318]'}`}>
-        {title}
-      </h2>
-      {body && <p className={`mt-7 max-w-3xl text-base leading-8 md:text-[19px] ${dark ? 'text-white/58' : 'text-[#626872]'}`}>{body}</p>}
-    </Reveal>
-  );
-}
-
-function HealthDashboardMock({ lang }: { lang: Lang }) {
-  const bars = ['38%', '52%', '47%', '70%', '58%', '82%', '76%', '68%', '88%', '79%', '91%', '84%'];
+  const [selectedVersion, setSelectedVersion] = useState(2);
+  const selected = versions[selectedVersion];
+  const media: MediaItem = {
+    src: screenshotPath(selected.image),
+    alt: {
+      en: `${selected.title.en} design iteration`,
+      zh: `${selected.title.zh}设计迭代`,
+    },
+    label: selected.stage,
+    caption: selected.changed,
+  };
 
   return (
-    <div className="relative overflow-hidden rounded-[28px] border border-white/15 bg-[#08131f] shadow-[0_36px_100px_rgba(0,0,0,0.45)]">
-      <div className="flex h-12 items-center justify-between border-b border-white/10 bg-white/[0.035] px-5">
-        <div className="flex gap-2" aria-hidden="true">
-          <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
-          <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
-          <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
-        </div>
-        <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-slate-500">
-          {lang === 'zh' ? '抽象界面 · 示例数据' : 'Abstract interface · Illustrative data'}
-        </span>
-      </div>
-
-      <div className="grid min-h-[470px] grid-cols-[52px_1fr] md:grid-cols-[72px_1fr]">
-        <div className="border-r border-white/10 bg-white/[0.02] px-3 py-5">
-          <div className="mx-auto mb-8 flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-300 text-xs font-black text-[#06111d]">
-            H
-          </div>
-          <div className="space-y-4">
-            {[true, false, false, false].map((active, index) => (
-              <div
-                key={index}
-                className={`mx-auto h-8 w-8 rounded-lg border ${active ? 'border-cyan-300/40 bg-cyan-300/15' : 'border-white/5 bg-white/[0.025]'}`}
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className="min-w-0 p-4 md:p-6">
-          <div className="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
-            <div>
-              <p className="text-xs text-slate-500">{lang === 'zh' ? '企业连接' : 'Enterprise connections'}</p>
-              <h3 className="mt-1 text-xl font-semibold text-white md:text-2xl">
-                {lang === 'zh' ? '连接健康总览' : 'Connection health overview'}
-              </h3>
-            </div>
-            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1.5 text-xs text-emerald-100">
-              <span className="h-2 w-2 rounded-full bg-emerald-300" />
-              {lang === 'zh' ? '数据更新于 4 分钟前' : 'Updated 4 minutes ago'}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-3 gap-2 md:gap-3">
-            {[
-              { value: '12', label: lang === 'zh' ? '健康' : 'Healthy', tone: 'text-emerald-200' },
-              { value: '2', label: lang === 'zh' ? '需关注' : 'Attention', tone: 'text-amber-100' },
-              { value: '1', label: lang === 'zh' ? '需处理' : 'Action', tone: 'text-rose-200' },
-            ].map((metric) => (
-              <div key={metric.label} className="rounded-xl border border-white/10 bg-white/[0.035] p-3 md:p-4">
-                <div className={`text-2xl font-semibold md:text-3xl ${metric.tone}`}>{metric.value}</div>
-                <div className="mt-1 text-[10px] uppercase tracking-[0.12em] text-slate-500 md:text-xs">{metric.label}</div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-3 grid gap-3 lg:grid-cols-[1.15fr_0.85fr]">
-            <div className="rounded-xl border border-white/10 bg-white/[0.025] p-4">
-              <div className="mb-4 flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-300">{lang === 'zh' ? '健康信号趋势' : 'Health signal trend'}</span>
-                <span className="text-[10px] text-slate-600">{lang === 'zh' ? '最近 12 个周期' : 'Last 12 cycles'}</span>
-              </div>
-              <div className="flex h-24 items-end gap-1.5 border-b border-white/10">
-                {bars.map((height, index) => (
-                  <div
-                    key={index}
-                    className={`flex-1 rounded-t-sm ${index === 8 ? 'bg-amber-300/70' : index === 9 ? 'bg-rose-300/70' : 'bg-cyan-300/45'}`}
-                    style={{ height }}
-                  />
-                ))}
-              </div>
-              <div className="mt-4 space-y-2.5">
-                {demoEvents.slice(0, 2).map((event) => {
-                  const style = severityStyle[event.severity];
-                  return (
-                    <div key={event.title.en} className="flex items-center gap-3 rounded-lg bg-white/[0.03] px-3 py-2.5">
-                      <span className={`h-2 w-2 flex-none rounded-full ${style.dot}`} />
-                      <span className="min-w-0 flex-1 truncate text-xs text-slate-300">{event.title[lang]}</span>
-                      <span className="text-[10px] text-slate-600">{event.time[lang]}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="rounded-xl border border-cyan-300/15 bg-cyan-300/[0.045] p-4">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-cyan-300">
-                {lang === 'zh' ? '推荐行动' : 'Recommended action'}
-              </span>
-              <h4 className="mt-3 text-sm font-semibold text-white">
-                {lang === 'zh' ? '检查部分抓取范围' : 'Review partial crawl scope'}
-              </h4>
-              <p className="mt-2 text-xs leading-5 text-slate-400">
-                {lang === 'zh'
-                  ? '确认数据源访问权限后，再重新运行受影响的同步。'
-                  : 'Confirm source access before retrying the affected synchronization.'}
-              </p>
-              <div className="mt-5 flex items-center gap-2 text-xs font-medium text-cyan-200">
-                {lang === 'zh' ? '查看诊断上下文' : 'View diagnostic context'}
-                <span aria-hidden="true">→</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ExperienceDemo({ lang }: { lang: Lang }) {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const selected = demoEvents[selectedIndex];
-  const selectedStyle = severityStyle[selected.severity];
-
-  return (
-    <div className="overflow-hidden rounded-[28px] border border-white/15 bg-[#08131f] shadow-[0_32px_90px_rgba(0,0,0,0.35)]">
-      <div className="flex items-center justify-between border-b border-white/10 px-5 py-4 md:px-7">
-        <div>
-          <p className="text-xs text-slate-500">{lang === 'zh' ? '抽象交互原型' : 'Abstract interaction prototype'}</p>
-          <h3 className="mt-1 text-base font-semibold text-white">{lang === 'zh' ? '健康事件与诊断详情' : 'Health events and diagnostic detail'}</h3>
-        </div>
-        <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-slate-500">
-          {lang === 'zh' ? '示例数据' : 'Illustrative data'}
-        </span>
-      </div>
-
-      <div className="grid lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="border-b border-white/10 p-4 md:p-6 lg:border-b-0 lg:border-r">
-          <div className="mb-4 flex items-center justify-between">
-            <span className="text-xs font-medium uppercase tracking-[0.14em] text-slate-500">
-              {lang === 'zh' ? '最近事件' : 'Recent events'}
-            </span>
-            <span className="text-xs text-slate-600">3</span>
-          </div>
-          <div className="space-y-2">
-            {demoEvents.map((event, index) => {
-              const style = severityStyle[event.severity];
-              const selectedEvent = selectedIndex === index;
-              return (
-                <button
-                  key={event.title.en}
-                  type="button"
-                  onClick={() => setSelectedIndex(index)}
-                  aria-pressed={selectedEvent}
-                  className={`w-full rounded-xl border p-4 text-left transition ${
-                    selectedEvent
-                      ? 'border-cyan-300/35 bg-cyan-300/[0.07]'
-                      : 'border-white/10 bg-white/[0.025] hover:border-white/15 hover:bg-white/[0.045]'
-                  }`}
-                >
-                  <div className="flex items-start gap-3">
-                    <span className={`mt-1.5 h-2.5 w-2.5 flex-none rounded-full ${style.dot}`} />
-                    <span className="min-w-0 flex-1">
-                      <span className="block text-sm font-medium text-white">{event.title[lang]}</span>
-                      <span className="mt-1 block text-xs text-slate-500">{event.source[lang]} · {event.time[lang]}</span>
-                    </span>
+    <div className="grid gap-6 lg:grid-cols-[0.34fr_0.66fr]">
+      <div className="space-y-2" role="group" aria-label={lang === 'zh' ? 'Health Center 版本选择' : 'Health Center version selector'}>
+        {versions.map((version, index) => {
+          const selectedItem = index === selectedVersion;
+          return (
+            <button
+              key={version.number}
+              type="button"
+              aria-pressed={selectedItem}
+              onClick={() => setSelectedVersion(index)}
+              className={`w-full rounded-[20px] border p-4 text-left transition ${
+                selectedItem
+                  ? 'border-[#1267d6]/35 bg-white shadow-[0_12px_30px_rgba(18,103,214,0.08)]'
+                  : 'border-[#dfe2e7] bg-white/55 hover:bg-white'
+              }`}
+            >
+              <div className="flex items-start gap-4">
+                <NumberBadge>{version.number}</NumberBadge>
+                <div className="min-w-0">
+                  <div className={`font-semibold ${selectedItem ? 'text-[#111318]' : 'text-[#626872]'}`}>
+                    {version.title[lang]}
                   </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+                  <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-[#8e949e]">
+                    {version.date} · {version.stage[lang]}
+                  </div>
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
 
-        <div className="p-5 md:p-8">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <span className={`rounded-full border px-3 py-1 text-xs font-medium ${selectedStyle.badge}`}>
-              {selectedStyle.label[lang]}
-            </span>
-            <span className="text-xs text-slate-600">{selected.time[lang]}</span>
-          </div>
-          <h4 className="mt-5 text-2xl font-semibold tracking-[-0.02em] text-white">{selected.title[lang]}</h4>
-          <p className="mt-2 text-sm text-slate-500">{selected.source[lang]}</p>
-
-          <div className="mt-7 grid gap-5 sm:grid-cols-2">
-            <div>
-              <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">{lang === 'zh' ? '影响' : 'Impact'}</div>
-              <p className="mt-2 text-sm leading-6 text-slate-300">{selected.impact[lang]}</p>
+      <div>
+        <ScreenshotFrame item={media} lang={lang} onOpen={onOpen} />
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          <EditorialCard>
+            <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#1267d6]">
+              {lang === 'zh' ? '我改变了什么' : 'What I changed'}
             </div>
-            <div>
-              <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">{lang === 'zh' ? '诊断上下文' : 'Diagnostic context'}</div>
-              <p className="mt-2 text-sm leading-6 text-slate-300">{selected.context[lang]}</p>
+            <p className="mt-4 text-base leading-7 text-[#111318]">{selected.changed[lang]}</p>
+          </EditorialCard>
+          <EditorialCard className="bg-[#edf4ff] shadow-none">
+            <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#1267d6]">
+              {lang === 'zh' ? '为什么这样改' : 'Why this decision'}
             </div>
-          </div>
-
-          <div className="mt-6 rounded-xl border border-cyan-300/15 bg-cyan-300/[0.05] p-4">
-            <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-cyan-300">{lang === 'zh' ? '建议操作' : 'Resolution guidance'}</div>
-            <p className="mt-2 text-sm leading-6 text-slate-200">{selected.guidance[lang]}</p>
-          </div>
-
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-5">
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-              {lang === 'zh' ? '交接目标' : 'Handoff target'}
-            </span>
-            <span className="inline-flex items-center gap-2 text-sm font-semibold text-cyan-200">
-              {lang === 'zh' ? '连接设置' : 'Connection settings'}
-              <span aria-hidden="true">→</span>
-            </span>
-          </div>
+            <p className="mt-4 text-base leading-7 text-[#111318]">{selected.why[lang]}</p>
+          </EditorialCard>
         </div>
       </div>
     </div>
+  );
+}
+
+function LiveDemo({ lang }: { lang: Lang }) {
+  const [revision, setRevision] = useState(0);
+  const demoUrl = `${basePath}/health-center-live-demo/index.html`;
+
+  return (
+    <Reveal>
+      <div className="overflow-hidden rounded-[28px] border border-white/14 bg-[#111318] shadow-[0_28px_80px_rgba(0,0,0,0.28)]">
+        <div className="flex flex-col justify-between gap-4 border-b border-white/10 px-5 py-4 sm:flex-row sm:items-center md:px-6">
+          <div>
+            <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#70a9f5]">
+              {lang === 'zh' ? '可交互代码原型' : 'Interactive coded prototype'}
+            </div>
+            <div className="mt-1 text-sm text-white/60">
+              {lang === 'zh'
+                ? 'Overview → 通知详情 → Your Connections → Cowork 修复'
+                : 'Overview → notification detail → Your Connections → Cowork repair'}
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setRevision((value) => value + 1)}
+              className="rounded-full border border-white/15 px-4 py-2 text-xs font-semibold text-white/75 transition hover:border-white/35 hover:text-white"
+            >
+              {lang === 'zh' ? '重置 Demo' : 'Reset demo'}
+            </button>
+            <a
+              href={demoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full bg-[#1267d6] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#2b78dc]"
+            >
+              {lang === 'zh' ? '新窗口打开 ↗' : 'Open full demo ↗'}
+            </a>
+          </div>
+        </div>
+        <iframe
+          key={revision}
+          src={`${demoUrl}?revision=${revision}`}
+          title={lang === 'zh' ? 'Health Center 可交互设计原型' : 'Health Center interactive design prototype'}
+          loading="lazy"
+          className="h-[660px] w-full border-0 bg-white md:h-[760px] lg:h-[820px]"
+          allow="clipboard-write"
+        />
+      </div>
+    </Reveal>
   );
 }
 
 export default function ConnectorHealthCenterPage() {
   const { lang, t } = useLanguage();
-  const reduceMotion = useReducedMotion();
+  const [lightboxItem, setLightboxItem] = useState<MediaItem | null>(null);
+
+  const currentOverview: MediaItem = {
+    src: screenshotPath('current-overview.png'),
+    alt: {
+      en: 'Current Health Center overview with connection status, adoption, and notifications',
+      zh: '当前 Health Center 总览，包含连接状态、采用情况和通知',
+    },
+    label: { en: 'Current design · Overview', zh: '当前设计 · Overview' },
+    caption: {
+      en: 'One operating surface connects connection status, adoption signals, and actionable notifications.',
+      zh: '一个运营入口将连接状态、采用信号和可行动通知连接起来。',
+    },
+  };
+
+  const notificationDetail: MediaItem = {
+    src: screenshotPath('notification-detail-panel.png'),
+    alt: {
+      en: 'Notification diagnostic panel with sync context and next steps',
+      zh: '包含同步上下文和下一步的通知诊断面板',
+    },
+    label: { en: 'Current design · Diagnosis', zh: '当前设计 · 诊断' },
+    caption: {
+      en: 'The latest panel explains what happened, sync context, next steps, recent activity, and the error log.',
+      zh: '最新版面板解释发生了什么、同步上下文、下一步、近期活动和错误日志。',
+    },
+  };
+
+  const adoptionDetail: MediaItem = {
+    src: screenshotPath('adoption-detail-panel.png'),
+    alt: {
+      en: 'Detailed adoption panel with summary and active-user trend',
+      zh: '包含摘要和活跃用户趋势的详细采用面板',
+    },
+    label: { en: 'Current design · Adoption drilldown', zh: '当前设计 · 采用情况详情' },
+    caption: {
+      en: 'Admin-facing metrics stay understandable at a glance, then reveal trend and scope on demand.',
+      zh: '面向管理员的指标先保持易读，再按需展开趋势和范围。',
+    },
+  };
+
+  const handoffDetail: MediaItem = {
+    src: screenshotPath('repair-handoff-your-connections.png'),
+    alt: {
+      en: 'Failed connection detail in Your Connections with fix actions',
+      zh: 'Your Connections 中带修复操作的失败连接详情',
+    },
+    label: { en: 'Design output · Repair handoff', zh: '设计产出 · 修复交接' },
+    caption: {
+      en: 'The notification carries the administrator into the failed connection detail without losing context.',
+      zh: '通知将管理员带入失败连接详情，同时保留问题上下文。',
+    },
+  };
+
+  const repairFlow: MediaItem[] = [
+    {
+      src: screenshotPath('repair-handoff-your-connections.png'),
+      alt: {
+        en: 'Failed connection detail with Fix now and Fix with Cowork actions',
+        zh: '包含立即修复和使用 Cowork 修复的失败连接详情',
+      },
+      label: { en: '01 · Choose a repair path', zh: '01 · 选择修复路径' },
+      caption: {
+        en: 'The failed connection is the source of truth; diagnosis arrives with it.',
+        zh: '失败连接是修复任务的事实来源，诊断上下文随之到达。',
+      },
+    },
+    {
+      src: screenshotPath('cowork-repair-poc.png'),
+      alt: {
+        en: 'Cowork proposes a credential repair action for administrator approval',
+        zh: 'Cowork 提出凭据修复操作并等待管理员批准',
+      },
+      label: { en: '02 · Review before execution', zh: '02 · 执行前审核' },
+      caption: {
+        en: 'The agent verifies the connection, explains the action, and requires explicit approval.',
+        zh: 'Agent 验证连接、解释操作，并要求管理员明确批准。',
+      },
+    },
+    {
+      src: screenshotPath('cowork-repair-approved.png'),
+      alt: {
+        en: 'Cowork confirms the repaired connection after approval',
+        zh: 'Cowork 在批准后确认连接修复成功',
+      },
+      label: { en: '03 · Confirm recovery', zh: '03 · 确认恢复' },
+      caption: {
+        en: 'The flow ends with a verified outcome, not a generic success message.',
+        zh: '流程以经过验证的恢复结果结束，而不是泛化的成功提示。',
+      },
+    },
+  ];
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#f7f8fa] text-[#111318]">
@@ -521,376 +447,415 @@ export default function ConnectorHealthCenterPage() {
       <Navigation />
 
       <main>
-        <section className="relative isolate overflow-hidden px-6 pb-24 pt-36 md:pb-32 md:pt-44">
-          <div className="pointer-events-none absolute inset-0 -z-10">
-            <div className="absolute left-[-8%] top-20 h-[420px] w-[420px] rounded-full bg-[#1267d6]/[0.055] blur-[120px]" />
-            <div className="absolute right-[-8%] top-[25%] h-[520px] w-[520px] rounded-full bg-[#1267d6]/[0.07] blur-[150px]" />
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#1267d6]/20 to-transparent" />
-          </div>
+        <Chapter tone="surface" className="pt-36 md:pt-44 lg:pt-48">
+          <Link
+            href="/projects"
+            className="mb-16 inline-flex items-center gap-2 text-sm font-medium text-[#626872] transition hover:text-[#1267d6]"
+          >
+            <span aria-hidden="true">←</span>
+            {t('All projects', '全部项目')}
+          </Link>
 
-          <div className="mx-auto max-w-[1160px]">
-            <Link
-              href="/projects"
-              className="mb-14 inline-flex items-center gap-2 text-sm font-medium text-[#626872] transition hover:text-[#1267d6]"
-            >
-              <span aria-hidden="true">←</span>
-              {t('All projects', '全部项目')}
-            </Link>
-
-            <div className="grid items-center gap-14 lg:grid-cols-[0.88fr_1.12fr] lg:gap-16">
-              <motion.div
-                initial={{ opacity: 0, y: reduceMotion ? 0 : 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: reduceMotion ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <div className="mb-7 flex flex-wrap items-center gap-3 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-[#1267d6]">
-                  <span>{t('Product design', '产品设计')}</span>
-                  <span className="h-1 w-1 rounded-full bg-[#1267d6]/40" />
-                  <span>{t('Enterprise operations', '企业运维')}</span>
-                  <span className="h-1 w-1 rounded-full bg-[#1267d6]/40" />
-                  <span>2026</span>
-                </div>
-                <h1 className={`max-w-2xl font-[720] leading-[0.94] tracking-[-0.065em] text-[#111318] ${lang === 'zh' ? 'text-[clamp(2.35rem,6vw,5.2rem)]' : 'text-[clamp(3.4rem,7.2vw,5.875rem)]'}`}>
-                  {lang === 'zh' ? (
-                    <>从收到告警，<br />到真正解决问题。</>
-                  ) : (
-                    <>From alerts<br />to action.</>
-                  )}
-                </h1>
-                <p className="mt-8 max-w-xl text-lg leading-8 text-[#626872] md:text-[21px]">
-                  {t(
-                    'I helped evolve connector notifications into a proactive health-management loop where administrators can monitor status, understand failures, and move directly toward resolution.',
-                    '我推动连接器通知从单向提醒演进为主动健康管理闭环，让管理员能够监控状态、理解故障，并直接进入修复路径。'
-                  )}
-                </p>
-
-                <div className="mt-10 grid max-w-xl grid-cols-2 gap-px overflow-hidden rounded-[24px] border border-[#dfe2e7] bg-[#dfe2e7]">
-                  {[
-                    { label: t('Role', '角色'), value: t('Product designer', '产品设计师') },
-                    { label: t('Scope', '范围'), value: t('Definition to validation', '从产品定义到验证') },
-                    { label: t('Focus', '重点'), value: t('Trust + actionability', '可信与可行动') },
-                    { label: t('Status', '状态'), value: t('Validated direction', '已验证方向') },
-                  ].map((item) => (
-                    <div key={item.label} className="bg-white p-4 md:p-5">
-                      <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#8e949e]">{item.label}</div>
-                      <div className="mt-2 text-sm font-semibold text-[#111318]">{item.value}</div>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, scale: reduceMotion ? 1 : 0.97, y: reduceMotion ? 0 : 24 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ duration: reduceMotion ? 0 : 0.8, delay: reduceMotion ? 0 : 0.12, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <HealthDashboardMock lang={lang} />
-              </motion.div>
+          <Reveal>
+            <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-[#1267d6]">
+              {t('Product design · AI-native coded prototype · Current in review', '产品设计 · AI 原生代码原型 · 当前评审中')}
             </div>
-
-            <div className="mt-10 flex items-center gap-3 font-mono text-[11px] text-[#8e949e]">
-              <span className="flex h-5 w-5 items-center justify-center rounded-full border border-[#c9cdd4]" aria-hidden="true">i</span>
+            <h1 className={`mt-8 max-w-5xl font-[720] leading-[0.94] tracking-[-0.065em] text-[#111318] ${lang === 'zh' ? 'text-[clamp(2.8rem,6.5vw,5.7rem)]' : 'text-[clamp(3.35rem,7.2vw,6.5rem)]'}`}>
               {t(
-                'Public case study. Interfaces, names, and data are intentionally abstracted.',
-                '公开案例版本。界面、名称与数据均经过抽象化处理。'
+                'Designing the path from connector health signal to recovery.',
+                '设计一条从连接健康信号到完成修复的路径。'
               )}
-            </div>
-          </div>
-        </section>
-
-        <section className="border-t border-[#dfe2e7] bg-white px-6 py-24 md:py-32 lg:py-36">
-          <div className="mx-auto max-w-[1160px]">
-            <SectionIntro
-              eyebrow={t('01 · Operational reality', '01 · 运营现实')}
-              title={t(
-                'A notification can say something broke. It cannot solve the operational problem.',
-                '通知可以告诉你故障发生了，却无法独立解决运维问题。'
+            </h1>
+            <p className="mt-8 max-w-3xl text-lg leading-8 text-[#626872] md:text-[21px]">
+              {t(
+                'I turned passive notifications into an operational experience that helps administrators see risk, diagnose failures, and move into repair without rebuilding context.',
+                '我把被动通知重构为一套运营体验，让管理员能够发现风险、诊断故障，并在无需重建上下文的情况下进入修复。'
               )}
-              body={t(
-                'Without a shared health view, administrators were left to discover risk late, reconstruct context, and search for the right place to act.',
-                '缺少统一健康视图时，管理员只能较晚发现风险、重新拼接上下文，再寻找正确的操作入口。'
-              )}
-            />
+            </p>
+          </Reveal>
 
-            <div className="mt-14 grid gap-5 md:grid-cols-3">
-              {operationalGaps.map((gap, index) => (
-                <Reveal key={gap.number} delay={index * 0.08} className="rounded-[24px] border border-[#dfe2e7] bg-[#f7f8fa] p-6 md:p-7">
-                  <div className="font-mono text-xs font-semibold text-[#1267d6]">{gap.number}</div>
-                  <h3 className="mt-8 text-xl font-semibold text-[#111318]">{gap.title[lang]}</h3>
-                  <p className="mt-4 text-base leading-7 text-[#626872]">{gap.body[lang]}</p>
-                </Reveal>
-              ))}
+          <Reveal className="mt-12">
+            <MetaGrid
+              items={[
+                { label: t('Role', '角色'), value: t('Product designer', '产品设计师') },
+                { label: t('Owned', '负责内容'), value: t('Framing · IA · interaction · prototyping', '问题定义 · 信息架构 · 交互 · 原型') },
+                { label: t('Designed', '设计产出'), value: t('Overview · diagnostics · repair handoff', '总览 · 诊断 · 修复交接') },
+                { label: t('Method', '方法'), value: t('Coded exploration + admin validation', '代码化探索 + 管理员验证') },
+              ]}
+            />
+          </Reveal>
+
+          <div className="mt-10 grid gap-5 lg:grid-cols-[1.24fr_0.76fr]">
+            <ScreenshotFrame item={currentOverview} lang={lang} onOpen={setLightboxItem} priority />
+            <div className="grid gap-5">
+              <ScreenshotFrame item={notificationDetail} lang={lang} onOpen={setLightboxItem} />
+              <ScreenshotFrame item={adoptionDetail} lang={lang} onOpen={setLightboxItem} />
             </div>
           </div>
-        </section>
 
-        <section className="border-t border-[#dfe2e7] bg-[#f7f8fa] px-6 py-24 md:py-32 lg:py-36">
-          <div className="mx-auto max-w-[1160px]">
-            <SectionIntro
-              eyebrow={t('02 · Product evolution', '02 · 产品演进')}
-              title={t('The scope changed when the user task became clearer.', '当用户任务变清晰，产品范围也随之改变。')}
-              body={t(
-                'The work did not jump directly to a dashboard. It expanded step by step—from surfacing critical events to organizing signals, and finally to closing the operational loop.',
-                '项目并不是直接跳到一个仪表盘，而是从暴露关键事件、组织健康信号，逐步演进到闭合完整运维链路。'
-              )}
-            />
-
-            <div className="relative mt-16 grid gap-6 lg:grid-cols-3">
-              <div className="absolute left-[16.7%] right-[16.7%] top-7 hidden h-px bg-[#c9cdd4] lg:block" />
-              {evolution.map((stage, index) => (
-                <Reveal key={stage.step} delay={index * 0.1} className="relative">
-                  <div className="mb-7 flex h-14 w-14 items-center justify-center rounded-full border border-[#c9cdd4] bg-white font-mono text-sm font-semibold text-[#1267d6] shadow-[0_10px_30px_rgba(17,19,24,0.06)]">
-                    {stage.step}
-                  </div>
-                  <div className={`rounded-[24px] border p-6 ${index === 2 ? 'border-[#171a21] bg-[#171a21] text-white shadow-[0_20px_50px_rgba(17,19,24,0.14)]' : 'border-[#dfe2e7] bg-white'}`}>
-                    <span className={`font-mono text-[11px] font-semibold uppercase tracking-[0.15em] ${index === 2 ? 'text-[#70a9f5]' : 'text-[#1267d6]'}`}>{stage.label[lang]}</span>
-                    <h3 className={`mt-3 text-2xl font-semibold ${index === 2 ? 'text-white' : 'text-[#111318]'}`}>{stage.title[lang]}</h3>
-                    <p className={`mt-4 text-base leading-7 ${index === 2 ? 'text-white/60' : 'text-[#626872]'}`}>{stage.body[lang]}</p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-
-            <Reveal className="mt-12 rounded-[28px] border border-[#2a2e37] bg-[#171a21] p-7 shadow-[0_24px_70px_rgba(17,19,24,0.16)] md:p-10">
-              <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-[#70a9f5]">{t('The shift', '关键转折')}</div>
-              <p className="mt-6 max-w-4xl text-2xl font-medium leading-[1.2] tracking-[-0.03em] text-white md:text-3xl">
-                {t(
-                  'The problem was not “we need more notifications.” It was “administrators need a continuous path from risk to resolution.”',
-                  '真正的问题不是“我们需要更多通知”，而是“管理员需要一条从发现风险到完成修复的连续路径”。'
-                )}
-              </p>
-            </Reveal>
-          </div>
-        </section>
-
-        <section className="border-t border-black/10 bg-[#171a21] px-6 py-24 text-white md:py-32 lg:py-36">
-          <div className="mx-auto max-w-[1160px]">
-            <SectionIntro
-              eyebrow={t('03 · Evidence', '03 · 证据')}
-              title={t('The direction came from converging evidence—not a dashboard trend.', '方向来自多层证据，而不是对仪表盘形式的偏好。')}
-              dark
-            />
-
-            <div className="mt-14 grid gap-px overflow-hidden rounded-[24px] border border-white/12 bg-white/12 lg:grid-cols-3">
-              {evidence.map((item, index) => (
-                <Reveal key={item.label.en} delay={index * 0.08} className="bg-[#171a21] p-7 md:p-8">
-                  <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70a9f5]">{item.label[lang]}</span>
-                  <h3 className="mt-5 text-xl font-semibold leading-7 text-white">{item.title[lang]}</h3>
-                  <p className="mt-4 text-base leading-7 text-white/58">{item.body[lang]}</p>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="relative overflow-hidden border-t border-white/10 bg-[#171a21] px-6 pb-28 pt-10 text-white md:pb-36">
-          <div className="pointer-events-none absolute left-1/2 top-1/2 h-[440px] w-[760px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#1267d6]/10 blur-[130px]" />
-          <div className="relative mx-auto max-w-5xl text-center">
-            <Reveal>
-              <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-[#70a9f5]">
-                {t('The reframed question', '重新定义后的设计问题')}
-              </div>
-              <h2 className="mt-8 text-[clamp(2.5rem,5vw,4.15rem)] font-[720] leading-[1.02] tracking-[-0.052em] text-white">
-                {t(
-                  'How might we help administrators detect risk early, understand why it happened, and move into resolution without rebuilding context?',
-                  '我们如何帮助管理员更早发现风险、理解问题为何发生，并在无需重建上下文的情况下进入修复？'
-                )}
-              </h2>
-            </Reveal>
-
-            <div className="mt-16 grid gap-4 text-left sm:grid-cols-2 lg:grid-cols-4">
-              {loopSteps.map((step, index) => (
-                <Reveal key={step.number} delay={index * 0.08} className="group relative rounded-[24px] border border-white/12 bg-white/[0.055] p-5">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs text-[#70a9f5]">{step.number}</span>
-                    {index < loopSteps.length - 1 && <span className="text-[#70a9f5]" aria-hidden="true">→</span>}
-                  </div>
-                  <h3 className="mt-7 text-xl font-semibold text-white">{step.title[lang]}</h3>
-                  <p className="mt-3 text-sm leading-6 text-white/55">{step.body[lang]}</p>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="border-t border-[#dfe2e7] bg-white px-6 py-24 md:py-32 lg:py-36">
-          <div className="mx-auto max-w-[1160px]">
-            <SectionIntro
-              eyebrow={t('04 · Design principles', '04 · 设计原则')}
-              title={t('The dashboard was not the product. Trust was.', '仪表盘不是产品本身，信任才是。')}
-            />
-            <div className="mt-14 grid gap-5 md:grid-cols-2">
-              {principles.map((principle, index) => (
-                <Reveal key={principle.title.en} delay={(index % 2) * 0.08} className="flex gap-5 rounded-[24px] border border-[#dfe2e7] bg-[#f7f8fa] p-6 md:p-7">
-                  <span className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-[#c9cdd4] bg-white font-mono text-xs font-semibold text-[#1267d6]">
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
-                  <div>
-                    <h3 className="text-lg font-semibold text-[#111318]">{principle.title[lang]}</h3>
-                    <p className="mt-2 text-base leading-7 text-[#626872]">{principle.body[lang]}</p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="border-t border-[#dfe2e7] bg-[#f7f8fa] px-6 py-24 md:py-32 lg:py-36">
-          <div className="mx-auto max-w-[1160px]">
-            <SectionIntro
-              eyebrow={t('05 · Key decisions', '05 · 关键决策')}
-              title={t('Four decisions changed the shape—and the priority—of the product.', '四项决策改变了产品的形态，也改变了优先级。')}
-              body={t(
-                'Each decision connected an observed problem to a product-model change. The interface followed the decision, not the other way around.',
-                '每项决策都把观察到的问题连接到产品模型的变化。界面跟随决策，而不是反过来。'
-              )}
-            />
-
-            <div className="mt-16 space-y-6">
-              {decisions.map((decision, index) => (
-                <Reveal key={decision.number} className="grid overflow-hidden rounded-[24px] border border-[#dfe2e7] bg-white shadow-[0_16px_40px_rgba(17,19,24,0.04)] lg:grid-cols-[0.72fr_1.28fr]">
-                  <div className="border-b border-[#dfe2e7] p-7 md:p-9 lg:border-b-0 lg:border-r">
-                    <div className="font-mono text-xs font-semibold text-[#1267d6]">{decision.number}</div>
-                    <h3 className="mt-8 text-2xl font-[680] leading-tight tracking-[-0.03em] text-[#111318] md:text-3xl">{decision.title[lang]}</h3>
-                    <p className="mt-5 text-base leading-7 text-[#626872]">{decision.body[lang]}</p>
-                  </div>
-                  <div className="grid gap-px bg-[#dfe2e7] sm:grid-cols-2">
-                    <div className="bg-[#f7f8fa] p-7 md:p-9">
-                      <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8e949e]">{t('Earlier direction', '原方向')}</span>
-                      <p className="mt-5 text-lg font-medium leading-7 text-[#626872]">{decision.before[lang]}</p>
-                    </div>
-                    <div className="relative bg-[#edf4ff] p-7 md:p-9">
-                      <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1267d6]">{t('Design decision', '设计决策')}</span>
-                      <p className="mt-5 text-lg font-semibold leading-7 text-[#111318]">{decision.after[lang]}</p>
-                      <span className="absolute bottom-6 right-7 font-mono text-[#1267d6]/25" aria-hidden="true">
-                        {String(index + 1).padStart(2, '0')}
-                      </span>
-                    </div>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="border-t border-[#dfe2e7] bg-[#eef1f5] px-6 py-24 md:py-32 lg:py-36">
-          <div className="mx-auto max-w-[1160px]">
-            <SectionIntro
-              eyebrow={t('06 · Experience model', '06 · 体验模型')}
-              title={t('Overview for posture. Detail for diagnosis. Management for action.', '总览用于判断态势，详情用于诊断，管理界面用于行动。')}
-              body={t(
-                'This abstract prototype shows the intended handoff. Select an event to see how operational context stays intact before remediation.',
-                '这个抽象原型展示了预期的交接方式。选择一个事件，查看运维上下文如何在进入修复前保持完整。'
-              )}
-            />
-            <Reveal className="mt-14">
-              <ExperienceDemo lang={lang} />
-            </Reveal>
-          </div>
-        </section>
-
-        <section className="border-t border-[#dfe2e7] bg-white px-6 py-24 md:py-32 lg:py-36">
-          <div className="mx-auto max-w-[1160px]">
-            <SectionIntro
-              eyebrow={t('07 · Customer validation', '07 · 客户验证')}
-              title={t('Validation did more than confirm the design. It changed what came first.', '验证不只是确认方案，它改变了什么应该优先。')}
-            />
-
-            <div className="mt-14 grid gap-5 lg:grid-cols-2">
-              {validationInsights.map((insight, index) => (
-                <Reveal key={insight.heard.en} delay={(index % 2) * 0.08} className="rounded-[24px] border border-[#dfe2e7] bg-[#f7f8fa] p-6 md:p-8">
-                  <div className="grid gap-6 sm:grid-cols-[0.88fr_1.12fr]">
-                    <div>
-                      <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8e949e]">{t('What we heard', '我们听到的')}</span>
-                      <p className="mt-3 text-base font-medium leading-7 text-[#111318]">{insight.heard[lang]}</p>
-                    </div>
-                    <div className="border-t border-[#dfe2e7] pt-5 sm:border-l sm:border-t-0 sm:pl-6 sm:pt-0">
-                      <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1267d6]">{t('What it changed', '它改变了什么')}</span>
-                      <p className="mt-3 text-sm font-semibold leading-6 text-[#111318]">{insight.learned[lang]}</p>
-                      <p className="mt-3 text-sm leading-6 text-[#626872]">{insight.response[lang]}</p>
-                    </div>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="border-t border-[#dfe2e7] bg-[#eef1f5] px-6 py-24 md:py-32 lg:py-36">
-          <div className="mx-auto max-w-[1160px]">
-            <SectionIntro
-              eyebrow={t('08 · Current state', '08 · 当前状态')}
-              title={t('A credible case study separates foundation, validated direction, and open work.', '可信的案例需要区分基础能力、已验证方向和开放问题。')}
-            />
-
-            <div className="mt-14 grid gap-5 lg:grid-cols-3">
+          <Reveal className="mt-10">
+            <div className="grid gap-px overflow-hidden rounded-[24px] border border-[#dfe2e7] bg-[#dfe2e7] md:grid-cols-4">
               {[
                 {
-                  label: t('Foundation established', '已建立基础'),
-                  tone: 'border-[#b9dfce] bg-[#f2fbf6]',
-                  dot: 'bg-[#167a52]',
-                  items: [
-                    t('Proactive alert path for priority events', '优先级事件的主动告警路径'),
-                    t('Subscription and notification foundations', '订阅与通知基础能力'),
-                    t('A continuous roadmap into health management', '向健康管理演进的连续路线'),
-                  ],
+                  label: t('I framed', '我定义'),
+                  value: t('Notification → health-to-recovery loop', '从通知功能到健康—修复闭环'),
                 },
                 {
-                  label: t('Validated direction', '已验证方向'),
-                  tone: 'border-[#b9d1f3] bg-[#edf4ff]',
-                  dot: 'bg-[#1267d6]',
-                  items: [
-                    t('Overview-centered information architecture', '以 Overview 为中心的信息架构'),
-                    t('Monitor → Alert → Diagnose → Fix framework', '监控 → 告警 → 诊断 → 修复框架'),
-                    t('Actionable detail and remediation handoff', '可执行详情与修复交接'),
-                  ],
+                  label: t('I designed', '我设计'),
+                  value: t('Overview, triage, diagnostics, handoff', '总览、分诊、诊断与交接'),
                 },
                 {
-                  label: t('Open questions', '开放问题'),
-                  tone: 'border-[#e7d7a8] bg-[#fffaf0]',
-                  dot: 'bg-[#a76b00]',
-                  items: [
-                    t('Customer-facing metric semantics', '面向客户的指标语义'),
-                    t('Telemetry accuracy and coverage', '遥测准确性与覆盖范围'),
-                    t('Routing, recipient, and surface boundaries', '路由、接收者与界面边界'),
-                  ],
+                  label: t('I prototyped', '我原型验证'),
+                  value: t('Interactive code branches + AI-assisted repair', '可交互代码分支 + AI 辅助修复'),
                 },
-              ].map((group, index) => (
-                <Reveal key={group.label} delay={index * 0.08} className={`rounded-[24px] border p-6 md:p-7 ${group.tone}`}>
-                  <div className="flex items-center gap-3">
-                    <span className={`h-2.5 w-2.5 rounded-full ${group.dot}`} />
-                    <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-[#111318]">{group.label}</h3>
-                  </div>
-                  <ul className="mt-7 space-y-4">
-                    {group.items.map((item) => (
-                      <li key={item} className="flex gap-3 text-sm leading-6 text-[#626872]">
-                        <span className="mt-2 h-1 w-1 flex-none rounded-full bg-[#626872]/50" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </Reveal>
+                {
+                  label: t('I prioritized', '我推动优先级'),
+                  value: t('Accuracy and actionability before breadth', '先准确、可行动，再扩展功能'),
+                },
+              ].map((item) => (
+                <div key={item.label} className="bg-[#f7f8fa] p-5">
+                  <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1267d6]">{item.label}</div>
+                  <div className="mt-4 text-sm font-semibold leading-6 text-[#111318]">{item.value}</div>
+                </div>
               ))}
             </div>
+          </Reveal>
+        </Chapter>
+
+        <Chapter tone="paper">
+          <div className="grid gap-12 lg:grid-cols-[0.4fr_0.6fr] lg:items-start">
+            <div>
+              <SectionHeading
+                index="01"
+                eyebrow={t('The operational gap', '运营断点')}
+                title={t(
+                  'The brief was not “design a dashboard.”',
+                  '任务并不是“设计一个仪表盘”。'
+                )}
+                body={t(
+                  'Administrators were manually checking large connection estates and often learned about failures after users were affected.',
+                  '管理员需要人工检查大量连接，并且往往在用户受到影响后才知道故障发生。'
+                )}
+              />
+              <Reveal className="mt-8">
+                <StatementBand label={t('My reframe', '我的问题重定义')}>
+                  {t(
+                    'A health experience must help an administrator move from signal to decision—not simply deliver another notification.',
+                    '健康体验必须帮助管理员从信号走向决策，而不只是再发送一条通知。'
+                  )}
+                </StatementBand>
+              </Reveal>
+            </div>
+            <ScreenshotFrame
+              item={currentOverview}
+              lang={lang}
+              onOpen={setLightboxItem}
+            />
           </div>
-        </section>
+        </Chapter>
+
+        <Chapter tone="soft">
+          <SectionHeading
+            index="02"
+            eyebrow={t('Three decision-led milestones', '三个决策里程碑')}
+            title={t(
+              'I kept only the iterations that changed the product model.',
+              '我只保留真正改变产品模型的迭代。'
+            )}
+            body={t(
+              'Smaller business additions stayed inside the dashboard; these three milestones changed how administrators understand and act on health.',
+              '较小的业务扩展被吸收到 Dashboard 中；这三个里程碑真正改变了管理员理解并处理健康问题的方式。'
+            )}
+          />
+          <div className="mt-12">
+            <VersionExplorer lang={lang} onOpen={setLightboxItem} />
+          </div>
+        </Chapter>
+
+        <Chapter tone="dark">
+          <SectionHeading
+            index="03"
+            eyebrow={t('AI-native design process', 'AI 原生设计过程')}
+            title={t(
+              'The prototype became the design artifact—not a handoff after the design.',
+              '原型本身就是设计产物，而不是设计完成后的交接物。'
+            )}
+            body={t(
+              'I used structured briefs, reusable product components, and AI-assisted code generation to keep every meaningful hypothesis executable. That let reviews focus on behavior, states, and operational consequences—not just static frames.',
+              '我用结构化 Brief、可复用产品组件和 AI 辅助代码生成，让每个有意义的假设都保持可运行。评审因此能够聚焦行为、状态和运营后果，而不只是静态画面。'
+            )}
+            dark
+          />
+
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
+            {[
+              {
+                number: '01',
+                title: t('Evidence became a brief', '证据变成 Brief'),
+                body: t(
+                  'Operational needs and product constraints were translated into explicit acceptance checks.',
+                  '运营需求与产品约束被转化为明确的验收条件。'
+                ),
+              },
+              {
+                number: '02',
+                title: t('A branch became a hypothesis', '一个分支就是一个假设'),
+                body: t(
+                  'I could fork the model, change the information architecture, and compare working states without redrawing the product shell.',
+                  '我可以分叉方案、改变信息架构并比较真实状态，而不必重复绘制产品外壳。'
+                ),
+              },
+              {
+                number: '03',
+                title: t('Feedback changed behavior', '反馈直接改变行为'),
+                body: t(
+                  'Filters, panels, handoffs, and repair approval were reviewed as interactions and revised in code.',
+                  '筛选、面板、交接和修复批准都以真实交互接受评审，并直接在代码中迭代。'
+                ),
+              },
+            ].map((item) => (
+              <EditorialCard key={item.number} dark className="h-full">
+                <NumberBadge dark>{item.number}</NumberBadge>
+                <h3 className="mt-7 text-xl font-semibold text-white">{item.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-white/58">{item.body}</p>
+              </EditorialCard>
+            ))}
+          </div>
+
+          <div className="mt-12">
+            <LiveDemo lang={lang} />
+          </div>
+          <p className="mt-5 text-sm leading-7 text-white/48">
+            {t(
+              'Try it: open an error notification, inspect the diagnostic context, continue to Your Connections, then choose Fix with Cowork and approve the proposed action.',
+              '可以直接操作：打开错误通知、查看诊断上下文、进入 Your Connections，再选择 Fix with Cowork 并批准建议操作。'
+            )}
+          </p>
+        </Chapter>
+
+        <Chapter tone="surface">
+          <SectionHeading
+            index="04"
+            eyebrow={t('Decision · Operational home', '决策 · 运营入口')}
+            title={t(
+              'I moved notifications into Overview instead of building another inbox.',
+              '我把通知放进 Overview，而不是再做一个独立收件箱。'
+            )}
+            body={t(
+              'Status, adoption, and notifications are different signals, but the administrator needs to judge them together before choosing an action.',
+              '状态、采用情况和通知是不同信号，但管理员需要把它们放在一起判断，再决定下一步。'
+            )}
+          />
+          <div className="mt-10">
+            <ScreenshotFrame item={currentOverview} lang={lang} onOpen={setLightboxItem} />
+          </div>
+          <div className="mt-5 grid gap-4 md:grid-cols-3">
+            {[
+              {
+                number: '01',
+                title: t('Connection status', '连接状态'),
+                body: t('Shows what is healthy, incomplete, failed, or constrained.', '展示健康、未完成、失败或受限的连接。'),
+              },
+              {
+                number: '02',
+                title: t('Detailed adoption', '详细采用情况'),
+                body: t('Turns product usage into administrator-facing operating context.', '把产品使用情况转化为管理员可理解的运营上下文。'),
+              },
+              {
+                number: '03',
+                title: t('Notifications', '通知'),
+                body: t('Connects the signal to its severity, source, context, and next action.', '把信号连接到严重程度、来源、上下文和下一步。'),
+              },
+            ].map((item) => (
+              <EditorialCard key={item.number} className="bg-[#f7f8fa] shadow-none">
+                <NumberBadge>{item.number}</NumberBadge>
+                <h3 className="mt-6 text-xl font-semibold text-[#111318]">{item.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-[#626872]">{item.body}</p>
+              </EditorialCard>
+            ))}
+          </div>
+        </Chapter>
+
+        <Chapter tone="paper">
+          <SectionHeading
+            index="05"
+            eyebrow={t('Decision · Actionable diagnosis', '决策 · 可行动诊断')}
+            title={t(
+              'A notification became a diagnostic object, not a message.',
+              '通知变成了诊断对象，而不只是一条消息。'
+            )}
+            body={t(
+              'I reorganized the panel around the questions an administrator asks during an incident: what happened, what was affected, what changed, and what should I do next?',
+              '我按照管理员处理故障时真正会问的问题重组面板：发生了什么、影响了什么、哪里发生变化、下一步该做什么？'
+            )}
+          />
+          <div className="mt-10">
+            <ScreenshotFrame item={notificationDetail} lang={lang} onOpen={setLightboxItem} />
+          </div>
+          <div className="mt-5 grid gap-px overflow-hidden rounded-[24px] border border-[#dfe2e7] bg-[#dfe2e7] md:grid-cols-4">
+            {[
+              t('What happened?', '发生了什么？'),
+              t('Sync context', '同步上下文'),
+              t('Next steps', '下一步'),
+              t('Recent activity + error log', '近期活动 + 错误日志'),
+            ].map((label, index) => (
+              <div key={label} className="bg-white p-5">
+                <div className="font-mono text-[10px] text-[#1267d6]">0{index + 1}</div>
+                <div className="mt-4 font-semibold text-[#111318]">{label}</div>
+              </div>
+            ))}
+          </div>
+        </Chapter>
+
+        <Chapter tone="surface">
+          <div className="grid gap-12 lg:grid-cols-[0.38fr_0.62fr] lg:items-start">
+            <SectionHeading
+              index="06"
+              eyebrow={t('Decision · Responsibility split', '决策 · 职责拆分')}
+              title={t(
+                'Overview diagnoses. Your Connections repairs.',
+                'Overview 负责诊断，Your Connections 负责修复。'
+              )}
+              body={t(
+                'Putting every corrective control into Overview would turn it into another complex admin surface. I kept the diagnosis close to the signal, then handed off to the connection that owns the configuration.',
+                '如果把所有修复控件都塞进 Overview，它会变成另一个复杂后台。我让诊断靠近信号，再把任务交给真正拥有配置的连接详情。'
+              )}
+            />
+            <ScreenshotFrame item={handoffDetail} lang={lang} onOpen={setLightboxItem} />
+          </div>
+          <Reveal className="mt-10">
+            <div className="grid gap-0 overflow-hidden rounded-[24px] border border-[#dfe2e7] md:grid-cols-3">
+              {[
+                {
+                  label: t('Overview', 'Overview'),
+                  value: t('See and prioritize the signal', '看见并判断信号优先级'),
+                },
+                {
+                  label: t('Diagnostic panel', '诊断面板'),
+                  value: t('Understand impact and next step', '理解影响和下一步'),
+                },
+                {
+                  label: t('Connection detail', '连接详情'),
+                  value: t('Own configuration and repair', '承载配置和修复'),
+                },
+              ].map((step, index) => (
+                <div key={step.label} className="relative border-b border-[#dfe2e7] bg-[#f7f8fa] p-6 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0">
+                  {index < 2 && (
+                    <span className="absolute -right-3 top-1/2 z-10 hidden h-6 w-6 -translate-y-1/2 place-items-center rounded-full bg-[#171a21] text-xs text-white md:grid" aria-hidden="true">
+                      →
+                    </span>
+                  )}
+                  <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#8e949e]">{step.label}</div>
+                  <div className="mt-6 text-lg font-semibold text-[#111318]">{step.value}</div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </Chapter>
+
+        <Chapter tone="dark">
+          <SectionHeading
+            index="07"
+            eyebrow={t('POC · Closing the loop', '概念验证 · 闭合链路')}
+            title={t(
+              'I explored an AI-assisted repair path with human approval.',
+              '我探索了一个带人工批准的 AI 辅助修复路径。'
+            )}
+            body={t(
+              'The agent does not silently change production configuration. It verifies context, proposes a specific action, waits for approval, and confirms the recovered state.',
+              'Agent 不会静默修改生产配置。它先验证上下文、提出具体操作、等待批准，再确认恢复状态。'
+            )}
+            dark
+          />
+          <div className="mt-12 grid gap-5">
+            {repairFlow.map((item, index) => (
+              <Reveal key={item.src} delay={index * 0.05}>
+                <ScreenshotFrame item={item} lang={lang} onOpen={setLightboxItem} />
+              </Reveal>
+            ))}
+          </div>
+        </Chapter>
+
+        <Chapter tone="soft">
+          <SectionHeading
+            index="08"
+            eyebrow={t('Validation changed the design', '验证改变了设计')}
+            title={t(
+              'Customer feedback changed what I prioritized—not just what I polished.',
+              '客户反馈改变了我优先解决什么，而不只是优化哪些细节。'
+            )}
+          />
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
+            {validationChanges.map((item, index) => (
+              <EditorialCard key={item.evidence.en} className="h-full">
+                <NumberBadge>0{index + 1}</NumberBadge>
+                <div className="mt-7 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8e949e]">
+                  {t('What I heard', '我听到的')}
+                </div>
+                <p className="mt-3 text-base font-medium leading-7 text-[#111318]">{item.evidence[lang]}</p>
+                <div className="my-6 h-px bg-[#dfe2e7]" />
+                <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1267d6]">
+                  {t('What I changed', '我改变的方向')}
+                </div>
+                <p className="mt-3 text-sm leading-7 text-[#626872]">{item.decision[lang]}</p>
+              </EditorialCard>
+            ))}
+          </div>
+
+          <div className="mt-12 grid gap-5 lg:grid-cols-3">
+            {[
+              {
+                label: t('Delivered foundation', '已交付基础'),
+                items: [
+                  t('Proactive notification foundation', '主动通知基础'),
+                  t('Health and connection-status model', '健康与连接状态模型'),
+                  t('Notification diagnostic pattern', '通知诊断模式'),
+                ],
+              },
+              {
+                label: t('Validated direction', '已验证方向'),
+                items: [
+                  t('Overview as the operating surface', 'Overview 作为运营入口'),
+                  t('Signal → diagnosis → repair handoff', '信号 → 诊断 → 修复交接'),
+                  t('Accuracy and actionability first', '准确性与可行动优先'),
+                ],
+              },
+              {
+                label: t('Still open', '仍待验证'),
+                items: [
+                  t('Final customer-facing metrics', '最终客户指标'),
+                  t('Telemetry coverage and false positives', '遥测覆盖与误报'),
+                  t('Routing and recipient model', '路由与接收者模型'),
+                ],
+              },
+            ].map((group, index) => (
+              <EditorialCard key={group.label} className={index === 1 ? 'border-[#b9d1f3] bg-[#edf4ff]' : ''}>
+                <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1267d6]">{group.label}</div>
+                <ul className="mt-6 space-y-3">
+                  {group.items.map((item) => (
+                    <li key={item} className="flex gap-3 text-sm leading-6 text-[#626872]">
+                      <span className="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-[#1267d6]" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </EditorialCard>
+            ))}
+          </div>
+        </Chapter>
 
         <section className="relative overflow-hidden border-t border-black/10 bg-[#171a21] px-6 py-28 text-white md:py-40">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(18,103,214,0.16),transparent_52%)]" />
           <Reveal className="relative mx-auto max-w-[1000px] text-center">
-            <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-[#70a9f5]">{t('09 · Reflection', '09 · 反思')}</div>
-            <blockquote className="mt-8 text-[clamp(2.25rem,5vw,4.3rem)] font-[680] leading-[1.03] tracking-[-0.052em] text-white">
+            <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-[#70a9f5]">
+              {t('Reflection', '反思')}
+            </div>
+            <blockquote className="mt-8 text-[clamp(2.25rem,5vw,4.3rem)] font-[680] leading-[1.03] tracking-[-0.052em]">
               {t(
-                'The core of an enterprise health experience is not the dashboard. It is whether administrators trust the signal, understand the impact, and know what to do next.',
-                '企业健康体验的核心不是仪表盘，而是管理员是否相信信号、理解影响，并知道下一步该做什么。'
+                'The design was not the dashboard. It was the decision path from an uncertain signal to a verified recovery.',
+                '真正的设计不是仪表盘，而是一条从不确定信号走向已验证恢复结果的决策路径。'
               )}
             </blockquote>
-            <p className="mx-auto mt-8 max-w-3xl text-base leading-8 text-white/58 md:text-lg">
-              {t(
-                'Telemetry semantics, historical context, and the remediation handoff are not implementation details around the experience—they are the experience.',
-                '遥测语义、历史上下文和修复交接并不是体验外围的实现细节，它们共同构成了体验本身。'
-              )}
-            </p>
           </Reveal>
         </section>
 
@@ -910,6 +875,8 @@ export default function ConnectorHealthCenterPage() {
           </div>
         </footer>
       </main>
+
+      <Lightbox item={lightboxItem} lang={lang} onClose={() => setLightboxItem(null)} />
     </div>
   );
 }
