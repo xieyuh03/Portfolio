@@ -1,0 +1,21 @@
+import{a as e,n as t}from"./rolldown-runtime-DaJ6WEGw.js";import{Kn as n,Qn as r,gr as i,t as a,xn as o}from"./lib-CZaTWtPI.js";import{In as s,Sr as c,hr as l,t as u,wr as d}from"./lib-DC32QjlN.js";import{t as f}from"./jsx-runtime-cM__dR4X.js";var p,m,h,g,_,v,y,b,x,S,C,w;t((()=>{u(),a(),p=e(f(),1),m=i({surface:{backgroundColor:d.colorNeutralBackground1,minHeight:`320px`,padding:`32px 40px`,display:`flex`,flexDirection:`column`,gap:d.spacingVerticalXL},root:{display:`flex`,alignItems:`center`,justifyContent:`space-between`,height:`48px`,paddingLeft:d.spacingHorizontalL,paddingRight:d.spacingHorizontalM,borderBottomWidth:`1px`,borderBottomStyle:`solid`,borderBottomColor:d.colorNeutralStroke2,backgroundColor:d.colorNeutralBackground1},breadcrumb:{display:`flex`,alignItems:`center`,gap:d.spacingHorizontalS,fontSize:d.fontSizeBase300,minWidth:0},avatar:{width:`20px`,height:`20px`,borderRadius:`50%`,display:`inline-flex`,alignItems:`center`,justifyContent:`center`,color:`#FFFFFF`,fontSize:d.fontSizeBase100,fontWeight:d.fontWeightSemibold,flexShrink:0},avatarImg:{width:`20px`,height:`20px`,borderRadius:`50%`,objectFit:`cover`,flexShrink:0},agentName:{fontWeight:d.fontWeightSemibold,color:d.colorNeutralForeground1,whiteSpace:`nowrap`,overflow:`hidden`,textOverflow:`ellipsis`},separator:{color:d.colorNeutralForeground3},conversationTitle:{color:d.colorNeutralForeground2,overflow:`hidden`,textOverflow:`ellipsis`,whiteSpace:`nowrap`,minWidth:0},actions:{display:`flex`,gap:d.spacingHorizontalXS,flexShrink:0}}),h={copilot:`linear-gradient(135deg, #7B61FF 0%, #00B3D7 100%)`,domainLens:`linear-gradient(135deg, #00B3D7 0%, #107C10 100%)`,ocdi:`linear-gradient(135deg, #FD6585 0%, #F2B441 100%)`},g=({agentName:e=`Domain Lens Agent`,agentKey:t=`domainLens`,conversationTitle:i,showNewChat:a=!0,showShare:c=!0,showOverflow:l=!0})=>{let u=m(),d=e.trim().charAt(0).toUpperCase();return(0,p.jsxs)(`div`,{className:u.root,children:[(0,p.jsxs)(`div`,{className:u.breadcrumb,children:[(0,p.jsx)(`span`,{className:u.avatar,style:{background:h[t]??h.copilot},children:d}),(0,p.jsx)(`span`,{className:u.agentName,children:e}),i&&(0,p.jsxs)(p.Fragment,{children:[(0,p.jsx)(`span`,{className:u.separator,children:`›`}),(0,p.jsx)(`span`,{className:u.conversationTitle,children:i})]})]}),(0,p.jsxs)(`div`,{className:u.actions,children:[a&&(0,p.jsx)(s,{appearance:`subtle`,size:`small`,icon:(0,p.jsx)(o,{}),children:`New chat`}),c&&(0,p.jsx)(s,{appearance:`subtle`,size:`small`,icon:(0,p.jsx)(n,{})}),l&&(0,p.jsx)(s,{appearance:`subtle`,size:`small`,icon:(0,p.jsx)(r,{})})]})]})},_=e=>(0,p.jsx)(l,{theme:c,children:(0,p.jsx)(`div`,{className:m().surface,children:(0,p.jsx)(g,{...e})})}),v={title:`Design System Copilot/Agents/AgentHeader`,component:_,parameters:{layout:`fullscreen`}},y={},b={args:{conversationTitle:`OCDI onboarding blockers Q1`}},x={args:{agentName:`Copilot`,agentKey:`copilot`}},S={args:{agentName:`OCDI Compliance Assistant`,agentKey:`ocdi`,conversationTitle:`Service tree mapping audit`}},C={args:{showShare:!1,showOverflow:!1}},y.parameters={...y.parameters,docs:{...y.parameters?.docs,source:{originalSource:`{}`,...y.parameters?.docs?.source}}},b.parameters={...b.parameters,docs:{...b.parameters?.docs,source:{originalSource:`{
+  args: {
+    conversationTitle: 'OCDI onboarding blockers Q1'
+  }
+}`,...b.parameters?.docs?.source}}},x.parameters={...x.parameters,docs:{...x.parameters?.docs,source:{originalSource:`{
+  args: {
+    agentName: 'Copilot',
+    agentKey: 'copilot'
+  }
+}`,...x.parameters?.docs?.source}}},S.parameters={...S.parameters,docs:{...S.parameters?.docs,source:{originalSource:`{
+  args: {
+    agentName: 'OCDI Compliance Assistant',
+    agentKey: 'ocdi',
+    conversationTitle: 'Service tree mapping audit'
+  }
+}`,...S.parameters?.docs?.source}}},C.parameters={...C.parameters,docs:{...C.parameters?.docs,source:{originalSource:`{
+  args: {
+    showShare: false,
+    showOverflow: false
+  }
+}`,...C.parameters?.docs?.source}}},w=[`Default`,`WithConversationCrumb`,`CopilotMain`,`OCDIAssistant`,`Minimal`]}))();export{x as CopilotMain,y as Default,C as Minimal,S as OCDIAssistant,b as WithConversationCrumb,w as __namedExportsOrder,v as default};

@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-DaJ6WEGw.js";function t(e){let t=`./`;t===`/`&&(t=`/MADs_DesignAgent/`),t.endsWith(`/`)||(t+=`/`);let n=e.startsWith(`/`)?e.slice(1):e;return`${t}${n}`}var n=e((()=>{}));export{n,t};

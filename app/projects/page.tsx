@@ -101,8 +101,8 @@ const projectCategories: ProjectCategory[] = [
         id: 11,
         title: 'Unified Enterprise Connector Experience',
         description: {
-          en: 'Reframed a fragmented enterprise connector ecosystem around a data-source-first model, unifying discovery, setup, and lifecycle management without hiding differences that change administrator actions.',
-          zh: '将碎片化的企业连接器体验重构为“数据源优先”的产品模型，在保留关键差异的同时，统一多种能力的发现、设置与生命周期管理。',
+          en: 'A systems-design case study about turning fast-changing AI data-access technology into a stable mental model—through product framing, information architecture, coded alternatives, and E2E validation.',
+          zh: '一个系统设计案例：通过产品问题重定义、信息架构、可运行方案与端到端验证，把快速变化的 AI 数据访问技术转化为稳定的用户心智模型。',
         },
         tags: [
           { en: 'Systems Design', zh: '系统设计' },
@@ -111,7 +111,7 @@ const projectCategories: ProjectCategory[] = [
           { en: 'Enterprise AI', zh: '企业 AI' },
         ],
         year: '2026',
-        image: `${basePath}/images/unified-connector-experience/thumbnail.svg`,
+        image: `${basePath}/images/unified-connector-experience/exploration-scheme-b.png`,
         imageSize: 'cover',
         href: '/projects/unified-connector-experience',
         presentationStyle: true,

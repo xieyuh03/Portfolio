@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-DaJ6WEGw.js";import{Xt as t}from"./Icon-sSlGJTJZ.js";import{E as n,t as r}from"./lib-BIv0kCW3.js";import{b as i,t as a}from"./customizations-CsEn-AWS.js";var o,s=e((()=>{a(),o=e=>i})),c,l=e((()=>{r(),s(),c=t(n,o,void 0,{scope:`M365Pivot`})})),u=e((()=>{l(),s()})),d=e((()=>{u()}));export{c as n,l as r,d as t};

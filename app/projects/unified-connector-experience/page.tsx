@@ -1,9 +1,8 @@
 'use client';
 
-import Image from "next/image";
-import Link from "next/link";
-import { useState, type ReactNode } from "react";
-import Navigation from "@/components/Navigation";
+import Link from 'next/link';
+import { useState } from 'react';
+import Navigation from '@/components/Navigation';
 import {
   Chapter,
   EditorialCard,
@@ -13,481 +12,551 @@ import {
   Reveal,
   SectionHeading,
   StatementBand,
-} from "@/components/case-study/PresentationCaseStudy";
-import { useLanguage } from "@/lib/LanguageContext";
+} from '@/components/case-study/PresentationCaseStudy';
+import { useLanguage, type Lang } from '@/lib/LanguageContext';
 
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+const screenshotPath = (file: string) =>
+  `${basePath}/images/unified-connector-experience/${file}`;
 
 type Localized = { en: string; zh: string };
-type CapabilityState =
-  | "Available"
-  | "Enabled"
-  | "Needs user sign-in"
-  | "Preview";
-type Capability = {
-  name: Localized;
-  value: Localized;
-  state: CapabilityState;
-  action: Localized;
-  dependency: Localized;
-};
-type Scenario = {
-  name: Localized;
-  type: Localized;
-  purpose: Localized;
-  capabilities: Capability[];
+type MediaItem = {
+  src: string;
+  alt: Localized;
+  label: Localized;
+  caption: Localized;
 };
 
 const meta = [
   {
-    label: { en: "Role", zh: "角色" },
-    value: { en: "Product Designer", zh: "产品设计师" },
+    label: { en: 'Role', zh: '角色' },
+    value: { en: 'Product Designer', zh: '产品设计师' },
   },
   {
-    label: { en: "Scope", zh: "范围" },
+    label: { en: 'Design challenge', zh: '设计挑战' },
     value: {
-      en: "0→1 product model · end-to-end experience",
-      zh: "0→1 产品模型 · 端到端体验",
+      en: 'Make a changing technical system feel stable',
+      zh: '让持续变化的技术系统保持稳定心智',
     },
   },
   {
-    label: { en: "Touchpoints", zh: "触点" },
+    label: { en: 'Core skills', zh: '核心能力' },
     value: {
-      en: "Discovery · comparison · setup · lifecycle management",
-      zh: "发现 · 比较 · 设置 · 生命周期管理",
+      en: 'Strategy · systems thinking · interaction design',
+      zh: '产品战略 · 系统思维 · 交互设计',
     },
   },
   {
-    label: { en: "Status", zh: "状态" },
+    label: { en: 'Evidence', zh: '设计证据' },
     value: {
-      en: "Core direction aligned; labels under validation",
-      zh: "核心方向已对齐；标签仍在验证",
+      en: 'Coded concepts · scenario tests · E2E review',
+      zh: '代码原型 · 场景验证 · 端到端评审',
     },
   },
 ];
 
-const whyChain = [
-  { en: "Capabilities increase", zh: "能力增加" },
-  { en: "One source creates multiple entries", zh: "同一来源出现多个入口" },
-  { en: "Technology names compete with value", zh: "技术名称抢占价值理解" },
-  { en: "Setup and management paths split", zh: "设置与管理路径分散" },
-  { en: "Administrator cost grows", zh: "管理员成本上升" },
-];
+const currentProblemMedia = [
+  {
+    src: screenshotPath('current-gallery-scale.png'),
+    alt: {
+      en: 'Current connector Gallery with a rapidly growing number of cards',
+      zh: '当前连接器 Gallery 中快速增长的大量卡片',
+    },
+    label: { en: 'Current Gallery · scale', zh: '当前 Gallery · 规模问题' },
+    caption: {
+      en: 'The catalog kept scaling by adding cards. Browsing became inventory scanning rather than source discovery.',
+      zh: '目录通过不断增加卡片来扩展，浏览逐渐变成库存扫描，而不是数据源发现。',
+    },
+  },
+  {
+    src: screenshotPath('current-gallery-fragmentation.png'),
+    alt: {
+      en: 'Current Gallery showing one app split into multiple connector cards',
+      zh: '当前 Gallery 中同一个 App 被拆分为多个连接器卡片',
+    },
+    label: {
+      en: 'Current Gallery · one app, many connectors',
+      zh: '当前 Gallery · 一个 App，多个 Connector',
+    },
+    caption: {
+      en: 'GitHub Cloud and Server capabilities appear as separate Issues, Knowledge, and Pull Requests entries, forcing admins to reconstruct the app relationship.',
+      zh: 'GitHub Cloud 与 Server 的 Issues、Knowledge、Pull Requests 分别成为独立入口，管理员必须自己重新拼接它们与 App 的关系。',
+    },
+  },
+] satisfies MediaItem[];
 
-const beforeEntries = [
-  { en: "Search connector", zh: "检索连接器" },
-  { en: "Records sync", zh: "记录同步" },
-  { en: "User sync", zh: "用户同步" },
-  { en: "Workflow skill", zh: "工作流技能" },
-  { en: "Entity: account", zh: "实体：账户" },
-  { en: "Entity: contact", zh: "实体：联系人" },
-];
-
-const problemLayers = [
+const strategyStages = [
   {
-    title: { en: "Discovery", zh: "发现" },
+    number: '01',
+    title: { en: 'Indexed search', zh: '索引式搜索' },
     body: {
-      en: "The same business data source appeared as multiple cards, so administrators had to decode internal categories before choosing a path.",
-      zh: "同一个业务数据源出现为多张卡片，管理员必须先理解内部分类才能选择路径。",
+      en: 'The original connector model assumed that admins configured a crawl and AI searched a prepared index.',
+      zh: '原有连接器模型假设管理员配置抓取范围，AI 再从预先建立的索引中搜索。',
     },
   },
   {
-    title: { en: "Understanding", zh: "理解" },
+    number: '02',
+    title: { en: 'Mixed data access', zh: '混合数据访问' },
     body: {
-      en: "Technology labels appeared before user value, while similar names and states made capabilities hard to compare.",
-      zh: "技术标签先于用户价值出现，相似名称和状态让能力之间难以比较。",
+      en: 'MCP, User Sync, and Skills introduced live retrieval, user-owned access, and task-specific actions.',
+      zh: 'MCP、User Sync 与 Skills 带来了实时检索、用户级访问和面向任务的操作。',
     },
   },
   {
-    title: { en: "Lifecycle", zh: "生命周期" },
+    number: '03',
+    title: { en: 'Design implication', zh: '设计启示' },
     body: {
-      en: "Discovery, authentication, rollout, and ongoing management lived in separate places with weak continuity.",
-      zh: "发现、身份验证、发布范围和持续管理分散在不同位置，连续性不足。",
-    },
-  },
-];
-
-const evidence = [
-  {
-    label: { en: "User evidence", zh: "用户证据" },
-    title: {
-      en: "Administrators think in data sources.",
-      zh: "管理员以数据源思考。",
-    },
-    body: {
-      en: "They enter the catalog with a target source in mind. The first question is “What can this source do?” rather than “Which connection technology is behind it?”",
-      zh: "他们带着明确数据源目标进入目录，首先想知道“这个来源能做什么”，而不是“背后是哪种连接技术”。",
-    },
-  },
-  {
-    label: { en: "Product evidence", zh: "产品证据" },
-    title: {
-      en: "Capability combinations are uneven.",
-      zh: "能力组合并不均衡。",
-    },
-    body: {
-      en: "Sources do not share the same capability set, and the product direction keeps evolving. A fixed template would create empty states and exceptions.",
-      zh: "不同来源并不拥有相同能力组合，产品方向也会继续变化。固定模板会制造空状态和例外。",
-    },
-  },
-  {
-    label: { en: "Technical evidence", zh: "技术证据" },
-    title: {
-      en: "Some differences change the work.",
-      zh: "有些差异会改变操作。",
-    },
-    body: {
-      en: "Deployment model, ownership level, authentication, and lifecycle rules are real differences that should appear when they affect the next action.",
-      zh: "部署模型、责任层级、身份验证和生命周期规则都是真实差异，应在影响下一步操作时出现。",
+      en: 'The interface could no longer be organized around connector technology. It needed a stable object that could absorb change.',
+      zh: '界面不能再围绕连接技术组织，而需要一个能够持续吸收变化的稳定对象。',
     },
   },
 ];
 
-const principles = [
+const competitorSignals = [
   {
-    title: { en: "Data source first", zh: "数据源优先" },
-    body: {
-      en: "Start with the stable object administrators recognize.",
-      zh: "优先使用管理员熟悉且稳定的对象。",
+    name: 'OpenAI',
+    finding: {
+      en: 'Separates live app access from administrator-managed sync.',
+      zh: '区分实时应用访问与管理员管理的同步。',
+    },
+    implication: {
+      en: 'One provider can carry multiple data-access contracts.',
+      zh: '同一服务可以承载多种不同的数据访问契约。',
     },
   },
   {
-    title: { en: "Value before technology", zh: "价值先于技术" },
-    body: {
-      en: "Explain what a capability enables before naming its type.",
-      zh: "先说明能力带来的价值，再说明它的类型。",
+    name: 'Glean',
+    finding: {
+      en: 'Distinguishes indexed Connectors from live Tools and can combine both.',
+      zh: '区分索引型 Connector 与实时 Tool，并允许两者组合。',
+    },
+    implication: {
+      en: 'Hybrid is a capability composition, not merely a badge.',
+      zh: 'Hybrid 是能力组合，而不只是一个标签。',
     },
   },
   {
-    title: { en: "Progressive disclosure", zh: "渐进披露" },
-    body: {
-      en: "Catalog for scanning, panel for comparing, setup for complex tasks.",
-      zh: "目录用于扫描，面板用于比较，设置页用于复杂任务。",
+    name: 'Design response',
+    finding: {
+      en: 'Unify the inventory, not the underlying behavior.',
+      zh: '统一入口，但不抹平底层行为。',
+    },
+    implication: {
+      en: 'Keep ownership, permissions, freshness, and next actions explicit.',
+      zh: '明确表达责任归属、权限、新鲜度与下一步操作。',
     },
   },
+];
+
+const sourceLinks = [
   {
-    title: { en: "Separate responsibilities", zh: "职责分离" },
-    body: {
-      en: "Discovery and management share context but carry different density.",
-      zh: "发现与管理共享上下文，但信息密度不同。",
-    },
+    label: 'OpenAI · Apps',
+    href: 'https://help.openai.com/en/articles/11487775-apps-in-chatgpt',
   },
   {
-    title: { en: "Consistent, not rigid", zh: "一致但不僵化" },
-    body: {
-      en: "Use shared states and structure without forcing every source to look identical.",
-      zh: "共享状态与结构，但不强迫所有来源完全相同。",
-    },
+    label: 'OpenAI · Apps with sync',
+    href: 'https://help.openai.com/en/articles/10847137-administrator-managed-apps-with-sync-in-chatgpt',
   },
   {
-    title: { en: "Design for transition", zh: "为过渡而设计" },
-    body: {
-      en: "Let near-term delivery and long-term direction use the same foundation.",
-      zh: "让近期落地和长期方向共用同一基础模型。",
-    },
+    label: 'Glean · Connectors',
+    href: 'https://docs.glean.com/connectors/about',
+  },
+  {
+    label: 'Glean · Tools',
+    href: 'https://docs.glean.com/administration/tools',
   },
 ];
 
 const decisions = [
   {
-    code: "A",
-    title: { en: "Redefine the top-level object", zh: "重新定义顶层对象" },
-    observation: {
-      en: "A source identity remains stable while capability packaging changes.",
-      zh: "数据源身份相对稳定，而能力包装方式会变化。",
-    },
-    explored: [
-      {
-        en: "Keep one card per connector type",
-        zh: "继续为每种连接器类型保留卡片",
-      },
-      {
-        en: "Organize the catalog by capability tabs",
-        zh: "按能力标签组织目录",
-      },
-      { en: "Use one entry per data source", zh: "每个数据源只保留一个入口" },
-    ],
-    decision: {
-      en: "One data source / one entry point. Capabilities expand only after the source is selected.",
-      zh: "一个数据源 / 一个入口。选择数据源后再展开能力。",
-    },
-  },
-  {
-    code: "B",
-    title: { en: "Make capabilities modular", zh: "让能力成为模块" },
-    observation: {
-      en: "Different sources support different combinations; fixed pages would create empty or misleading areas.",
-      zh: "不同来源支持不同组合；固定页面会产生空区域或误导。",
-    },
-    explored: [
-      {
-        en: "Create a unique page for each combination",
-        zh: "为每种组合创建独立页面",
-      },
-      { en: "Always show the same tabs", zh: "始终显示相同标签页" },
-      { en: "Render only supported capability rows", zh: "只显示已支持能力行" },
-    ],
-    decision: {
-      en: "Each capability row uses a shared anatomy: value, state, dependency, and next action.",
-      zh: "每条能力行使用共享结构：价值、状态、依赖和下一步操作。",
-    },
-  },
-  {
-    code: "C",
+    code: '01',
+    skill: { en: 'Systems thinking', zh: '系统思维' },
     title: {
-      en: "Separate discovery from lifecycle management",
-      zh: "分离发现与生命周期管理",
+      en: 'Define the right product object.',
+      zh: '定义正确的产品对象。',
     },
-    observation: {
-      en: "The catalog was taking on discovery, configuration, permissions, and lifecycle controls at once.",
-      zh: "目录同时承担发现、配置、权限和生命周期控制，信息密度失控。",
+    question: {
+      en: 'What should remain stable when connection technology keeps changing?',
+      zh: '当连接技术不断变化时，什么应该保持稳定？',
     },
-    explored: [
-      { en: "Complete every task in the catalog", zh: "在目录中完成所有任务" },
+    tension: {
+      en: 'One card per vendor hid Cloud and Data Center differences. One card per technical connector pushed implementation complexity onto administrators.',
+      zh: '按供应商聚合会掩盖 Cloud 与 Data Center 的差异；按技术连接器拆分又会把实现复杂度转嫁给管理员。',
+    },
+    alternatives: [
+      { en: 'One card per technical connector', zh: '每个技术连接器一张卡片' },
+      { en: 'One card per vendor', zh: '每个供应商一张卡片' },
       {
-        en: "Route to unrelated legacy surfaces",
-        zh: "跳转到彼此割裂的旧页面",
-      },
-      {
-        en: "Connect focused surfaces with shared language",
-        zh: "用一致语言连接专注页面",
+        en: 'One card per database / deployment boundary',
+        zh: '每个数据库 / 部署边界一张卡片',
       },
     ],
     decision: {
-      en: "The catalog starts; setup completes; management owns real connection instances.",
-      zh: "目录负责启动；设置负责完成；管理页负责真实连接实例。",
+      en: 'Use the database or deployment boundary as the stable object. Jira Cloud and Jira Data Center stay separate; Sync, MCP, and User Sync become capabilities beneath them.',
+      zh: '以数据库或部署边界作为稳定对象。Jira Cloud 与 Jira Data Center 保持分离，Sync、MCP 与 User Sync 成为其下能力。',
     },
+    why: {
+      en: 'This boundary matches the administrator’s setup decision while remaining flexible enough for future capability changes.',
+      zh: '这个边界既符合管理员真实的设置决策，也能为未来能力变化保留足够弹性。',
+    },
+    media: [
+      {
+        src: screenshotPath('exploration-scheme-a.png'),
+        alt: {
+          en: 'Scheme A with one vendor-level card',
+          zh: 'Scheme A 供应商级单卡片方案',
+        },
+        label: { en: 'Explored · too broad', zh: '探索方案 · 边界过宽' },
+        caption: {
+          en: 'Vendor-level aggregation reduced cards but concealed deployment differences.',
+          zh: '供应商级聚合减少了卡片，却掩盖了部署差异。',
+        },
+      },
+      {
+        src: screenshotPath('exploration-scheme-b.png'),
+        alt: {
+          en: 'Scheme B with cards per database or deployment',
+          zh: 'Scheme B 数据库或部署级卡片方案',
+        },
+        label: { en: 'Selected · right boundary', zh: '最终方案 · 正确边界' },
+        caption: {
+          en: 'Database-level entries preserve meaningful differences without exposing every implementation.',
+          zh: '数据库级入口保留有意义的差异，同时避免暴露所有实现细节。',
+        },
+      },
+    ] satisfies MediaItem[],
+  },
+  {
+    code: '02',
+    skill: { en: 'Information architecture', zh: '信息架构' },
+    title: {
+      en: 'Reveal complexity only when it helps a decision.',
+      zh: '只在帮助决策时披露复杂度。',
+    },
+    question: {
+      en: 'How much should an admin understand before choosing a source?',
+      zh: '管理员在选择数据源前，需要理解多少内容？',
+    },
+    tension: {
+      en: 'Showing Sync, MCP, User Sync, Skills, status, and availability on every gallery card made comparison harder. Hiding everything made the cards vague.',
+      zh: '在每张目录卡片上展示 Sync、MCP、User Sync、Skills、状态和可用性会增加比较成本；全部隐藏又会让卡片失去信息。',
+    },
+    alternatives: [
+      { en: 'Expose every capability in Gallery', zh: '在 Gallery 展示全部能力' },
+      { en: 'Expand options inside each card', zh: '在每张卡片内展开选项' },
+      {
+        en: 'Progressively disclose source → capability → setup',
+        zh: '渐进披露：来源 → 能力 → 设置',
+      },
+    ],
+    decision: {
+      en: 'Gallery answers “What source is this?” The detail panel answers “What can it do?” Setup appears only after the admin chooses a capability.',
+      zh: 'Gallery 回答“这是什么来源”；详情面板回答“它能做什么”；只有管理员选择能力后才进入设置。',
+    },
+    why: {
+      en: 'Each surface carries one level of decision density, reducing cognitive load without hiding important differences.',
+      zh: '每个页面只承担一层决策密度，在降低认知负担的同时保留关键差异。',
+    },
+    media: [
+      {
+        src: screenshotPath('journey-02-capabilities.png'),
+        alt: {
+          en: 'Salesforce Connector and Skills capability panel',
+          zh: 'Salesforce Connector 与 Skills 能力面板',
+        },
+        label: { en: 'Capability comparison', zh: '能力比较' },
+        caption: {
+          en: 'A shared Connector / Skills structure explains an uneven capability set without duplicating the source.',
+          zh: '共享的 Connector / Skills 结构解释不均衡能力组合，而无需复制数据源入口。',
+        },
+      },
+    ] satisfies MediaItem[],
+  },
+  {
+    code: '03',
+    skill: { en: 'Interaction & service design', zh: '交互与服务设计' },
+    title: {
+      en: 'Route actions by ownership, not technology.',
+      zh: '按责任归属设计路径，而不是按技术分类。',
+    },
+    question: {
+      en: 'Where should each capability be configured and managed?',
+      zh: '每种能力应该在哪里设置和管理？',
+    },
+    tension: {
+      en: 'Similar “Add” and “Configured” states led to different destinations. Admins could not predict what would happen next or where to return.',
+      zh: '相似的“添加”和“已配置”状态却通向不同位置，管理员无法预期下一步，也不知道应该返回哪里。',
+    },
+    alternatives: [
+      { en: 'Configure everything in Gallery', zh: '在 Gallery 中配置全部能力' },
+      { en: 'Preserve every legacy destination', zh: '保留所有旧有目的地' },
+      {
+        en: 'Route by admin-owned vs. user-owned responsibility',
+        zh: '按管理员负责与用户负责进行路由',
+      },
+    ],
+    decision: {
+      en: 'Tenant Sync enters an admin-owned Add flow. MCP and User Sync move to Your Connections, where real instances, states, and lifecycle actions live.',
+      zh: 'Tenant Sync 进入管理员负责的 Add Flow；MCP 与 User Sync 进入 Your Connections，由该页面承载实例、状态和生命周期操作。',
+    },
+    why: {
+      en: 'The navigation now follows responsibility and task stage—the concepts administrators use to act—not internal protocol names.',
+      zh: '导航遵循管理员真正用于行动的责任归属和任务阶段，而不是内部协议名称。',
+    },
+    media: [
+      {
+        src: screenshotPath('journey-03-setup.png'),
+        alt: {
+          en: 'Salesforce tenant Sync setup flow',
+          zh: 'Salesforce Tenant Sync 设置流程',
+        },
+        label: { en: 'Admin-owned setup', zh: '管理员负责的设置' },
+        caption: {
+          en: 'Authentication, content, permissions, and rollout stay inside a focused setup task.',
+          zh: '身份验证、内容、权限和发布范围集中在专注的设置任务中。',
+        },
+      },
+      {
+        src: screenshotPath('journey-04-management.png'),
+        alt: {
+          en: 'Your Connections grouped lifecycle view',
+          zh: 'Your Connections 聚合生命周期视图',
+        },
+        label: { en: 'Lifecycle ownership', zh: '生命周期归属' },
+        caption: {
+          en: 'Configured capabilities return as grouped instances with shared state and action language.',
+          zh: '已配置能力以聚合实例呈现，并共享一致的状态与操作语言。',
+        },
+      },
+    ] satisfies MediaItem[],
   },
 ];
 
 const journey = [
   {
-    step: "01",
-    title: { en: "Connector library", zh: "连接器库" },
-    task: { en: "Find the data source", zh: "找到数据源" },
-    density: { en: "Low density", zh: "低信息密度" },
-    detail: {
-      en: "Source name, value summary, capability overview, primary action.",
-      zh: "数据源名称、价值摘要、能力概览、主操作。",
+    title: 'Gallery',
+    question: { en: 'What source is this?', zh: '这是什么来源？' },
+    role: { en: 'Recognition', zh: '识别' },
+    rationale: {
+      en: 'Show the source identity and value first. Capability details stay out of the scanning layer.',
+      zh: '先呈现数据源身份与价值，能力细节不进入用于快速浏览的第一层。',
+    },
+    media: {
+      src: screenshotPath('journey-01-gallery.png'),
+      alt: {
+        en: 'Gallery filtered to Salesforce sources',
+        zh: '筛选到 Salesforce 数据源的 Gallery',
+      },
+      label: { en: 'Step 01 · Gallery', zh: '步骤 01 · Gallery' },
+      caption: {
+        en: 'The Gallery lets an administrator recognize Salesforce CRM as one source before comparing its capabilities.',
+        zh: '管理员先在 Gallery 中把 Salesforce CRM 识别为一个来源，再进入能力比较。',
+      },
     },
   },
   {
-    step: "02",
-    title: { en: "Capability panel", zh: "能力面板" },
-    task: { en: "Compare what is supported", zh: "比较支持的能力" },
-    density: { en: "Medium density", zh: "中信息密度" },
-    detail: {
-      en: "Capability value, state, dependency, and action remain in source context.",
-      zh: "能力价值、状态、依赖和操作保留在数据源上下文中。",
+    title: 'Connector detail',
+    question: { en: 'What can it do?', zh: '它能做什么？' },
+    role: { en: 'Comparison', zh: '比较' },
+    rationale: {
+      en: 'Compare only the capabilities this source supports, including ownership, status, and the next action.',
+      zh: '只比较该来源真实支持的能力，并明确责任归属、当前状态与下一步。',
+    },
+    media: {
+      src: screenshotPath('journey-02-capabilities.png'),
+      alt: {
+        en: 'Salesforce CRM connector capability panel',
+        zh: 'Salesforce CRM Connector 能力面板',
+      },
+      label: { en: 'Step 02 · Connector detail', zh: '步骤 02 · Connector Detail' },
+      caption: {
+        en: 'MCP, User Sync, Tenant Sync, and Skills remain grouped under the Salesforce CRM source.',
+        zh: 'MCP、User Sync、Tenant Sync 与 Skills 保持聚合在 Salesforce CRM 来源之下。',
+      },
     },
   },
   {
-    step: "03",
-    title: { en: "Setup", zh: "设置" },
-    task: { en: "Configure content and access", zh: "配置内容与访问" },
-    density: { en: "High density", zh: "高信息密度" },
-    detail: {
-      en: "Authentication, content selection, and rollout appear only inside a clear task.",
-      zh: "身份验证、内容选择与发布范围只在明确任务中展开。",
+    title: 'Add flow',
+    question: { en: 'What must I configure?', zh: '我需要配置什么？' },
+    role: { en: 'Execution', zh: '执行' },
+    rationale: {
+      en: 'Open a focused task only for admin-owned setup: authentication, content scope, permissions, and rollout.',
+      zh: '只有管理员负责的设置才进入专注任务：身份验证、内容范围、权限与发布范围。',
+    },
+    media: {
+      src: screenshotPath('journey-03-setup.png'),
+      alt: {
+        en: 'Salesforce CRM tenant Sync setup',
+        zh: 'Salesforce CRM Tenant Sync 设置',
+      },
+      label: { en: 'Step 03 · Add flow', zh: '步骤 03 · Add Flow' },
+      caption: {
+        en: 'The setup surface carries configuration density without making the Gallery harder to scan.',
+        zh: '设置页面承载高密度配置，而不会让 Gallery 变得更难浏览。',
+      },
     },
   },
   {
-    step: "04",
-    title: { en: "Connection management", zh: "连接管理" },
-    task: { en: "Manage live instances", zh: "管理真实实例" },
-    density: { en: "High density", zh: "高信息密度" },
-    detail: {
-      en: "Display name, capability, state, scope, and actions use the same vocabulary.",
-      zh: "显示名称、能力、状态、范围和操作使用同一套语言。",
+    title: 'Your Connections',
+    question: { en: 'What state is it in?', zh: '它现在是什么状态？' },
+    role: { en: 'Operations', zh: '运营' },
+    rationale: {
+      en: 'Bring configured capabilities back together as real instances with shared state and lifecycle actions.',
+      zh: '把已配置能力重新聚合为真实实例，并统一展示状态与生命周期操作。',
+    },
+    media: {
+      src: screenshotPath('journey-04-management.png'),
+      alt: {
+        en: 'Your Connections grouped lifecycle management',
+        zh: 'Your Connections 聚合生命周期管理',
+      },
+      label: { en: 'Step 04 · Your Connections', zh: '步骤 04 · Your Connections' },
+      caption: {
+        en: 'Source groups preserve context while child rows expose the capabilities that administrators operate.',
+        zh: '父级来源保留上下文，子行展示管理员实际运营的各项能力。',
+      },
+    },
+  },
+] satisfies Array<{
+  title: string;
+  question: Localized;
+  role: Localized;
+  rationale: Localized;
+  media: MediaItem;
+}>;
+
+const stressCases = [
+  {
+    name: 'Salesforce CRM',
+    model: { en: 'Full hybrid', zh: '完整 Hybrid' },
+    proves: {
+      en: 'Live retrieval + tenant indexing + Skills',
+      zh: '实时检索 + 租户索引 + Skills',
+    },
+    media: {
+      src: screenshotPath('journey-02-capabilities.png'),
+      alt: {
+        en: 'Salesforce CRM full hybrid capability case',
+        zh: 'Salesforce CRM 完整 Hybrid 能力场景',
+      },
+      label: { en: 'Full hybrid case', zh: '完整 Hybrid 场景' },
+      caption: {
+        en: 'Salesforce CRM combines MCP, User Sync, Tenant Sync, and Skills under one source.',
+        zh: 'Salesforce CRM 在同一来源下组合 MCP、User Sync、Tenant Sync 与 Skills。',
+      },
+    },
+  },
+  {
+    name: 'Jira Cloud',
+    model: { en: 'Dual ownership', zh: '双责任模型' },
+    proves: {
+      en: 'Tenant Sync + User Sync',
+      zh: 'Tenant Sync + User Sync',
+    },
+    media: {
+      src: screenshotPath('edge-jira-cloud.png'),
+      alt: {
+        en: 'Jira Cloud dual-ownership capability case',
+        zh: 'Jira Cloud 双责任能力场景',
+      },
+      label: { en: 'Dual-ownership case', zh: '双责任场景' },
+      caption: {
+        en: 'Jira Cloud keeps Microsoft-enabled MCP and User Sync beside admin-owned Tenant Sync.',
+        zh: 'Jira Cloud 同时呈现 Microsoft 启用的 MCP、User Sync 与管理员负责的 Tenant Sync。',
+      },
+    },
+  },
+  {
+    name: 'Jira Data Center',
+    model: { en: 'Deployment boundary', zh: '部署边界' },
+    proves: {
+      en: 'Tenant Sync only',
+      zh: '仅 Tenant Sync',
+    },
+    media: {
+      src: screenshotPath('edge-jira-data-center.png'),
+      alt: {
+        en: 'Jira Data Center tenant-Sync-only case',
+        zh: 'Jira Data Center 仅 Tenant Sync 场景',
+      },
+      label: { en: 'Deployment-boundary case', zh: '部署边界场景' },
+      caption: {
+        en: 'Jira Data Center exposes only the supported admin-managed Sync path without empty capability sections.',
+        zh: 'Jira Data Center 只展示受支持的管理员 Sync 路径，不制造空能力区域。',
+      },
+    },
+  },
+  {
+    name: 'Linear / FCC',
+    model: { en: 'Minimum capability', zh: '最小能力组合' },
+    proves: {
+      en: 'MCP only',
+      zh: '仅 MCP',
+    },
+    media: {
+      src: screenshotPath('edge-linear.png'),
+      alt: {
+        en: 'Linear MCP-only capability case',
+        zh: 'Linear 仅 MCP 能力场景',
+      },
+      label: { en: 'Minimum-capability case', zh: '最小能力场景' },
+      caption: {
+        en: 'Linear proves the shared model remains useful even when MCP is the only capability.',
+        zh: 'Linear 证明即使 MCP 是唯一能力，共享模型仍然成立。',
+      },
+    },
+  },
+] satisfies Array<{
+  name: string;
+  model: Localized;
+  proves: Localized;
+  media: MediaItem;
+}>;
+
+const validationChanges = [
+  {
+    test: {
+      en: 'Can one structure represent every capability combination?',
+      zh: '同一套结构能否表达所有能力组合？',
+    },
+    finding: {
+      en: 'A fixed layout created irrelevant or empty sections for Tenant-Sync-only and MCP-only sources.',
+      zh: '固定布局会在仅 Tenant Sync 与仅 MCP 的来源中制造无关内容或空区域。',
+    },
+    change: {
+      en: 'Render only supported capability rows while preserving one shared information anatomy.',
+      zh: '只渲染真实支持的能力行，同时保持统一的信息结构。',
+    },
+  },
+  {
+    test: {
+      en: 'Can an admin predict where each action will go?',
+      zh: '管理员能否预期每个操作会去哪里？',
+    },
+    finding: {
+      en: 'Tenant Sync opened Add flow, but MCP and User Sync used inconsistent destinations and return paths.',
+      zh: 'Tenant Sync 会打开 Add Flow，但 MCP 与 User Sync 的目的地和返回路径不一致。',
+    },
+    change: {
+      en: 'Route admin-owned setup to Add flow and configured or user-owned capabilities to Your Connections.',
+      zh: '管理员负责的设置进入 Add Flow；已配置或用户负责的能力进入 Your Connections。',
+    },
+  },
+  {
+    test: {
+      en: 'Can the first management level support the next action?',
+      zh: '管理页第一层能否支持下一步操作？',
+    },
+    finding: {
+      en: 'Admins had to open a detail panel to understand ownership, permissions, rollout, and basic lifecycle actions.',
+      zh: '管理员必须进入详情面板，才能理解责任、权限、发布范围和基础生命周期操作。',
+    },
+    change: {
+      en: 'Expose capability type, state, ownership, and essential actions at the grouped connection level.',
+      zh: '在聚合连接层直接展示能力类型、状态、责任归属与必要操作。',
     },
   },
 ];
-
-const capabilityLibrary = {
-  realtime: {
-    name: { en: "Real-time retrieval", zh: "实时检索" },
-    value: {
-      en: "Answer with source data at request time.",
-      zh: "在请求时使用源数据回答。",
-    },
-  },
-  index: {
-    name: { en: "Background indexing", zh: "后台索引" },
-    value: {
-      en: "Prepare organization content for broad discovery.",
-      zh: "为组织范围检索预先准备内容。",
-    },
-  },
-  user: {
-    name: { en: "User-level sync", zh: "用户级同步" },
-    value: {
-      en: "Let each user connect data under their own account.",
-      zh: "让每位用户用自己的账户连接数据。",
-    },
-  },
-  org: {
-    name: { en: "Organization sync", zh: "组织级同步" },
-    value: {
-      en: "Admin-managed connection for a governed audience.",
-      zh: "由管理员管理并发布给受控范围。",
-    },
-  },
-  skill: {
-    name: { en: "Guided skill", zh: "引导式技能" },
-    value: {
-      en: "Turn source capability into a repeatable workflow.",
-      zh: "将来源能力转化为可复用工作流。",
-    },
-  },
-};
-
-const scenarios: Scenario[] = [
-  {
-    name: { en: "Customer records", zh: "客户记录" },
-    type: { en: "Multi-capability cloud source", zh: "多能力云端来源" },
-    purpose: {
-      en: "Proves the full hybrid capability story.",
-      zh: "验证完整混合能力故事。",
-    },
-    capabilities: [
-      {
-        ...capabilityLibrary.realtime,
-        state: "Enabled",
-        action: { en: "Manage", zh: "管理" },
-        dependency: { en: "User account required", zh: "需要用户账户" },
-      },
-      {
-        ...capabilityLibrary.index,
-        state: "Available",
-        action: { en: "Start setup", zh: "开始设置" },
-        dependency: { en: "Admin consent", zh: "管理员授权" },
-      },
-      {
-        ...capabilityLibrary.skill,
-        state: "Preview",
-        action: { en: "Review scope", zh: "查看范围" },
-        dependency: { en: "Uses connected source", zh: "依赖已连接来源" },
-      },
-    ],
-  },
-  {
-    name: { en: "Knowledge base", zh: "知识库" },
-    type: { en: "Dual ownership model", zh: "双责任模型" },
-    purpose: {
-      en: "Separates organization and user-level responsibilities.",
-      zh: "区分组织级与用户级责任。",
-    },
-    capabilities: [
-      {
-        ...capabilityLibrary.org,
-        state: "Enabled",
-        action: { en: "Edit rollout", zh: "编辑发布范围" },
-        dependency: { en: "Admin-owned", zh: "管理员负责" },
-      },
-      {
-        ...capabilityLibrary.user,
-        state: "Needs user sign-in",
-        action: { en: "Show instructions", zh: "查看说明" },
-        dependency: { en: "User-owned", zh: "用户负责" },
-      },
-    ],
-  },
-  {
-    name: { en: "Self-hosted repository", zh: "自托管资料库" },
-    type: { en: "Deployment boundary", zh: "部署边界" },
-    purpose: {
-      en: "Keeps infrastructure constraints visible when they affect setup.",
-      zh: "基础设施影响设置时保持可见。",
-    },
-    capabilities: [
-      {
-        ...capabilityLibrary.index,
-        state: "Available",
-        action: { en: "Configure gateway", zh: "配置网关" },
-        dependency: { en: "Network gateway", zh: "网络网关" },
-      },
-    ],
-  },
-  {
-    name: { en: "Work tracker", zh: "工作追踪器" },
-    type: { en: "Minimum capability source", zh: "最小能力来源" },
-    purpose: {
-      en: "Shows the model does not manufacture empty sections.",
-      zh: "证明模型不会制造空模块。",
-    },
-    capabilities: [
-      {
-        ...capabilityLibrary.realtime,
-        state: "Available",
-        action: { en: "Connect", zh: "连接" },
-        dependency: { en: "User account required", zh: "需要用户账户" },
-      },
-    ],
-  },
-];
-
-const statusGroups = [
-  {
-    title: { en: "Validated / aligned", zh: "已验证 / 已对齐" },
-    items: [
-      {
-        en: "Data-source-level entry as the scalable catalog direction.",
-        zh: "数据源级入口成为可扩展目录方向。",
-      },
-      {
-        en: "Flexible panel structure for uneven capability combinations.",
-        zh: "灵活面板结构适配不均衡能力组合。",
-      },
-      {
-        en: "Clear boundaries between catalog, setup, and management.",
-        zh: "目录、设置与管理边界清晰。",
-      },
-      {
-        en: "Display name and first-level information hierarchy direction.",
-        zh: "显示名称优先与第一层信息层级方向收敛。",
-      },
-    ],
-  },
-  {
-    title: { en: "Delivered artifacts", zh: "已形成产物" },
-    items: [
-      {
-        en: "End-to-end journey from discovery to lifecycle management.",
-        zh: "从发现到生命周期管理的端到端旅程。",
-      },
-      {
-        en: "Decision logic, principles, and scenario coverage model.",
-        zh: "决策逻辑、设计原则与场景覆盖模型。",
-      },
-      {
-        en: "Reusable terminology, state, and component anatomy.",
-        zh: "可复用的术语、状态和组件结构。",
-      },
-    ],
-  },
-  {
-    title: { en: "Open / under validation", zh: "开放项 / 待验证" },
-    items: [
-      {
-        en: "Final presentation of technical type labels.",
-        zh: "技术类型标签的最终表现。",
-      },
-      {
-        en: "Boundary between current catalog and long-term architecture.",
-        zh: "当前目录与长期架构的边界。",
-      },
-      {
-        en: "Detailed authentication and deployment constraints.",
-        zh: "身份验证与部署约束的细节影响。",
-      },
-      {
-        en: "No public production efficiency metric is claimed.",
-        zh: "不声明尚无公开依据的生产效率指标。",
-      },
-    ],
-  },
-];
-
 
 function useLocalized() {
   const { lang, t } = useLanguage();
@@ -500,318 +569,154 @@ function BackToProjects() {
     <Reveal className="mb-12">
       <Link
         href="/projects"
-        className="inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#626872] transition-colors hover:text-[#1267d6] motion-reduce:transition-none"
+        className="inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#626872] transition-colors hover:text-[#1267d6]"
       >
         <span aria-hidden="true">←</span>
-        {t("All Projects", "所有项目")}
+        {t('All Projects', '所有项目')}
       </Link>
     </Reveal>
   );
 }
 
-function StatusBadge({ state, dark = false }: { state: CapabilityState; dark?: boolean }) {
-  const { lang } = useLanguage();
-  const label: Record<CapabilityState, Localized> = {
-    Available: { en: "Available", zh: "可用" },
-    Enabled: { en: "Enabled", zh: "已启用" },
-    "Needs user sign-in": { en: "Needs user sign-in", zh: "需要用户登录" },
-    Preview: { en: "Preview", zh: "预览" },
-  };
-  const palette: Record<CapabilityState, string> = {
-    Available: dark
-      ? "border-[#70a9f5]/40 bg-[#1267d6]/20 text-[#d8e9ff]"
-      : "border-[#1267d6]/22 bg-[#edf4ff] text-[#1267d6]",
-    Enabled: dark
-      ? "border-emerald-300/30 bg-emerald-300/12 text-emerald-100"
-      : "border-emerald-600/18 bg-emerald-50 text-emerald-700",
-    "Needs user sign-in": dark
-      ? "border-amber-300/35 bg-amber-300/12 text-amber-100"
-      : "border-amber-600/20 bg-amber-50 text-amber-700",
-    Preview: dark
-      ? "border-violet-300/35 bg-violet-300/12 text-violet-100"
-      : "border-violet-600/18 bg-violet-50 text-violet-700",
-  };
-
+function MediaFrame({
+  item,
+  lang,
+  onOpen,
+  dark = false,
+  priority = false,
+}: {
+  item: MediaItem;
+  lang: Lang;
+  onOpen: (item: MediaItem) => void;
+  dark?: boolean;
+  priority?: boolean;
+}) {
   return (
-    <span className={`inline-flex rounded-full border px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] ${palette[state]}`}>
-      {label[state][lang]}
-    </span>
-  );
-}
-
-function CapabilityPill({ children, dark = false }: { children: ReactNode; dark?: boolean }) {
-  return (
-    <span
-      className={`rounded-full border px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] ${
+    <figure
+      className={`overflow-hidden rounded-[24px] border ${
         dark
-          ? "border-white/14 bg-white/[0.06] text-white/72"
-          : "border-[#c9cdd4] bg-white text-[#626872]"
+          ? 'border-white/12 bg-white/[0.055]'
+          : 'border-[#dfe2e7] bg-white shadow-[0_18px_50px_rgba(17,19,24,0.07)]'
       }`}
     >
-      {children}
-    </span>
-  );
-}
-
-function SourceGlyph({ name, dark = false }: { name: string; dark?: boolean }) {
-  return (
-    <div
-      className={`grid h-11 w-11 shrink-0 place-items-center rounded-2xl border font-mono text-xs font-semibold ${
-        dark
-          ? "border-white/12 bg-white/[0.07] text-white"
-          : "border-[#dfe2e7] bg-[#f7f8fa] text-[#1267d6]"
-      }`}
-      aria-hidden="true"
-    >
-      {name.slice(0, 2).toUpperCase()}
-    </div>
-  );
-}
-
-function ConnectorCard({ name, dense = false, dark = false }: { name: string; dense?: boolean; dark?: boolean }) {
-  const { t } = useLanguage();
-  return (
-    <div
-      className={`rounded-[20px] border p-4 ${
-        dark
-          ? "border-white/12 bg-white/[0.055]"
-          : "border-[#dfe2e7] bg-white shadow-[0_12px_30px_rgba(17,19,24,0.04)]"
-      }`}
-    >
-      <div className="mb-4 flex items-center gap-3">
-        <SourceGlyph name={name} dark={dark} />
-        <div>
-          <h3 className={`text-sm font-semibold ${dark ? "text-white" : "text-[#111318]"}`}>{name}</h3>
-          <p className={`text-xs ${dark ? "text-white/45" : "text-[#8e949e]"}`}>
-            {dense ? t("Technical connector", "技术连接器") : t("Data source", "数据源")}
-          </p>
-        </div>
-      </div>
-      <div className="flex flex-wrap gap-2">
-        <CapabilityPill dark={dark}>{t("Search", "检索")}</CapabilityPill>
-        {!dense && <CapabilityPill dark={dark}>{t("Sync", "同步")}</CapabilityPill>}
-        {!dense && <CapabilityPill dark={dark}>{t("Skill", "技能")}</CapabilityPill>}
-      </div>
-    </div>
-  );
-}
-
-function CapabilityRows({ dark = false }: { dark?: boolean }) {
-  const { lang, t } = useLanguage();
-  const rows = [
-    {
-      title: capabilityLibrary.realtime.name,
-      value: capabilityLibrary.realtime.value,
-      state: "Enabled" as CapabilityState,
-      dependency: { en: "User account required", zh: "需要用户账户" },
-      action: { en: "Manage", zh: "管理" },
-    },
-    {
-      title: capabilityLibrary.index.name,
-      value: capabilityLibrary.index.value,
-      state: "Available" as CapabilityState,
-      dependency: { en: "Admin consent", zh: "管理员授权" },
-      action: { en: "Start setup", zh: "开始设置" },
-    },
-    {
-      title: capabilityLibrary.skill.name,
-      value: capabilityLibrary.skill.value,
-      state: "Preview" as CapabilityState,
-      dependency: { en: "Uses connected source", zh: "依赖已连接来源" },
-      action: { en: "Review scope", zh: "查看范围" },
-    },
-  ];
-
-  return (
-    <div className="space-y-3">
-      {rows.map((row) => (
-        <div
-          key={row.title.en}
-          className={`rounded-[18px] border p-4 ${
-            dark ? "border-white/12 bg-[#171a21]" : "border-[#dfe2e7] bg-[#f7f8fa]"
+      <div
+        className={`flex items-center justify-between gap-4 border-b px-4 py-3 ${
+          dark ? 'border-white/10' : 'border-[#dfe2e7]'
+        }`}
+      >
+        <span
+          className={`font-mono text-[10px] font-semibold uppercase tracking-[0.18em] ${
+            dark ? 'text-white/48' : 'text-[#8e949e]'
           }`}
         >
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <h4 className={`font-semibold ${dark ? "text-white" : "text-[#111318]"}`}>{row.title[lang]}</h4>
-              <p className={`mt-1 text-sm leading-6 ${dark ? "text-white/56" : "text-[#626872]"}`}>{row.value[lang]}</p>
-            </div>
-            <StatusBadge state={row.state} dark={dark} />
-          </div>
-          <div className={`mt-4 grid gap-3 text-sm sm:grid-cols-2 ${dark ? "text-white/70" : "text-[#626872]"}`}>
-            <div className={`rounded-2xl border p-3 ${dark ? "border-white/10 bg-white/[0.045]" : "border-[#dfe2e7] bg-white"}`}>
-              <span className={`block font-mono text-[10px] uppercase tracking-[0.16em] ${dark ? "text-white/38" : "text-[#8e949e]"}`}>
-                {t("Dependency", "依赖")}
-              </span>
-              <span>{row.dependency[lang]}</span>
-            </div>
-            <div className={`rounded-2xl border p-3 ${dark ? "border-white/10 bg-white/[0.045]" : "border-[#dfe2e7] bg-white"}`}>
-              <span className={`block font-mono text-[10px] uppercase tracking-[0.16em] ${dark ? "text-white/38" : "text-[#8e949e]"}`}>
-                {t("Next action", "下一步操作")}
-              </span>
-              <span>{row.action[lang]}</span>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function HeroVisual({ thumbnailSrc }: { thumbnailSrc: string }) {
-  const { t } = useLanguage();
-  return (
-    <Reveal delay={0.08}>
-      <div className="rounded-[28px] border border-[#dfe2e7] bg-white p-4 shadow-[0_30px_80px_rgba(17,19,24,0.10)] md:p-5">
-        <Image
-          src={thumbnailSrc}
-          alt={t(
-            "Editorial diagram showing fragmented connectors converging into one source object and modular capabilities",
-            "碎片连接器汇聚为一个数据源对象和模块化能力的编辑式示意图",
-          )}
-          width={1600}
-          height={1100}
-          className="w-full rounded-[22px] border border-[#dfe2e7] bg-[#f7f8fa]"
-          priority
+          {item.label[lang]}
+        </span>
+        <span className={`text-xs ${dark ? 'text-white/38' : 'text-[#8e949e]'}`}>
+          {lang === 'zh' ? '点击放大' : 'Click to expand'}
+        </span>
+      </div>
+      <button
+        type="button"
+        onClick={() => onOpen(item)}
+        className="group block aspect-[3/2] w-full overflow-hidden bg-[#eef1f5] text-left focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#1267d6]"
+        aria-label={
+          lang === 'zh'
+            ? `放大查看：${item.alt.zh}`
+            : `Expand image: ${item.alt.en}`
+        }
+      >
+        <img
+          src={item.src}
+          alt={item.alt[lang]}
+          width={2160}
+          height={1440}
+          loading={priority ? 'eager' : 'lazy'}
+          decoding="async"
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.01] motion-reduce:transition-none"
         />
-        <div className="mt-4 grid grid-cols-3 gap-2 text-center font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#626872] sm:gap-3">
-          <div className="rounded-2xl border border-[#dfe2e7] bg-[#f7f8fa] p-3">{t("Converge", "汇聚")}</div>
-          <div className="rounded-2xl border border-[#dfe2e7] bg-[#f7f8fa] p-3">{t("Object", "对象")}</div>
-          <div className="rounded-2xl border border-[#dfe2e7] bg-[#f7f8fa] p-3">{t("Modules", "模块")}</div>
-        </div>
-      </div>
-    </Reveal>
+      </button>
+      <figcaption
+        className={`border-t px-4 py-3 text-sm leading-6 ${
+          dark ? 'border-white/10 text-white/58' : 'border-[#dfe2e7] text-[#626872]'
+        }`}
+      >
+        {item.caption[lang]}
+      </figcaption>
+    </figure>
   );
 }
 
-function ConvergenceModel() {
-  const { lang, t } = useLanguage();
+function Lightbox({
+  item,
+  lang,
+  onClose,
+}: {
+  item: MediaItem | null;
+  lang: Lang;
+  onClose: () => void;
+}) {
+  if (!item) return null;
+
   return (
-    <Reveal>
-      <div className="rounded-[28px] border border-[#dfe2e7] bg-white p-5 shadow-[0_18px_46px_rgba(17,19,24,0.055)] md:p-7">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8e949e]">
-            {t("Convergence model", "汇聚模型")}
-          </p>
-          <p className="text-sm text-[#626872]">
-            {t("connector entries → source object → capability modules", "连接器入口 → 来源对象 → 能力模块")}
-          </p>
-        </div>
-        <div className="grid gap-5 lg:grid-cols-[0.9fr_90px_1fr_90px_1.15fr] lg:items-center">
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-            {beforeEntries.slice(0, 4).map((entry) => (
-              <div key={entry.en} className="rounded-2xl border border-[#dfe2e7] bg-[#f7f8fa] p-4">
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#8e949e]">{t("Fragment", "碎片")}</p>
-                <p className="mt-2 font-semibold text-[#111318]">{entry[lang]}</p>
-              </div>
-            ))}
-          </div>
-          <div className="relative hidden h-px bg-[#c9cdd4] lg:block" aria-hidden="true">
-            <span className="absolute left-1/2 top-1/2 grid h-9 w-9 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-[#171a21] text-white">→</span>
-          </div>
-          <div className="rounded-[24px] border border-[#1267d6]/30 bg-[#edf4ff] p-5">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1267d6]">
-              {t("Stable object", "稳定对象")}
-            </p>
-            <div className="mt-5 flex items-center gap-4">
-              <SourceGlyph name={t("Customer Records", "客户记录")} />
-              <div>
-                <h3 className="text-2xl font-[720] tracking-[-0.035em] text-[#111318]">
-                  {t("Customer Records", "客户记录")}
-                </h3>
-                <p className="mt-1 text-sm text-[#626872]">{t("One source-level entry", "一个数据源级入口")}</p>
-              </div>
-            </div>
-            <div className="mt-6 flex flex-wrap gap-2">
-              <CapabilityPill>{t("Search", "检索")}</CapabilityPill>
-              <CapabilityPill>{t("Sync", "同步")}</CapabilityPill>
-              <CapabilityPill>{t("Skill", "技能")}</CapabilityPill>
-            </div>
-          </div>
-          <div className="relative hidden h-px bg-[#c9cdd4] lg:block" aria-hidden="true">
-            <span className="absolute left-1/2 top-1/2 grid h-9 w-9 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-[#1267d6] text-white">→</span>
-          </div>
-          <div className="rounded-[24px] border border-[#dfe2e7] bg-[#f7f8fa] p-4">
-            <CapabilityRows />
-          </div>
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={item.alt[lang]}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/88 p-3 backdrop-blur-sm md:p-8"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
+      onKeyDown={(event) => {
+        if (event.key === 'Escape') onClose();
+      }}
+    >
+      <div className="relative max-h-[95vh] max-w-[96vw]">
+        <button
+          type="button"
+          onClick={onClose}
+          autoFocus
+          className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/75 text-xl text-white transition hover:bg-black"
+          aria-label={lang === 'zh' ? '关闭大图' : 'Close image'}
+        >
+          ×
+        </button>
+        <img
+          src={item.src}
+          alt={item.alt[lang]}
+          width={2160}
+          height={1440}
+          className="h-auto w-auto max-h-[88vh] max-w-[94vw] rounded-2xl object-contain shadow-2xl"
+        />
+        <div className="mx-auto mt-3 max-w-4xl text-center text-sm text-white/70">
+          {item.caption[lang]}
         </div>
       </div>
-    </Reveal>
+    </div>
   );
 }
 
-function BeforeAfter() {
-  const { lang, t } = useLanguage();
+function StrategicShift() {
+  const { pick } = useLocalized();
   return (
-    <Reveal>
-      <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
-        <EditorialCard className="bg-[#f7f8fa] shadow-none">
-          <div className="mb-5 flex items-center justify-between gap-4">
-            <div>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8e949e]">{t("Before", "改版前")}</p>
-              <h3 className="mt-2 text-2xl font-[720] tracking-[-0.035em] text-[#111318]">
-                {t("Fragmented entries", "碎片化入口")}
-              </h3>
-            </div>
-            <NumberBadge>01</NumberBadge>
-          </div>
-          <p className="mb-5 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-800">
-            {t(
-              "Problem: one source appears as many unrelated starting points. Text labels accompany color cues for accessibility.",
-              "问题：一个来源变成多个看似无关的起点。颜色提示同时配合文字标签，便于无障碍理解。",
+    <div className="grid gap-4 lg:grid-cols-3">
+      {strategyStages.map((stage, index) => (
+        <Reveal key={stage.number} delay={index * 0.04}>
+          <EditorialCard className="relative h-full">
+            {index < strategyStages.length - 1 && (
+              <span
+                className="absolute -right-3 top-8 z-10 hidden h-6 w-6 place-items-center rounded-full bg-[#171a21] text-xs text-white lg:grid"
+                aria-hidden="true"
+              >
+                →
+              </span>
             )}
-          </p>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {beforeEntries.map((entry) => (
-              <ConnectorCard key={entry.en} name={entry[lang]} dense />
-            ))}
-          </div>
-        </EditorialCard>
-
-        <EditorialCard>
-          <div className="mb-5 flex items-center justify-between gap-4">
-            <div>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1267d6]">{t("After", "改版后")}</p>
-              <h3 className="mt-2 text-2xl font-[720] tracking-[-0.035em] text-[#111318]">
-                {t("Unified source model", "统一数据源模型")}
-              </h3>
-            </div>
-            <NumberBadge>02</NumberBadge>
-          </div>
-          <div className="rounded-[24px] border border-[#1267d6]/24 bg-[#edf4ff] p-5">
-            <p className="mb-3 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1267d6]">
-              {t("Data source", "数据源")}
+            <NumberBadge>{stage.number}</NumberBadge>
+            <h3 className="mt-7 text-2xl font-[720] tracking-[-0.035em] text-[#111318]">
+              {pick(stage.title)}
+            </h3>
+            <p className="mt-4 text-sm leading-7 text-[#626872]">
+              {pick(stage.body)}
             </p>
-            <ConnectorCard name={t("Customer Records", "客户记录")} />
-            <p className="mt-5 text-sm leading-6 text-[#626872]">
-              {t(
-                "The catalog represents the stable object first; tags summarize capability availability without splitting the entry.",
-                "目录优先呈现稳定对象；标签只概览能力可用性，不再拆分入口。",
-              )}
-            </p>
-          </div>
-          <div className="mt-4 rounded-[24px] border border-[#dfe2e7] bg-[#f7f8fa] p-4">
-            <p className="mb-4 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8e949e]">
-              {t("Capability panel", "能力面板")}
-            </p>
-            <CapabilityRows />
-          </div>
-        </EditorialCard>
-      </div>
-    </Reveal>
-  );
-}
-
-function ProblemLayers() {
-  const { pick } = useLocalized();
-  return (
-    <div className="grid gap-4 md:grid-cols-3">
-      {problemLayers.map((p, index) => (
-        <Reveal key={p.title.en} delay={index * 0.04}>
-          <EditorialCard className="h-full">
-            <NumberBadge>0{index + 1}</NumberBadge>
-            <h3 className="mt-6 text-xl font-semibold tracking-[-0.02em] text-[#111318]">{pick(p.title)}</h3>
-            <p className="mt-3 text-sm leading-7 text-[#626872]">{pick(p.body)}</p>
           </EditorialCard>
         </Reveal>
       ))}
@@ -819,239 +724,519 @@ function ProblemLayers() {
   );
 }
 
-function EvidenceGrid() {
-  const { pick } = useLocalized();
-  return (
-    <div className="grid gap-5 md:grid-cols-3">
-      {evidence.map((item, index) => (
-        <Reveal key={item.label.en} delay={index * 0.04}>
-          <EditorialCard className="h-full bg-[#f7f8fa] shadow-none">
-            <div className="mb-6 flex items-start justify-between gap-4">
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1267d6]">{pick(item.label)}</p>
-              <NumberBadge>0{index + 1}</NumberBadge>
-            </div>
-            <h3 className="text-xl font-semibold tracking-[-0.02em] text-[#111318]">{pick(item.title)}</h3>
-            <p className="mt-4 text-sm leading-7 text-[#626872]">{pick(item.body)}</p>
-          </EditorialCard>
-        </Reveal>
-      ))}
-    </div>
-  );
-}
-
-function PrinciplesGrid() {
-  const { pick } = useLocalized();
-  return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {principles.map((principle, index) => (
-        <Reveal key={principle.title.en} delay={index * 0.03}>
-          <EditorialCard className="h-full">
-            <div className="mb-7 flex items-center justify-between gap-4">
-              <NumberBadge>0{index + 1}</NumberBadge>
-              <span className="h-px flex-1 bg-[#dfe2e7]" aria-hidden="true" />
-            </div>
-            <h3 className="text-xl font-semibold tracking-[-0.02em] text-[#111318]">{pick(principle.title)}</h3>
-            <p className="mt-3 text-sm leading-7 text-[#626872]">{pick(principle.body)}</p>
-          </EditorialCard>
-        </Reveal>
-      ))}
-    </div>
-  );
-}
-
-function DecisionCard({ decision, index }: { decision: (typeof decisions)[number]; index: number }) {
+function CompetitiveSignal() {
   const { t, pick } = useLocalized();
   return (
-    <Reveal delay={index * 0.05}>
-      <EditorialCard dark className="h-full">
-        <div className="mb-7 flex flex-wrap items-center gap-4">
-          <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#1267d6] font-mono text-sm font-semibold text-white">
-            {decision.code}
-          </span>
-          <h3 className="text-2xl font-[720] leading-tight tracking-[-0.035em] text-white">{pick(decision.title)}</h3>
-        </div>
-        <div className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="rounded-[20px] border border-white/10 bg-[#111318] p-5">
-            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">
-              {t("Observation", "观察")}
-            </p>
-            <p className="mt-3 text-sm leading-7 text-white/68">{pick(decision.observation)}</p>
-          </div>
-          <div className="rounded-[20px] border border-white/10 bg-[#111318] p-5">
-            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">
-              {t("Explored options", "探索方案")}
-            </p>
-            <ul className="mt-3 space-y-2 text-sm leading-6 text-white/68">
-              {decision.explored.map((option, optionIndex) => (
-                <li key={option.en} className="flex gap-3">
-                  <span className="font-mono text-white/32">{optionIndex + 1}</span>
-                  <span>{pick(option)}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-        <div className="mt-4 rounded-[20px] border border-[#70a9f5]/24 bg-[#1267d6]/16 p-5">
-          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#70a9f5]">
-            {t("Decision", "决策")}
-          </p>
-          <p className="mt-3 text-base leading-7 text-white">{pick(decision.decision)}</p>
-        </div>
-      </EditorialCard>
-    </Reveal>
-  );
-}
-
-function JourneyMap() {
-  const { pick } = useLocalized();
-  return (
-    <div className="grid gap-4 lg:grid-cols-4">
-      {journey.map((item, index) => (
-        <Reveal key={item.step} delay={index * 0.04}>
-          <EditorialCard className="relative h-full bg-white">
-            {index < journey.length - 1 && (
-              <div className="absolute -right-2 top-10 hidden h-px w-4 bg-[#c9cdd4] lg:block" aria-hidden="true" />
-            )}
-            <div className="mb-8 flex items-center justify-between gap-3">
-              <NumberBadge>{item.step}</NumberBadge>
-              <span className="rounded-full border border-[#dfe2e7] bg-[#f7f8fa] px-3 py-1 text-xs text-[#626872]">
-                {pick(item.density)}
-              </span>
-            </div>
-            <h3 className="text-xl font-semibold tracking-[-0.02em] text-[#111318]">{pick(item.title)}</h3>
-            <p className="mt-2 font-semibold text-[#1267d6]">{pick(item.task)}</p>
-            <p className="mt-4 text-sm leading-7 text-[#626872]">{pick(item.detail)}</p>
-          </EditorialCard>
-        </Reveal>
-      ))}
-    </div>
-  );
-}
-
-function LoopDiagram() {
-  const { t } = useLanguage();
-  const steps = [
-    { label: t("Source", "来源"), value: t("What am I connecting?", "我在连接什么？") },
-    { label: t("Capabilities", "能力"), value: t("What can it do?", "它能做什么？") },
-    { label: t("State", "状态"), value: t("What is ready now?", "当前什么可用？") },
-    { label: t("Action", "行动"), value: t("What should I do next?", "下一步做什么？") },
-  ];
-
-  return (
     <Reveal>
-      <div className="rounded-[28px] border border-[#dfe2e7] bg-white p-5 md:p-7">
-        <div className="grid gap-0 overflow-hidden rounded-[24px] border border-[#dfe2e7] md:grid-cols-4">
-          {steps.map((step, index) => (
-            <div key={step.label} className="relative border-b border-[#dfe2e7] bg-[#f7f8fa] p-5 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0">
-              {index < steps.length - 1 && (
-                <span className="absolute -right-3 top-8 z-10 hidden h-6 w-6 place-items-center rounded-full bg-[#171a21] text-xs text-white md:grid" aria-hidden="true">
-                  →
-                </span>
-              )}
-              <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8e949e]">{step.label}</p>
-              <p className="mt-8 text-lg font-semibold leading-6 tracking-[-0.02em] text-[#111318]">{step.value}</p>
+      <div className="overflow-hidden rounded-[28px] border border-[#dfe2e7] bg-white">
+        <div className="grid gap-px bg-[#dfe2e7] md:grid-cols-3">
+          {competitorSignals.map((signal, index) => (
+            <div
+              key={signal.name}
+              className={index === 2 ? 'bg-[#edf4ff] p-6' : 'bg-white p-6'}
+            >
+              <p
+                className={`font-mono text-[10px] font-semibold uppercase tracking-[0.18em] ${
+                  index === 2 ? 'text-[#1267d6]' : 'text-[#8e949e]'
+                }`}
+              >
+                {signal.name}
+              </p>
+              <p className="mt-5 text-lg font-semibold leading-7 text-[#111318]">
+                {pick(signal.finding)}
+              </p>
+              <p className="mt-3 text-sm leading-7 text-[#626872]">
+                {pick(signal.implication)}
+              </p>
             </div>
           ))}
         </div>
-        <div className="mt-5 flex items-center gap-4 text-sm text-[#626872]">
-          <span className="h-px flex-1 bg-[#c9cdd4]" aria-hidden="true" />
-          <span>{t("shared language carries context across surfaces", "共享语言让上下文跨页面延续")}</span>
-          <span className="text-xl text-[#1267d6]" aria-hidden="true">↩</span>
+        <div className="border-t border-[#dfe2e7] bg-[#f7f8fa] p-5">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="mr-2 font-mono text-[10px] uppercase tracking-[0.16em] text-[#8e949e]">
+              {t('Sources', '资料来源')}
+            </span>
+            {sourceLinks.map((source) => (
+              <a
+                key={source.href}
+                href={source.href}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full border border-[#c9cdd4] bg-white px-3 py-1.5 text-xs font-semibold text-[#626872] transition-colors hover:border-[#1267d6] hover:text-[#1267d6]"
+              >
+                {source.label} ↗
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </Reveal>
   );
 }
 
-function SystemMatrix() {
-  const { lang, t, pick } = useLocalized();
-  const [selected, setSelected] = useState(0);
-  const scenario = scenarios[selected];
+function ProblemEvidence({
+  lang,
+  onOpen,
+}: {
+  lang: Lang;
+  onOpen: (item: MediaItem) => void;
+}) {
+  const { t } = useLanguage();
+  const findings = [
+    {
+      number: '01',
+      title: { en: 'More cards, less discoverability', zh: '卡片越多，越难发现' },
+      body: {
+        en: 'Categories and search could help navigate the inventory, but they did not solve the underlying growth model.',
+        zh: '分类和搜索可以帮助浏览，却没有解决目录以卡片数量持续扩张的根本问题。',
+      },
+    },
+    {
+      number: '02',
+      title: { en: 'One app lost its identity', zh: '同一个 App 失去了整体身份' },
+      body: {
+        en: 'Every technical capability became a separate starting point, so admins saw implementation fragments before understanding the source.',
+        zh: '每种技术能力都成为独立起点，管理员在理解数据源之前，先看到了一组实现碎片。',
+      },
+    },
+  ];
 
   return (
-    <Reveal>
-      <div className="grid gap-6 lg:grid-cols-[0.86fr_1.14fr]">
-        <EditorialCard className="bg-[#f7f8fa] shadow-none">
-          <p className="mb-4 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8e949e]">
-            {t("Scenario matrix", "场景矩阵")}
-          </p>
-          <div className="space-y-2" role="group" aria-label={t("System scenario selector", "系统场景选择")}>
-            {scenarios.map((item, index) => (
-              <button
-                key={item.name.en}
-                type="button"
-                aria-pressed={selected === index}
-                onClick={() => setSelected(index)}
-                className={`w-full rounded-[18px] border p-4 text-left transition-colors motion-reduce:transition-none ${
-                  selected === index
-                    ? "border-[#1267d6]/36 bg-white text-[#111318] shadow-[0_10px_26px_rgba(18,103,214,0.08)]"
-                    : "border-[#dfe2e7] bg-white/60 text-[#626872] hover:bg-white"
-                }`}
-              >
-                <span className="block text-sm font-semibold">{pick(item.name)}</span>
-                <span className="mt-1 block text-xs text-[#8e949e]">{pick(item.type)}</span>
-                <span className="mt-3 block text-xs leading-5 text-[#1267d6]">{pick(item.purpose)}</span>
-              </button>
-            ))}
+    <div>
+      <div className="grid gap-6">
+        {currentProblemMedia.map((item, index) => (
+          <Reveal key={item.src} delay={index * 0.05}>
+            <MediaFrame item={item} lang={lang} onOpen={onOpen} priority />
+          </Reveal>
+        ))}
+      </div>
+      <div className="mt-5 grid gap-px overflow-hidden rounded-[24px] border border-[#dfe2e7] bg-[#dfe2e7] md:grid-cols-2">
+        {findings.map((finding) => (
+          <div key={finding.number} className="bg-white p-6">
+            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1267d6]">
+              {finding.number} · {t('Design problem', '设计问题')}
+            </p>
+            <h3 className="mt-4 text-xl font-semibold text-[#111318]">
+              {finding.title[lang]}
+            </h3>
+            <p className="mt-3 text-sm leading-7 text-[#626872]">
+              {finding.body[lang]}
+            </p>
           </div>
-        </EditorialCard>
+        ))}
+      </div>
+    </div>
+  );
+}
 
-        <div className="rounded-[28px] border border-[#dfe2e7] bg-white p-5 shadow-[0_18px_46px_rgba(17,19,24,0.055)] md:p-6">
-          <div className="mb-5 rounded-[22px] border border-[#dfe2e7] bg-[#f7f8fa] p-5">
-            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8e949e]">{pick(scenario.type)}</p>
-            <h3 className="mt-2 text-3xl font-[720] tracking-[-0.04em] text-[#111318]">{pick(scenario.name)}</h3>
-            <p className="mt-2 text-sm leading-6 text-[#626872]">{pick(scenario.purpose)}</p>
+function ReframeModel() {
+  const { lang, t } = useLanguage();
+  const questions = [
+    { en: 'What am I connecting?', zh: '我正在连接什么？' },
+    { en: 'What can it do for AI?', zh: '它能为 AI 做什么？' },
+    { en: 'Who sets it up and where?', zh: '由谁设置，在哪里管理？' },
+  ];
+  const principles = [
+    {
+      title: { en: 'Source first', zh: '数据源优先' },
+      body: {
+        en: 'Start with the object administrators recognize.',
+        zh: '从管理员能够识别的对象开始。',
+      },
+    },
+    {
+      title: { en: 'Complexity on demand', zh: '按需披露复杂度' },
+      body: {
+        en: 'Reveal technology only when it changes a decision.',
+        zh: '只有技术差异会改变决策时才进行披露。',
+      },
+    },
+    {
+      title: { en: 'Ownership drives action', zh: '责任归属驱动操作' },
+      body: {
+        en: 'Route by who configures and manages the capability.',
+        zh: '根据能力的设置与管理责任设计路径。',
+      },
+    },
+  ];
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+      <Reveal>
+        <EditorialCard className="h-full bg-[#f7f8fa] shadow-none">
+          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8e949e]">
+            {t('Original request', '原始问题')}
+          </p>
+          <p className="mt-4 text-xl font-semibold text-[#626872]">
+            {t(
+              'How might we reduce duplicated connector cards?',
+              '如何减少重复的 Connector 卡片？',
+            )}
+          </p>
+          <div className="my-7 flex items-center gap-4">
+            <span className="h-px flex-1 bg-[#c9cdd4]" />
+            <span className="font-mono text-xs text-[#1267d6]">REFRAME ↓</span>
+            <span className="h-px flex-1 bg-[#c9cdd4]" />
           </div>
-          <div className="space-y-3">
-            {scenario.capabilities.map((capability) => (
-              <div key={capability.name.en} className="rounded-[20px] border border-[#dfe2e7] bg-white p-4">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
-                    <h4 className="font-semibold text-[#111318]">{capability.name[lang]}</h4>
-                    <p className="mt-1 text-sm leading-6 text-[#626872]">{capability.value[lang]}</p>
-                  </div>
-                  <StatusBadge state={capability.state} />
+          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#1267d6]">
+            {t('Design question', '重新定义后的设计问题')}
+          </p>
+          <p className="mt-4 text-[clamp(1.55rem,3vw,2.5rem)] font-[720] leading-[1.12] tracking-[-0.04em] text-[#111318]">
+            {t(
+              'What should the product be organized around when one source supports many ways for AI to use its data?',
+              '当同一个数据源支持多种 AI 数据访问方式时，产品应该围绕什么来组织？',
+            )}
+          </p>
+        </EditorialCard>
+      </Reveal>
+
+      <div>
+        <div className="grid gap-3 sm:grid-cols-3">
+          {questions.map((question, index) => (
+            <Reveal key={question.en} delay={index * 0.04}>
+              <EditorialCard className="h-full p-5">
+                <NumberBadge>0{index + 1}</NumberBadge>
+                <p className="mt-5 text-base font-semibold leading-6 text-[#111318]">
+                  {question[lang]}
+                </p>
+              </EditorialCard>
+            </Reveal>
+          ))}
+        </div>
+        <div className="mt-4 grid gap-px overflow-hidden rounded-[24px] border border-[#dfe2e7] bg-[#dfe2e7] md:grid-cols-3">
+          {principles.map((principle) => (
+            <div key={principle.title.en} className="bg-white p-5">
+              <h3 className="text-sm font-semibold text-[#1267d6]">
+                {principle.title[lang]}
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-[#626872]">
+                {principle.body[lang]}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ExplorationStory({
+  lang,
+  onOpen,
+}: {
+  lang: Lang;
+  onOpen: (item: MediaItem) => void;
+}) {
+  const { t, pick } = useLocalized();
+  const decision = decisions[0];
+  const boundaries = [
+    {
+      label: { en: 'Too fragmented', zh: '过度拆分' },
+      value: { en: 'Connector type', zh: '连接器类型' },
+      risk: {
+        en: 'Implementation complexity becomes user-facing.',
+        zh: '实现复杂度被直接转嫁给用户。',
+      },
+    },
+    {
+      label: { en: 'Too unified', zh: '过度统一' },
+      value: { en: 'Vendor', zh: '供应商' },
+      risk: {
+        en: 'Cloud and on-premises consequences disappear.',
+        zh: 'Cloud 与本地部署的关键差异被隐藏。',
+      },
+    },
+    {
+      label: { en: 'Selected boundary', zh: '最终边界' },
+      value: { en: 'Database / deployment', zh: '数据库 / 部署方式' },
+      risk: {
+        en: 'Stable for admins and extensible for new capabilities.',
+        zh: '对管理员稳定，也能继续扩展新能力。',
+      },
+    },
+  ];
+
+  return (
+    <div>
+      <div className="grid gap-6">
+        {decision.media.map((item) => (
+          <MediaFrame
+            key={item.src}
+            item={item}
+            lang={lang}
+            onOpen={onOpen}
+            dark
+          />
+        ))}
+      </div>
+      <div className="mt-6 grid gap-3 md:grid-cols-3">
+        {boundaries.map((boundary, index) => (
+          <div
+            key={boundary.label.en}
+            className={`rounded-[20px] border p-5 ${
+              index === 2
+                ? 'border-[#70a9f5]/50 bg-[#1267d6]/18'
+                : 'border-white/12 bg-white/[0.055]'
+            }`}
+          >
+            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#70a9f5]">
+              0{index + 1} · {pick(boundary.label)}
+            </p>
+            <h3 className="mt-4 text-xl font-semibold text-white">
+              {pick(boundary.value)}
+            </h3>
+            <p className="mt-3 text-sm leading-7 text-white/58">
+              {pick(boundary.risk)}
+            </p>
+          </div>
+        ))}
+      </div>
+      <Reveal className="mt-6">
+        <div className="rounded-[24px] border border-[#70a9f5]/30 bg-[#1267d6]/15 p-6 md:p-8">
+          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#70a9f5]">
+            {t('My decision', '我的决策')}
+          </p>
+          <p className="mt-4 text-[clamp(1.35rem,2.7vw,2.25rem)] font-medium leading-[1.25] text-white">
+            {pick(decision.decision)}
+          </p>
+          <p className="mt-4 max-w-4xl text-sm leading-7 text-white/58">
+            {pick(decision.why)}
+          </p>
+        </div>
+      </Reveal>
+    </div>
+  );
+}
+
+function ExperienceLogic({
+  lang,
+  onOpen,
+}: {
+  lang: Lang;
+  onOpen: (item: MediaItem) => void;
+}) {
+  const { pick } = useLocalized();
+
+  return (
+    <div>
+      <SystemModel />
+      <div className="mt-12 space-y-16">
+        {journey.map((step, index) => (
+          <Reveal key={step.title}>
+            <div>
+              <div className="mb-6 grid gap-5 lg:grid-cols-[0.28fr_0.72fr] lg:items-end">
+                <div>
+                  <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#1267d6]">
+                    0{index + 1} · {pick(step.role)}
+                  </p>
+                  <h3 className="mt-3 text-3xl font-[720] tracking-[-0.04em] text-[#111318]">
+                    {step.title}
+                  </h3>
                 </div>
-                <div className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
-                  <div className="rounded-2xl border border-[#dfe2e7] bg-[#f7f8fa] p-3">
-                    <span className="block font-mono text-[10px] uppercase tracking-[0.16em] text-[#8e949e]">
-                      {t("Dependency", "依赖")}
-                    </span>
-                    <span className="text-[#626872]">{pick(capability.dependency)}</span>
-                  </div>
-                  <div className="rounded-2xl border border-[#dfe2e7] bg-[#f7f8fa] p-3">
-                    <span className="block font-mono text-[10px] uppercase tracking-[0.16em] text-[#8e949e]">
-                      {t("Next action", "下一步操作")}
-                    </span>
-                    <span className="text-[#626872]">{pick(capability.action)}</span>
-                  </div>
+                <div className="border-l-2 border-[#1267d6] pl-5">
+                  <p className="text-lg font-semibold text-[#111318]">
+                    {pick(step.question)}
+                  </p>
+                  <p className="mt-2 text-sm leading-7 text-[#626872]">
+                    {pick(step.rationale)}
+                  </p>
                 </div>
               </div>
-            ))}
+              <MediaFrame
+                item={step.media}
+                lang={lang}
+                onOpen={onOpen}
+                priority={index === 0}
+              />
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function LiveDemo({ lang }: { lang: Lang }) {
+  const [revision, setRevision] = useState(0);
+  const storyId =
+    'design-explorations-hybrid-connectors-salesforce-demo--skills-in-gallery';
+  const demoUrl = `${basePath}/hybrid-connector-live-demo/iframe.html?id=${storyId}&viewMode=story`;
+
+  return (
+    <Reveal className="relative left-1/2 w-[min(1440px,calc(100vw-32px))] -translate-x-1/2">
+      <div className="overflow-hidden rounded-[28px] border border-[#dfe2e7] bg-white shadow-[0_24px_70px_rgba(17,19,24,0.10)]">
+        <div className="flex flex-col justify-between gap-4 border-b border-[#dfe2e7] px-5 py-4 sm:flex-row sm:items-center md:px-6">
+          <div>
+            <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#1267d6]">
+              {lang === 'zh' ? '可交互代码原型' : 'Interactive coded prototype'}
+            </div>
+            <div className="mt-1 text-sm text-[#626872]">
+              {lang === 'zh'
+                ? 'Gallery → 数据源能力 → Add Flow → Your Connections'
+                : 'Gallery → source capabilities → Add flow → Your Connections'}
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setRevision((value) => value + 1)}
+              className="rounded-full border border-[#c9cdd4] px-4 py-2 text-xs font-semibold text-[#626872] transition hover:border-[#1267d6] hover:text-[#1267d6]"
+            >
+              {lang === 'zh' ? '重置 Demo' : 'Reset demo'}
+            </button>
+            <a
+              href={demoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full bg-[#1267d6] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#0f56b6]"
+            >
+              {lang === 'zh' ? '新窗口打开 ↗' : 'Open full demo ↗'}
+            </a>
           </div>
         </div>
+        <iframe
+          key={revision}
+          src={`${demoUrl}&revision=${revision}`}
+          title={
+            lang === 'zh'
+              ? 'Unified Connector 可交互设计原型'
+              : 'Unified Connector interactive design prototype'
+          }
+          loading="lazy"
+          className="aspect-[3/2] h-auto w-full border-0 bg-white"
+          allow="clipboard-write"
+        />
       </div>
     </Reveal>
   );
 }
 
-function StatusColumns({ focus = "all" }: { focus?: "all" | "open" }) {
+function SystemModel() {
   const { pick } = useLocalized();
-  const groups = focus === "open" ? statusGroups.slice(2) : statusGroups;
   return (
-    <div className={`grid gap-5 ${focus === "open" ? "lg:grid-cols-1" : "lg:grid-cols-3"}`}>
-      {groups.map((group, groupIndex) => (
-        <Reveal key={group.title.en} delay={groupIndex * 0.04}>
+    <div className="grid gap-px overflow-hidden rounded-[24px] border border-[#dfe2e7] bg-[#dfe2e7] md:grid-cols-4">
+      {journey.map((step, index) => (
+        <div key={step.title} className="relative bg-white p-5">
+          {index < journey.length - 1 && (
+            <span
+              className="absolute -right-3 top-8 z-10 hidden h-6 w-6 place-items-center rounded-full bg-[#171a21] text-xs text-white md:grid"
+              aria-hidden="true"
+            >
+              →
+            </span>
+          )}
+          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1267d6]">
+            0{index + 1} · {pick(step.role)}
+          </p>
+          <h3 className="mt-5 text-lg font-semibold text-[#111318]">
+            {step.title}
+          </h3>
+          <p className="mt-2 text-sm leading-6 text-[#626872]">
+            {pick(step.question)}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function StressTest({
+  lang,
+  onOpen,
+}: {
+  lang: Lang;
+  onOpen: (item: MediaItem) => void;
+}) {
+  const { t, pick } = useLocalized();
+  const [selected, setSelected] = useState(0);
+  const activeCase = stressCases[selected];
+
+  return (
+    <div>
+      <EditorialCard className="bg-[#f7f8fa] shadow-none">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#1267d6]">
+              {t('Scalability test', '扩展性验证')}
+            </p>
+            <h3 className="mt-3 text-2xl font-[720] tracking-[-0.035em] text-[#111318]">
+              {t(
+                'One model, four very different capability combinations.',
+                '同一模型，适配四种完全不同的能力组合。',
+              )}
+            </h3>
+          </div>
+          <span className="text-sm text-[#626872]">
+            {t('Select a case to inspect the real screen.', '选择场景查看对应真实界面。')}
+          </span>
+        </div>
+        <div
+          className="mt-7 grid gap-3 md:grid-cols-2 lg:grid-cols-4"
+          role="group"
+          aria-label={t('Edge case selector', '边界场景选择')}
+        >
+          {stressCases.map((item, index) => (
+            <button
+              key={item.name}
+              type="button"
+              aria-pressed={selected === index}
+              onClick={() => setSelected(index)}
+              className={`rounded-[18px] border p-4 text-left transition-colors ${
+                selected === index
+                  ? 'border-[#1267d6]/40 bg-white shadow-[0_10px_26px_rgba(18,103,214,0.08)]'
+                  : 'border-[#dfe2e7] bg-white/60 hover:bg-white'
+              }`}
+            >
+              <p className="text-sm font-semibold text-[#111318]">{item.name}</p>
+              <p className="mt-1 text-xs text-[#8e949e]">{pick(item.model)}</p>
+              <p className="mt-5 text-sm leading-6 text-[#1267d6]">
+                {pick(item.proves)}
+              </p>
+            </button>
+          ))}
+        </div>
+      </EditorialCard>
+      <div className="mt-5">
+        <MediaFrame
+          key={activeCase.name}
+          item={activeCase.media}
+          lang={lang}
+          onOpen={onOpen}
+          priority
+        />
+      </div>
+    </div>
+  );
+}
+
+function ValidationStory() {
+  const { t, pick } = useLocalized();
+  return (
+    <div className="grid gap-4 lg:grid-cols-3">
+      {validationChanges.map((change, index) => (
+        <Reveal key={change.test.en} delay={index * 0.04}>
           <EditorialCard className="h-full">
-            <h3 className="mb-5 text-xl font-semibold tracking-[-0.02em] text-[#111318]">{pick(group.title)}</h3>
-            <ul className="space-y-3 text-sm leading-7 text-[#626872]">
-              {group.items.map((item) => (
-                <li key={item.en} className="flex gap-3">
-                  <span className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-[#1267d6]" aria-hidden="true" />
-                  <span>{pick(item)}</span>
-                </li>
-              ))}
-            </ul>
+            <NumberBadge>0{index + 1}</NumberBadge>
+            <p className="mt-6 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8e949e]">
+              {t('What I tested', '测试问题')}
+            </p>
+            <h3 className="mt-2 text-lg font-semibold leading-7 text-[#111318]">
+              {pick(change.test)}
+            </h3>
+            <div className="my-5 h-px bg-[#dfe2e7]" />
+            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8e949e]">
+              {t('What failed', '发现的问题')}
+            </p>
+            <p className="mt-2 text-sm leading-7 text-[#626872]">
+              {pick(change.finding)}
+            </p>
+            <div className="my-5 h-px bg-[#dfe2e7]" />
+            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1267d6]">
+              {t('Design change', '设计变化')}
+            </p>
+            <p className="mt-2 text-sm font-medium leading-7 text-[#111318]">
+              {pick(change.change)}
+            </p>
           </EditorialCard>
         </Reveal>
       ))}
@@ -1060,13 +1245,26 @@ function StatusColumns({ focus = "all" }: { focus?: "all" | "open" }) {
 }
 
 export default function UnifiedConnectorExperiencePage() {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
   const { pick } = useLocalized();
-  const thumbnailSrc = `${basePath}/images/unified-connector-experience/thumbnail.svg`;
+  const [lightboxItem, setLightboxItem] = useState<MediaItem | null>(null);
+
+  const heroMedia: MediaItem = {
+    src: screenshotPath('exploration-scheme-b.png'),
+    alt: {
+      en: 'Selected unified connector gallery design',
+      zh: '最终选择的统一连接器目录设计',
+    },
+    label: { en: 'Selected product direction', zh: '最终产品方向' },
+    caption: {
+      en: 'One entry per database or deployment boundary; capabilities appear only after selection.',
+      zh: '每个数据库或部署边界一个入口，选择后再披露能力。',
+    },
+  };
 
   return (
     <>
-      <ReadingProgress label={t("Reading progress", "阅读进度")} />
+      <ReadingProgress label={t('Reading progress', '阅读进度')} />
       <Navigation />
       <main className="min-h-screen bg-[#f7f8fa] text-[#111318]">
         <Chapter id="top" tone="surface" className="pt-36 md:pt-44 lg:pt-48">
@@ -1075,236 +1273,256 @@ export default function UnifiedConnectorExperiencePage() {
             <Reveal>
               <div className="mb-7 flex items-center gap-3 font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8e949e]">
                 <span className="h-px w-10 bg-[#c9cdd4]" aria-hidden="true" />
-                <span>{t("Systems Design · Enterprise AI", "系统设计 · 企业 AI")}</span>
+                <span>{t('Systems Design · Enterprise AI', '系统设计 · 企业 AI')}</span>
               </div>
               <h1 className="max-w-4xl text-[clamp(3.3rem,7.4vw,6.9rem)] font-[720] leading-[0.92] tracking-[-0.07em] text-[#111318]">
-                Unified Enterprise <span className="text-[#1267d6]">Connector</span> Experience
+                Unified Enterprise{' '}
+                <span className="text-[#1267d6]">Connector</span> Experience
               </h1>
               <p className="mt-8 max-w-2xl text-[clamp(1.45rem,2.5vw,2.05rem)] font-medium leading-[1.22] tracking-[-0.035em] text-[#171a21]">
-                {t("One data source. One entry point. Multiple capabilities.", "一个数据源，一个入口，多种能力。")}
+                {t(
+                  'I turned a fast-changing data-access ecosystem into a stable mental model for administrators.',
+                  '我把快速变化的数据访问生态，转化为管理员可以稳定理解的产品模型。',
+                )}
               </p>
               <p className="mt-6 max-w-2xl text-base leading-8 text-[#626872] md:text-lg">
                 {t(
-                  "I redesigned how enterprise administrators discover, compare, configure, and manage multiple connection capabilities under the same data source—without hiding differences that change their actions.",
-                  "我重新设计了企业管理员发现、比较、配置并持续管理同一数据源下多种连接能力的方式，同时保留会改变操作的真实差异。",
+                  'The design challenge was not to fit more connector types into the UI. It was to decide what should remain stable as AI moved from indexed search to live retrieval and agentic actions.',
+                  '设计挑战不是在界面里塞进更多连接器类型，而是当 AI 从索引式搜索走向实时检索与 Agent 行动时，判断什么应该保持稳定。',
                 )}
               </p>
             </Reveal>
-            <HeroVisual thumbnailSrc={thumbnailSrc} />
+            <Reveal delay={0.08}>
+              <MediaFrame
+                item={heroMedia}
+                lang={lang}
+                onOpen={setLightboxItem}
+                priority
+              />
+            </Reveal>
           </div>
           <Reveal className="mt-12">
-            <MetaGrid items={meta.map((item) => ({ label: pick(item.label), value: pick(item.value) }))} />
+            <MetaGrid
+              items={meta.map((item) => ({
+                label: pick(item.label),
+                value: pick(item.value),
+              }))}
+            />
           </Reveal>
         </Chapter>
 
-        <Chapter id="bottleneck" tone="paper">
-          <div className="grid gap-12 lg:grid-cols-[0.38fr_0.62fr]">
-            <SectionHeading
-              index="01"
-              eyebrow={t("Bottleneck", "瓶颈")}
-              title={t(
-                "More capabilities created more entry points—but not more clarity.",
-                "更多能力带来了更多入口，却没有带来更清晰的体验。",
-              )}
-              body={t(
-                "The work was not a visual clean-up. It was a product-model problem caused by growth.",
-                "这不是一次视觉整理，而是能力增长引发的产品模型问题。",
-              )}
-            />
-            <div>
-              <Reveal>
-                <p className="mb-8 text-lg leading-8 text-[#626872]">
-                  {t(
-                    "As enterprise AI platforms added new ways to connect business data, a single source could support live retrieval, background indexing, user-owned sync, organization-owned sync, and guided workflows. The existing model turned each technical capability into a separate connector entry.",
-                    "随着企业 AI 平台增加更多连接业务数据的方式，同一个来源可能同时支持实时检索、后台索引、用户级同步、组织级同步和引导式工作流。原有模型把每种技术能力都表现为独立连接器入口。",
-                  )}
-                </p>
-              </Reveal>
-              <div className="grid gap-3 md:grid-cols-5">
-                {whyChain.map((item, index) => (
-                  <Reveal key={item.en} delay={index * 0.03}>
-                    <div className="relative h-full rounded-[20px] border border-[#dfe2e7] bg-white p-4">
-                      <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8e949e]">0{index + 1}</p>
-                      <p className="mt-8 text-sm font-semibold leading-6 text-[#111318]">{pick(item)}</p>
-                      {index < whyChain.length - 1 && (
-                        <span className="absolute -right-2 top-1/2 hidden h-px w-4 bg-[#c9cdd4] md:block" aria-hidden="true" />
-                      )}
-                    </div>
-                  </Reveal>
-                ))}
-              </div>
-            </div>
+        <Chapter id="problem" tone="paper">
+          <SectionHeading
+            index="01"
+            eyebrow={t('Problem analysis', '问题分析')}
+            title={t(
+              'The Gallery kept growing, but its unit of organization never changed.',
+              'Gallery 不断增长，但它的组织单位从未改变。',
+            )}
+            body={t(
+              'Every new connector became another card. When one app supported multiple connector capabilities, it appeared as several unrelated starting points and pushed the burden of understanding the system onto administrators.',
+              '每增加一种 Connector，Gallery 就增加一张卡片；当同一个 App 支持多种 Connector 能力时，它又会变成多个彼此割裂的入口，把理解系统的成本转嫁给管理员。',
+            )}
+          />
+          <div className="mt-10">
+            <ProblemEvidence lang={lang} onOpen={setLightboxItem} />
           </div>
           <div className="mt-14">
             <SectionHeading
               index="01A"
-              eyebrow={t("Before / After", "改版前 / 改版后")}
-              title={t("The object changed from connectors to data sources.", "顶层对象从连接器变成数据源。")}
+              eyebrow={t('Why the problem accelerated', '为什么问题正在加速')}
+              title={t(
+                'AI changed faster than the connector model.',
+                'AI 的演进速度超过了原有连接器模型。',
+              )}
               body={t(
-                "The abstract UI below uses sanitized examples only. It shows the structural shift, not unreleased product screens.",
-                "下方为脱敏抽象界面，只展示结构变化，不使用未发布产品截图。",
+                'The original structure was built for indexed search. Live retrieval, user-owned access, and agent actions kept adding new technical entry points to a model that was already difficult to scan.',
+                '原有结构面向索引式搜索；实时检索、用户级访问和 Agent 操作又不断增加新的技术入口，让原本难以浏览的模型进一步复杂化。',
               )}
             />
-            <div className="mt-10">
-              <BeforeAfter />
-            </div>
+          </div>
+          <div className="mt-10">
+            <StrategicShift />
+          </div>
+          <div className="mt-8">
+            <CompetitiveSignal />
           </div>
         </Chapter>
 
-        <Chapter id="gap" tone="surface">
-          <div className="grid gap-12 lg:grid-cols-[0.36fr_0.64fr]">
-            <SectionHeading
-              index="02"
-              eyebrow={t("Gap", "断点")}
-              title={t("The visible issue was duplicate cards. The real gap was decision continuity.", "表面问题是卡片重复，真实断点是决策连续性。")}
-              body={t(
-                "Discovery, understanding, and lifecycle work were split, so administrators had to reconstruct context before taking the next action.",
-                "发现、理解和生命周期工作被拆开，管理员必须在下一步行动前重新拼接上下文。",
-              )}
-            />
-            <ProblemLayers />
+        <Chapter id="reframe" tone="surface">
+          <SectionHeading
+            index="02"
+            eyebrow={t('Problem redefinition', '问题重定义')}
+            title={t(
+              'Duplicate cards were the symptom. The missing piece was a stable mental model.',
+              '重复卡片只是症状，真正缺失的是一套稳定的用户心智。',
+            )}
+            body={t(
+              'Instead of asking how to fit more connectors into the Gallery, I asked what the product should be organized around when one source supports many ways for AI to use its data.',
+              '我不再追问如何把更多 Connector 塞进 Gallery，而是重新思考：当同一来源支持多种 AI 数据访问方式时，产品应该围绕什么来组织？',
+            )}
+          />
+          <div className="mt-10">
+            <ReframeModel />
           </div>
-          <div className="mt-14">
-            <SectionHeading
-              index="02A"
-              eyebrow={t("Evidence", "证据")}
-              title={t("Three evidence streams shaped the model.", "三类证据共同塑造模型。")}
-              body={t(
-                "Raw internal inputs are translated into public insights: user behavior, product scalability, and technical constraints.",
-                "内部原始材料被转译为可公开洞察：用户行为、产品扩展性与技术约束。",
-              )}
-            />
-            <div className="mt-10">
-              <EvidenceGrid />
-            </div>
-          </div>
-          <Reveal className="mt-14">
-            <StatementBand label={t("Problem redefinition", "问题重定义")}>
+          <Reveal className="mt-12">
+            <StatementBand label={t('Design thesis', '设计命题')}>
               {t(
-                "Not “How do we reduce cards?” How might we make multiple connection capabilities feel like one coherent, scalable, and manageable system—without hiding technical differences that change the work?",
-                "不是“如何减少卡片？”而是：如何在不掩盖真实技术差异的前提下，让多种连接能力在管理员眼中形成一个统一、可扩展、可管理的系统？",
+                'Keep the source and administrator job stable. Let connection technologies evolve underneath as explicit capabilities.',
+                '保持数据源与管理员任务稳定，让连接技术在其下以明确能力持续演进。',
               )}
             </StatementBand>
           </Reveal>
         </Chapter>
 
-        <Chapter id="loop" tone="paper">
+        <Chapter id="exploration" tone="dark">
           <SectionHeading
             index="03"
-            eyebrow={t("Loop", "闭环")}
-            title={t("A shared language carries the source across discovery, setup, and management.", "用共享语言让数据源贯穿发现、设置与管理。")}
-            body={t(
-              "Before drawing detailed screens, I made the evaluation criteria explicit so “unified” would not become a vague visual goal.",
-              "在绘制细节页面前，我先明确评估标准，避免“统一”变成模糊的视觉目标。",
+            eyebrow={t('Core design exploration', '核心方案探索')}
+            title={t(
+              'How unified is too unified?',
+              '统一到什么程度，才不会失去真实差异？',
             )}
-          />
-          <div className="mt-10">
-            <PrinciplesGrid />
-          </div>
-          <div className="mt-14 grid gap-10 lg:grid-cols-[0.42fr_0.58fr] lg:items-start">
-            <SectionHeading
-              index="03A"
-              eyebrow={t("Journey", "旅程")}
-              title={t("Four surfaces, one mental model.", "四步旅程，一个心智模型。")}
-              body={t(
-                "The final model connects a low-density discovery moment with high-density setup and lifecycle management.",
-                "最终模型将低密度发现时刻与高密度设置和生命周期管理连接起来。",
-              )}
-            />
-            <LoopDiagram />
-          </div>
-          <div className="mt-10">
-            <JourneyMap />
-          </div>
-        </Chapter>
-
-        <Chapter id="decision" tone="dark">
-          <SectionHeading
-            index="04"
-            eyebrow={t("Decision", "决策")}
-            title={t("Three decisions changed the product direction.", "三组决策改变产品方向。")}
             body={t(
-              "The detailed decision set is grouped into three public narratives: object model, capability model, and lifecycle model.",
-              "细节决策在公开页面中收敛为三条主线：对象模型、能力模型和生命周期模型。",
+              'I explored different aggregation levels to find the boundary that matched an administrator’s decision—not the implementation team’s architecture.',
+              '我探索了不同聚合层级，寻找符合管理员真实决策、而不是实现团队技术架构的边界。',
             )}
             dark
           />
-          <div className="mt-10 grid gap-5 lg:grid-cols-3">
-            {decisions.map((decision, index) => (
-              <DecisionCard key={decision.code} decision={decision} index={index} />
-            ))}
-          </div>
-          <div className="mt-12">
-            <ConvergenceModel />
+          <div className="mt-10">
+            <ExplorationStory lang={lang} onOpen={setLightboxItem} />
           </div>
         </Chapter>
 
-        <Chapter id="proof" tone="surface">
-          <div className="grid gap-12 lg:grid-cols-[0.36fr_0.64fr]">
-            <SectionHeading
-              index="05"
-              eyebrow={t("Proof", "验证")}
-              title={t("The structure flexes by scenario instead of multiplying screens.", "结构按场景伸缩，而不是不断复制页面。")}
-              body={t(
-                "Four sanitized scenarios stress-test full, dual, constrained, and minimum capability combinations.",
-                "四类脱敏场景验证完整、双责任、受约束和最小能力组合。",
-              )}
-            />
-            <SystemMatrix />
+        <Chapter id="experience" tone="surface">
+          <SectionHeading
+            index="04"
+            eyebrow={t('From model to experience', '从模型到体验')}
+            title={t(
+              'One object, revealed at the right level across the journey.',
+              '同一个对象，在用户旅程中逐层展开。',
+            )}
+            body={t(
+              'The object model becomes useful only when Gallery, capability comparison, setup, and lifecycle management each carry the right decision density and preserve the same language.',
+              '只有当 Gallery、能力比较、设置和生命周期管理分别承载正确的决策密度，并保持同一套语言时，产品模型才真正成立。',
+            )}
+          />
+          <div className="mt-10">
+            <ExperienceLogic lang={lang} onOpen={setLightboxItem} />
           </div>
-          <div className="mt-14">
+          <div className="mt-16">
             <SectionHeading
-              index="05A"
-              eyebrow={t("Validation & status", "验证与状态")}
-              title={t("Clear outcomes, clear boundaries.", "结果清楚，边界也清楚。")}
+              index="04A"
+              eyebrow={t('Interactive prototype', '可交互原型')}
+              title={t(
+                'Experience the complete model as a working flow.',
+                '直接体验这套模型如何在完整流程中工作。',
+              )}
               body={t(
-                "The work aligned a data-source-level experience model and produced a complete review-ready journey. It intentionally avoids claiming production efficiency gains that were not publicly validated.",
-                "这项工作对齐了数据源级体验模型，并形成可进入详细评审的完整旅程。页面刻意不声明尚未公开验证的生产效率提升。",
+                'The coded prototype keeps the design review focused on real behavior, information density, routing, and state—not isolated static screens.',
+                '代码原型让设计评审聚焦于真实行为、信息密度、页面路由与状态，而不是彼此割裂的静态界面。',
               )}
             />
-            <div className="mt-10">
-              <StatusColumns />
-            </div>
+          </div>
+          <div className="mt-10">
+            <LiveDemo lang={lang} />
           </div>
         </Chapter>
 
-        <Chapter id="next" tone="paper">
-          <div className="grid gap-12 lg:grid-cols-[0.42fr_0.58fr]">
+        <Chapter id="validation" tone="soft">
+          <SectionHeading
+            index="05"
+            eyebrow={t('Validation changed the design', '验证改变了设计')}
+            title={t(
+              'The model had to survive exceptions—not just the ideal case.',
+              '模型必须经得住例外，而不只是最理想的场景。',
+            )}
+            body={t(
+              'Four very different capability combinations and an end-to-end audit exposed where the model broke. The value of validation was the design changes it produced.',
+              '四种差异明显的能力组合与端到端审查共同暴露模型断点。验证的价值，在于它真正改变了设计。',
+            )}
+          />
+          <div className="mt-10">
+            <StressTest lang={lang} onOpen={setLightboxItem} />
+          </div>
+          <div className="mt-10">
+            <ValidationStory />
+          </div>
+        </Chapter>
+
+        <Chapter id="outcome" tone="paper">
+          <div className="grid gap-12 lg:grid-cols-[0.4fr_0.6fr]">
             <SectionHeading
               index="06"
-              eyebrow={t("Next", "下一步")}
-              title={t("A unified experience is not one that makes everything look the same.", "统一体验不是让所有连接器看起来相同。")}
+              eyebrow={t('Outcome & reflection', '结果与反思')}
+              title={t(
+                'A connector model designed to evolve with AI.',
+                '一套能够随 AI 持续演进的连接器模型。',
+              )}
               body={t(
-                "It gives administrators a stable mental model—and reveals technical complexity only when it changes the next action.",
-                "它建立稳定的用户心智模型，并只在技术差异会改变下一步操作时让复杂度出现。",
+                'The outcome was not simply a cleaner Gallery. It was a shared product language that connects source discovery, capability decisions, setup ownership, and lifecycle management.',
+                '结果不只是一个更干净的 Gallery，而是一套贯穿数据源发现、能力选择、设置责任和生命周期管理的共享产品语言。',
               )}
             />
-            <div className="space-y-6">
-              <StatusColumns focus="open" />
-              <Reveal>
+            <div>
+              <div className="grid gap-3 md:grid-cols-3">
+                {[
+                  {
+                    label: t('Product', '产品'),
+                    value: t(
+                      'From technical entries to a stable source model.',
+                      '从技术入口转向稳定的数据源模型。',
+                    ),
+                  },
+                  {
+                    label: t('Experience', '体验'),
+                    value: t(
+                      'One language across discovery, setup, and management.',
+                      '发现、设置与管理使用同一套语言。',
+                    ),
+                  },
+                  {
+                    label: t('Team', '团队'),
+                    value: t(
+                      'Coded alternatives made architecture reviewable.',
+                      '可运行方案让抽象架构变得可评审。',
+                    ),
+                  },
+                ].map((outcome) => (
+                  <EditorialCard key={outcome.label} className="h-full p-5">
+                    <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1267d6]">
+                      {outcome.label}
+                    </p>
+                    <p className="mt-4 text-sm font-semibold leading-6 text-[#111318]">
+                      {outcome.value}
+                    </p>
+                  </EditorialCard>
+                ))}
+              </div>
+              <Reveal className="mt-5">
                 <EditorialCard>
-                  <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1267d6]">
-                    {t("Reflection", "反思")}
+                  <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#1267d6]">
+                    {t('Reflection', '反思')}
                   </p>
-                  <blockquote className="mt-5 text-[clamp(1.6rem,3vw,2.7rem)] font-medium leading-[1.1] tracking-[-0.045em] text-[#111318]">
+                  <blockquote className="mt-5 text-[clamp(1.6rem,3vw,2.7rem)] font-medium leading-[1.12] tracking-[-0.045em] text-[#111318]">
                     {t(
-                      "The most valuable artifact was not a set of screens. It was a product system that keeps answering: what am I connecting, what can it do, what state is it in, and what should I do next?",
-                      "最有价值的产物不是几张页面，而是一套持续回答这些问题的产品系统：我正在连接什么、它能做什么、当前处于什么状态、下一步该做什么？",
+                      'A durable enterprise experience is not organized around today’s protocol. It gives people a stable way to decide while the technology keeps moving.',
+                      '可持续的企业体验不应围绕今天的协议来组织，而应在技术持续变化时，仍为用户提供稳定的决策方式。',
                     )}
                   </blockquote>
                   <div className="mt-8 flex flex-wrap gap-3">
                     <Link
                       href="/projects"
-                      className="inline-flex items-center gap-2 rounded-full border border-[#c9cdd4] px-5 py-3 text-sm font-semibold text-[#626872] transition-colors hover:border-[#1267d6] hover:text-[#1267d6] motion-reduce:transition-none"
+                      className="inline-flex items-center gap-2 rounded-full border border-[#c9cdd4] px-5 py-3 text-sm font-semibold text-[#626872] transition-colors hover:border-[#1267d6] hover:text-[#1267d6]"
                     >
                       <span aria-hidden="true">←</span>
-                      {t("Back to projects", "返回项目")}
+                      {t('Back to projects', '返回项目')}
                     </Link>
                     <Link
                       href="/projects/connector-health-center"
-                      className="inline-flex items-center gap-2 rounded-full bg-[#1267d6] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#0f56b6] motion-reduce:transition-none"
+                      className="inline-flex items-center gap-2 rounded-full bg-[#1267d6] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#0f56b6]"
                     >
-                      {t("View Connector Health Center", "查看连接器健康中心")}
+                      {t('Next case study', '下一个案例')}
                       <span aria-hidden="true">→</span>
                     </Link>
                   </div>
@@ -1314,6 +1532,12 @@ export default function UnifiedConnectorExperiencePage() {
           </div>
         </Chapter>
       </main>
+
+      <Lightbox
+        item={lightboxItem}
+        lang={lang}
+        onClose={() => setLightboxItem(null)}
+      />
     </>
   );
 }
