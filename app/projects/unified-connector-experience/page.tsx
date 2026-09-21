@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Navigation from '@/components/Navigation';
 import {
   Chapter,
@@ -16,8 +16,9 @@ import {
 import { useLanguage, type Lang } from '@/lib/LanguageContext';
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+const screenshotRevision = '20260921-github-comparison';
 const screenshotPath = (file: string) =>
-  `${basePath}/images/unified-connector-experience/${file}`;
+  `${basePath}/images/unified-connector-experience/${file}?v=${screenshotRevision}`;
 
 type Localized = { en: string; zh: string };
 type MediaItem = {
@@ -172,16 +173,16 @@ const decisions = [
     code: '01',
     skill: { en: 'Systems thinking', zh: '系统思维' },
     title: {
-      en: 'Define the right product object.',
-      zh: '定义正确的产品对象。',
+      en: 'Choose the right unit of organization.',
+      zh: '选择正确的组织单位。',
     },
     question: {
-      en: 'What should remain stable when connection technology keeps changing?',
-      zh: '当连接技术不断变化时，什么应该保持稳定？',
+      en: 'Should GitHub be organized by capability, vendor, or deployment?',
+      zh: 'GitHub 应该按能力、供应商，还是部署边界组织？',
     },
     tension: {
-      en: 'One card per vendor hid Cloud and Data Center differences. One card per technical connector pushed implementation complexity onto administrators.',
-      zh: '按供应商聚合会掩盖 Cloud 与 Data Center 的差异；按技术连接器拆分又会把实现复杂度转嫁给管理员。',
+      en: 'GitHub Cloud and Server each exposed separate Issues, Knowledge, and Pull Requests cards. Six technical entries described the implementation, not the source an administrator intended to connect.',
+      zh: 'GitHub Cloud 与 Server 分别暴露 Issues、Knowledge、Pull Requests 卡片。六个技术入口描述的是实现方式，而不是管理员真正想连接的数据源。',
     },
     alternatives: [
       { en: 'One card per technical connector', zh: '每个技术连接器一张卡片' },
@@ -192,36 +193,42 @@ const decisions = [
       },
     ],
     decision: {
-      en: 'Use the database or deployment boundary as the stable object. Jira Cloud and Jira Data Center stay separate; Sync, MCP, and User Sync become capabilities beneath them.',
-      zh: '以数据库或部署边界作为稳定对象。Jira Cloud 与 Jira Data Center 保持分离，Sync、MCP 与 User Sync 成为其下能力。',
+      en: 'Keep two Gallery entries: GitHub Cloud and GitHub Server. Issues, Knowledge, Pull Requests, Sync, and MCP become capabilities beneath the appropriate deployment.',
+      zh: 'Gallery 只保留 GitHub Cloud 与 GitHub Server 两个入口；Issues、Knowledge、Pull Requests、Sync 与 MCP 成为对应部署入口下的能力。',
     },
     why: {
-      en: 'This boundary matches the administrator’s setup decision while remaining flexible enough for future capability changes.',
-      zh: '这个边界既符合管理员真实的设置决策，也能为未来能力变化保留足够弹性。',
+      en: 'Cloud and Server still require meaningfully different setup decisions, while capability changes no longer create more top-level cards.',
+      zh: 'Cloud 与 Server 仍对应不同的设置决策，但后续能力变化不再继续制造顶层卡片。',
     },
     media: [
       {
-        src: screenshotPath('exploration-scheme-a.png'),
+        src: screenshotPath('current-gallery-fragmentation.png'),
         alt: {
-          en: 'Scheme A with one vendor-level card',
-          zh: 'Scheme A 供应商级单卡片方案',
+          en: 'Before: GitHub Cloud and Server split into six technical connector cards',
+          zh: '合并前：GitHub Cloud 与 Server 被拆分为六张技术连接器卡片',
         },
-        label: { en: 'Explored · too broad', zh: '探索方案 · 边界过宽' },
+        label: {
+          en: 'Before · six technical entries',
+          zh: '合并前 · 六个技术入口',
+        },
         caption: {
-          en: 'Vendor-level aggregation reduced cards but concealed deployment differences.',
-          zh: '供应商级聚合减少了卡片，却掩盖了部署差异。',
+          en: 'Issues, Knowledge, and Pull Requests each became separate cards for GitHub Cloud and GitHub Server.',
+          zh: 'Issues、Knowledge、Pull Requests 在 GitHub Cloud 与 GitHub Server 下分别成为独立卡片。',
         },
       },
       {
         src: screenshotPath('exploration-scheme-b.png'),
         alt: {
-          en: 'Scheme B with cards per database or deployment',
-          zh: 'Scheme B 数据库或部署级卡片方案',
+          en: 'After: global Gallery with unified GitHub Cloud and GitHub Server cards',
+          zh: '合并后：全局 Gallery 中统一后的 GitHub Cloud 与 GitHub Server 卡片',
         },
-        label: { en: 'Selected · right boundary', zh: '最终方案 · 正确边界' },
+        label: {
+          en: 'After · two deployment entries',
+          zh: '合并后 · 两个部署入口',
+        },
         caption: {
-          en: 'Database-level entries preserve meaningful differences without exposing every implementation.',
-          zh: '数据库级入口保留有意义的差异，同时避免暴露所有实现细节。',
+          en: 'The global Gallery keeps GitHub Cloud and GitHub Server distinct while grouping their capabilities beneath each source.',
+          zh: '全局 Gallery 只保留 GitHub Cloud 与 GitHub Server 两个来源入口，各项能力收纳在对应卡片之下。',
         },
       },
     ] satisfies MediaItem[],
@@ -344,8 +351,8 @@ const journey = [
     media: {
       src: screenshotPath('journey-01-gallery.png'),
       alt: {
-        en: 'Gallery filtered to Salesforce sources',
-        zh: '筛选到 Salesforce 数据源的 Gallery',
+        en: 'Global Gallery with Salesforce CRM among a varied set of sources',
+        zh: '全局 Gallery 中 Salesforce CRM 与多种数据源共同展示',
       },
       label: { en: 'Step 01 · Gallery', zh: '步骤 01 · Gallery' },
       caption: {
@@ -434,7 +441,7 @@ const stressCases = [
       zh: '实时检索 + 租户索引 + Skills',
     },
     media: {
-      src: screenshotPath('journey-02-capabilities.png'),
+      src: screenshotPath('validation-salesforce-filtered.png'),
       alt: {
         en: 'Salesforce CRM full hybrid capability case',
         zh: 'Salesforce CRM 完整 Hybrid 能力场景',
@@ -931,27 +938,27 @@ function ExplorationStory({
   const decision = decisions[0];
   const boundaries = [
     {
-      label: { en: 'Too fragmented', zh: '过度拆分' },
-      value: { en: 'Connector type', zh: '连接器类型' },
+      label: { en: 'Before', zh: '合并前' },
+      value: { en: '6 capability cards', zh: '6 张能力卡片' },
       risk: {
-        en: 'Implementation complexity becomes user-facing.',
-        zh: '实现复杂度被直接转嫁给用户。',
+        en: 'Issues, Knowledge, and Pull Requests × Cloud and Server.',
+        zh: 'Issues、Knowledge、Pull Requests × Cloud 与 Server。',
       },
     },
     {
-      label: { en: 'Too unified', zh: '过度统一' },
-      value: { en: 'Vendor', zh: '供应商' },
+      label: { en: 'Rejected extreme', zh: '未采用的极端' },
+      value: { en: '1 GitHub card', zh: '1 张 GitHub 卡片' },
       risk: {
-        en: 'Cloud and on-premises consequences disappear.',
-        zh: 'Cloud 与本地部署的关键差异被隐藏。',
+        en: 'Cloud and Server setup consequences would disappear.',
+        zh: 'Cloud 与 Server 的设置差异会被隐藏。',
       },
     },
     {
-      label: { en: 'Selected boundary', zh: '最终边界' },
-      value: { en: 'Database / deployment', zh: '数据库 / 部署方式' },
+      label: { en: 'After · selected', zh: '合并后 · 最终方案' },
+      value: { en: '2 deployment cards', zh: '2 张部署卡片' },
       risk: {
-        en: 'Stable for admins and extensible for new capabilities.',
-        zh: '对管理员稳定，也能继续扩展新能力。',
+        en: 'GitHub Cloud + GitHub Server; capabilities live beneath them.',
+        zh: 'GitHub Cloud + GitHub Server；具体能力收纳在其下。',
       },
     },
   ];
@@ -1056,56 +1063,95 @@ function ExperienceLogic({
   );
 }
 
+const demoCanvas = {
+  width: 2160,
+  height: 1440,
+};
+
 function LiveDemo({ lang }: { lang: Lang }) {
   const [revision, setRevision] = useState(0);
+  const [viewportWidth, setViewportWidth] = useState(0);
+  const viewportRef = useRef<HTMLDivElement>(null);
   const storyId =
     'design-explorations-hybrid-connectors-salesforce-demo--skills-in-gallery';
   const demoUrl = `${basePath}/hybrid-connector-live-demo/iframe.html?id=${storyId}&viewMode=story`;
+  const scale = viewportWidth / demoCanvas.width;
+
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+
+    const updateWidth = () => setViewportWidth(viewport.clientWidth);
+    const observer = new ResizeObserver(updateWidth);
+
+    updateWidth();
+    observer.observe(viewport);
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <Reveal className="relative left-1/2 w-[min(1440px,calc(100vw-32px))] -translate-x-1/2">
-      <div className="overflow-hidden rounded-[28px] border border-[#dfe2e7] bg-white shadow-[0_24px_70px_rgba(17,19,24,0.10)]">
-        <div className="flex flex-col justify-between gap-4 border-b border-[#dfe2e7] px-5 py-4 sm:flex-row sm:items-center md:px-6">
-          <div>
-            <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#1267d6]">
-              {lang === 'zh' ? '可交互代码原型' : 'Interactive coded prototype'}
+    <Reveal>
+      <div className="relative left-1/2 w-[min(1440px,calc(100vw-32px))] -translate-x-1/2">
+        <div className="overflow-hidden rounded-[28px] border border-[#dfe2e7] bg-white shadow-[0_24px_70px_rgba(17,19,24,0.10)]">
+          <div className="flex flex-col justify-between gap-4 border-b border-[#dfe2e7] px-5 py-4 sm:flex-row sm:items-center md:px-6">
+            <div>
+              <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#1267d6]">
+                {lang === 'zh' ? '可交互代码原型' : 'Interactive coded prototype'}
+              </div>
+              <div className="mt-1 text-sm text-[#626872]">
+                {lang === 'zh'
+                  ? 'Gallery → 数据源能力 → Add Flow → Your Connections'
+                  : 'Gallery → source capabilities → Add flow → Your Connections'}
+              </div>
             </div>
-            <div className="mt-1 text-sm text-[#626872]">
-              {lang === 'zh'
-                ? 'Gallery → 数据源能力 → Add Flow → Your Connections'
-                : 'Gallery → source capabilities → Add flow → Your Connections'}
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => setRevision((value) => value + 1)}
+                className="rounded-full border border-[#c9cdd4] px-4 py-2 text-xs font-semibold text-[#626872] transition hover:border-[#1267d6] hover:text-[#1267d6]"
+              >
+                {lang === 'zh' ? '重置 Demo' : 'Reset demo'}
+              </button>
+              <a
+                href={demoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full bg-[#1267d6] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#0f56b6]"
+              >
+                {lang === 'zh' ? '新窗口打开 ↗' : 'Open full demo ↗'}
+              </a>
             </div>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => setRevision((value) => value + 1)}
-              className="rounded-full border border-[#c9cdd4] px-4 py-2 text-xs font-semibold text-[#626872] transition hover:border-[#1267d6] hover:text-[#1267d6]"
+          <div
+            ref={viewportRef}
+            className="relative aspect-[3/2] overflow-hidden bg-white"
+          >
+            <div
+              className="absolute left-0 top-0"
+              style={{
+                width: demoCanvas.width,
+                height: demoCanvas.height,
+                transform: `scale(${scale})`,
+                transformOrigin: 'top left',
+                visibility: viewportWidth > 0 ? 'visible' : 'hidden',
+              }}
             >
-              {lang === 'zh' ? '重置 Demo' : 'Reset demo'}
-            </button>
-            <a
-              href={demoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full bg-[#1267d6] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#0f56b6]"
-            >
-              {lang === 'zh' ? '新窗口打开 ↗' : 'Open full demo ↗'}
-            </a>
+              <iframe
+                key={revision}
+                src={`${demoUrl}&revision=${revision}`}
+                title={
+                  lang === 'zh'
+                    ? 'Unified Connector 可交互设计原型'
+                    : 'Unified Connector interactive design prototype'
+                }
+                loading="lazy"
+                className="h-full w-full border-0 bg-white"
+                allow="clipboard-write"
+              />
+            </div>
           </div>
         </div>
-        <iframe
-          key={revision}
-          src={`${demoUrl}&revision=${revision}`}
-          title={
-            lang === 'zh'
-              ? 'Unified Connector 可交互设计原型'
-              : 'Unified Connector interactive design prototype'
-          }
-          loading="lazy"
-          className="aspect-[3/2] h-auto w-full border-0 bg-white"
-          allow="clipboard-write"
-        />
       </div>
     </Reveal>
   );
@@ -1250,15 +1296,15 @@ export default function UnifiedConnectorExperiencePage() {
   const [lightboxItem, setLightboxItem] = useState<MediaItem | null>(null);
 
   const heroMedia: MediaItem = {
-    src: screenshotPath('exploration-scheme-b.png'),
+    src: screenshotPath('journey-01-gallery.png'),
     alt: {
-      en: 'Selected unified connector gallery design',
-      zh: '最终选择的统一连接器目录设计',
+      en: 'Selected unified connector design in the global Gallery',
+      zh: '全局 Gallery 中最终选择的统一连接器设计',
     },
     label: { en: 'Selected product direction', zh: '最终产品方向' },
     caption: {
-      en: 'One entry per database or deployment boundary; capabilities appear only after selection.',
-      zh: '每个数据库或部署边界一个入口，选择后再披露能力。',
+      en: 'The global Gallery stays rich and scannable; each card represents one database or deployment boundary.',
+      zh: '全局 Gallery 保持丰富且易于浏览，每张卡片代表一个数据库或部署边界。',
     },
   };
 
@@ -1378,14 +1424,14 @@ export default function UnifiedConnectorExperiencePage() {
         <Chapter id="exploration" tone="dark">
           <SectionHeading
             index="03"
-            eyebrow={t('Core design exploration', '核心方案探索')}
+            eyebrow={t('Defining the Gallery card boundary', '定义 Gallery 卡片边界')}
             title={t(
-              'How unified is too unified?',
-              '统一到什么程度，才不会失去真实差异？',
+              'From six GitHub connector cards to two source entries.',
+              '从 6 张 GitHub 技术卡片，合并为 2 个来源入口。',
             )}
             body={t(
-              'I explored different aggregation levels to find the boundary that matched an administrator’s decision—not the implementation team’s architecture.',
-              '我探索了不同聚合层级，寻找符合管理员真实决策、而不是实现团队技术架构的边界。',
+              'Before, Issues, Knowledge, and Pull Requests produced separate cards for GitHub Cloud and GitHub Server. After, the Gallery keeps only two deployment entries and reveals those connector technologies as capabilities after selection.',
+              '合并前，Issues、Knowledge、Pull Requests 在 GitHub Cloud 与 GitHub Server 下分别生成独立卡片；合并后，Gallery 只保留两个部署入口，并在选择后再披露具体连接能力。',
             )}
             dark
           />

@@ -111,7 +111,7 @@ const projectCategories: ProjectCategory[] = [
           { en: 'Enterprise AI', zh: '企业 AI' },
         ],
         year: '2026',
-        image: `${basePath}/images/unified-connector-experience/exploration-scheme-b.png`,
+        image: `${basePath}/images/unified-connector-experience/journey-01-gallery.png?v=20260921-github-comparison`,
         imageSize: 'cover',
         href: '/projects/unified-connector-experience',
         presentationStyle: true,
