@@ -35,8 +35,28 @@ type ProjectCategory = {
 // Featured project data
 const projectCategories: ProjectCategory[] = [
   {
-    title: { en: 'AI Agent', zh: 'AI 智能体' },
+    title: { en: 'AI Workflows', zh: 'AI 工作流' },
     projects: [
+      {
+        id: 13,
+        title: 'Information Flow & Consistency in AI Workflows',
+        description: {
+          en: 'An eight-part scrollytelling deck about carrying decisions, risks, constraints, and evidence across Scout, GitHub project memory, Copilot, and human review—so AI can move faster without losing design ownership.',
+          zh: '一套八章滚动叙事演示，探索如何让决策、风险、约束与验证证据在 Scout、GitHub 项目记忆、Copilot 和人工审查之间持续流转，让 AI 提速但不丢失设计 ownership。',
+        },
+        tags: [
+          { en: 'Information Architecture', zh: '信息架构' },
+          { en: 'AI Workflow', zh: 'AI 工作流' },
+          { en: 'Project Memory', zh: '项目记忆' },
+          { en: 'Design Ownership', zh: '设计 Ownership' },
+        ],
+        year: '2026',
+        image: `${basePath}/images/information-flow-consistency-ai-workflows/cover.png`,
+        imageSize: 'cover',
+        href: '/projects/information-flow-consistency-ai-workflows',
+        cta: { en: 'View Deck', zh: '查看演示' },
+        presentationStyle: true,
+      },
       {
         id: 9,
         title: 'AI-Native Design Framework',
@@ -152,8 +172,27 @@ const projectCategories: ProjectCategory[] = [
     ],
   },
   {
-    title: { en: 'Vibe coding', zh: 'Vibe Coding' },
+    title: { en: 'Personal Projects', zh: '个人项目' },
     projects: [
+      {
+        id: 14,
+        title: 'Personal Command Center',
+        description: {
+          en: 'A local-first macOS workspace that keeps projects, information, notes, creation, investments, persistent agent tasks, and background automations in one coherent operating system.',
+          zh: '一个本地优先的 macOS 工作中枢，将项目、资讯、笔记、创作、投资、持续 Agent 任务与后台自动化组织进同一套个人操作系统。',
+        },
+        tags: [
+          { en: 'Local-first', zh: '本地优先' },
+          { en: 'AI Workspace', zh: 'AI 工作空间' },
+          { en: 'Tauri', zh: 'Tauri' },
+          { en: 'Multi-model', zh: '多模型' },
+        ],
+        year: '2026',
+        image: `${basePath}/images/personal-command-center/project-atlas.png`,
+        imageSize: 'cover',
+        href: '/projects/personal-command-center',
+        presentationStyle: true,
+      },
       {
         id: 5,
         title: 'Planetary Orbit',

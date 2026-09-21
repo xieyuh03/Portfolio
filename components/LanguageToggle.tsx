@@ -3,12 +3,16 @@
 import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/lib/LanguageContext';
 
-const HIDDEN_ON = ['/resume'];
+const HIDDEN_ON = [
+  '/resume',
+  '/projects/information-flow-consistency-ai-workflows',
+];
 const LIGHT_BG_PATHS = [
   '/projects/bank-reconciliation',
   '/projects/vendor-invoice-center',
   '/projects/connector-health-center',
   '/projects/unified-connector-experience',
+  '/projects/personal-command-center',
 ];
 
 export default function LanguageToggle() {
