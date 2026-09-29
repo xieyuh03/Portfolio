@@ -8,6 +8,7 @@ import SoftAurora from '@/components/effects/SoftAurora';
 import FluidBackground from '@/components/FluidBackground';
 import TiltWrapper from '@/components/effects/TiltWrapper';
 import { useLanguage } from '@/lib/LanguageContext';
+import { legacyProjectCards } from '@/lib/legacyProjectCards';
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
@@ -30,6 +31,7 @@ type Project = {
 type ProjectCategory = {
   title: LocalizedText;
   projects: Project[];
+  compact?: boolean;
 };
 
 // Featured project data
@@ -172,6 +174,138 @@ const projectCategories: ProjectCategory[] = [
     ],
   },
   {
+    title: { en: 'Legacy Archive', zh: '早期作品归档' },
+    compact: true,
+    projects: [
+      {
+        id: 15,
+        title: 'Microsoft D365 Internship',
+        description: {
+          en: 'UI refinement and onboarding for Dynamics 365 Tax Calculation Service, plus an early blockchain-based cash-management concept.',
+          zh: '面向 Dynamics 365 Tax Calculation Service 的界面优化与新手引导，以及区块链现金管理概念探索。',
+        },
+        tags: [
+          { en: 'Enterprise UX', zh: '企业 UX' },
+          { en: 'ERP', zh: 'ERP' },
+          { en: 'Fluent UI', zh: 'Fluent UI' },
+        ],
+        year: '2021',
+        image: `${basePath}/images/legacy-source/covers/microsoft.jpg`,
+        imageSize: 'cover',
+        href: '/projects/archive/microsoft-internship-2021',
+      },
+      {
+        id: 16,
+        title: 'Transsion Product Design',
+        description: {
+          en: 'Interaction design and usability evaluation for an AR business-card app, Oraimo smartwatch, and foldable-screen interaction research.',
+          zh: 'AR 名片应用的交互设计与可用性评估，以及 Oraimo 智能手表和折叠屏交互研究。',
+        },
+        tags: [
+          { en: 'Interaction Design', zh: '交互设计' },
+          { en: 'User Testing', zh: '用户测试' },
+          { en: 'Mobile', zh: '移动端' },
+        ],
+        year: '2021',
+        image: `${basePath}/images/legacy-source/covers/transsion.jpg`,
+        imageSize: 'cover',
+        href: '/projects/archive/transsion-product-design',
+      },
+      {
+        id: 17,
+        title: 'MAXVAL SaaS Product Design',
+        description: {
+          en: 'A B2B SaaS redesign spanning product strategy, interviews, design principles, analytics, task management, and mobile workflows.',
+          zh: '覆盖产品战略、访谈、设计原则、数据分析、任务管理和移动工作流的 B2B SaaS 重设计。',
+        },
+        tags: [
+          { en: 'SaaS', zh: 'SaaS' },
+          { en: 'Product Strategy', zh: '产品战略' },
+          { en: 'Web App', zh: 'Web 应用' },
+        ],
+        year: '2020',
+        image: `${basePath}/images/legacy-source/covers/maxval.png`,
+        imageSize: 'cover',
+        href: '/projects/archive/maxval-saas-product-design',
+      },
+      {
+        id: 18,
+        title: 'Neighborhood App Design',
+        description: {
+          en: 'A social-context mobile product designed through user research, competitive analysis, personas, wireframes, and high-fidelity UI.',
+          zh: '通过用户研究、竞品分析、Persona、线框图和高保真界面完成的社交场景移动产品。',
+        },
+        tags: [
+          { en: 'Mobile UX', zh: '移动 UX' },
+          { en: 'Social Product', zh: '社交产品' },
+          { en: 'Visual Design', zh: '视觉设计' },
+        ],
+        year: '2020',
+        image: `${basePath}/images/legacy-source/covers/neighborhood.png`,
+        imageSize: 'cover',
+        href: '/projects/archive/neighborhood-app-design',
+      },
+      {
+        id: 19,
+        title: 'MiTools User Research',
+        description: {
+          en: 'A seven-stage needs assessment and usability evaluation of the University of Michigan School of Dentistry Time Away Request system.',
+          zh: '针对密歇根大学牙科学院请假系统开展的七阶段需求评估与可用性研究。',
+        },
+        tags: [
+          { en: 'UX Research', zh: 'UX 研究' },
+          { en: 'Survey', zh: '问卷' },
+          { en: 'Usability', zh: '可用性' },
+        ],
+        year: '2020',
+        image: `${basePath}/images/legacy-source/covers/mitools.png`,
+        imageSize: 'cover',
+        href: '/projects/archive/mitools-user-research',
+      },
+      {
+        id: 20,
+        title: 'Dribbble Daily UI Archive',
+        description: {
+          en: 'Seventeen visual and interaction-design explorations preserved from the original Dribbble profile.',
+          zh: '从原 Dribbble 主页完整保留的 17 个视觉与交互设计练习。',
+        },
+        tags: [
+          { en: 'Daily UI', zh: 'Daily UI' },
+          { en: 'Visual Design', zh: '视觉设计' },
+          { en: 'Interaction', zh: '交互' },
+        ],
+        year: '2020–2022',
+        image: `${basePath}/images/dribbble-archive/shot-01.webp`,
+        imageSize: 'cover',
+        href: '/projects/dribbble-archive',
+      },
+      {
+        id: 21,
+        title: 'Central Park Visual Identity',
+        description: {
+          en: 'A 47-page Paula Scher-inspired branding, typography, and visual-identity exploration for Central Park.',
+          zh: '一套 47 页、受 Paula Scher 启发的 Central Park 品牌、字体与视觉识别探索。',
+        },
+        tags: [
+          { en: 'Branding', zh: '品牌设计' },
+          { en: 'Typography', zh: '字体设计' },
+          { en: 'Visual Identity', zh: '视觉识别' },
+        ],
+        year: '2020',
+        image: `${basePath}/images/legacy-pdf/cover.png`,
+        imageSize: 'cover',
+        href: '/projects/visual-design-portfolio',
+      },
+      ...legacyProjectCards
+        .filter((project) => project.id >= 22)
+        .map((project) => ({
+          ...project,
+          image: `${basePath}${project.image}`,
+          imageSize: 'cover',
+        })),
+    ],
+  },
+  {
     title: { en: 'Personal Projects', zh: '个人项目' },
     projects: [
       {
@@ -229,6 +363,11 @@ const projectCategories: ProjectCategory[] = [
       },
     ],
   },
+];
+
+const orderedProjectCategories = [
+  ...projectCategories.filter((category) => category.title.en !== 'Legacy Archive'),
+  ...projectCategories.filter((category) => category.title.en === 'Legacy Archive'),
 ];
 
 // Earlier work (student-era projects)
@@ -359,7 +498,7 @@ export default function ProjectsPage() {
 
           {/* Categorized Two-Column Layout */}
           <div className="space-y-20">
-            {projectCategories.map((category, categoryIndex) => (
+            {orderedProjectCategories.map((category, categoryIndex) => (
               <section key={category.title.en}>
                 <motion.div
                   initial={{ opacity: 0, y: 16 }}
@@ -371,7 +510,13 @@ export default function ProjectsPage() {
                   <div className="h-px flex-1 bg-white/10" />
                 </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+                <div
+                  className={`grid grid-cols-1 gap-6 ${
+                    category.compact
+                      ? 'md:grid-cols-2 lg:grid-cols-3 lg:gap-6'
+                      : 'md:grid-cols-2 lg:gap-8'
+                  }`}
+                >
                   {category.projects.map((project, index) => {
                     const actionLabel = project.cta?.[lang] ?? t('View Case', '查看案例');
                     const isExternal = project.href.startsWith('http');
@@ -380,7 +525,9 @@ export default function ProjectsPage() {
                       <>
                         {/* Image Section */}
                         <div
-                          className="relative h-64 overflow-hidden rounded-t-3xl transition-transform duration-700 group-hover:scale-[1.025] lg:h-72"
+                          className={`relative overflow-hidden rounded-t-3xl transition-transform duration-700 group-hover:scale-[1.025] ${
+                            category.compact ? 'h-48 lg:h-52' : 'h-64 lg:h-72'
+                          }`}
                           style={{
                             backgroundColor: isEditorial ? '#f7f8fa' : '#0a0a0a',
                             backgroundImage: `url(${encodeURI(project.image)})`,
@@ -398,7 +545,11 @@ export default function ProjectsPage() {
                           </div>
                         </div>
                         {/* Content Section */}
-                        <div className="relative p-6 lg:p-8">
+                        <div
+                          className={`relative ${
+                            category.compact ? 'p-5 lg:p-6' : 'p-6 lg:p-8'
+                          }`}
+                        >
                           <div className="flex flex-wrap gap-2 mb-5">
                             {project.tags.map((tag) => (
                               <span key={tag.en} className={`rounded-full border px-3 py-1.5 text-xs transition-colors ${isEditorial ? 'border-[#1267d6]/25 bg-[#1267d6]/10 text-[#b9d6ff] group-hover:border-[#70a9f5]/60' : 'border-white/20 bg-white/10 group-hover:border-white/40'}`}>
@@ -406,10 +557,22 @@ export default function ProjectsPage() {
                               </span>
                             ))}
                           </div>
-                          <h3 className="text-3xl lg:text-4xl font-bold mb-4 group-hover:text-white transition-colors">
+                          <h3
+                            className={`font-bold mb-4 group-hover:text-white transition-colors ${
+                              category.compact
+                                ? 'text-2xl lg:text-3xl'
+                                : 'text-3xl lg:text-4xl'
+                            }`}
+                          >
                             {project.title}
                           </h3>
-                          <p className="text-base text-gray-400 mb-6 leading-relaxed line-clamp-3">
+                          <p
+                            className={`text-gray-400 mb-6 leading-relaxed ${
+                              category.compact
+                                ? 'text-sm line-clamp-2'
+                                : 'text-base line-clamp-3'
+                            }`}
+                          >
                             {project.description[lang]}
                           </p>
                           <div className="flex flex-wrap gap-3">

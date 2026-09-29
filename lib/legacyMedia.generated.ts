@@ -1,0 +1,103 @@
+export const legacyMedia = {
+  "transsionEn": [
+    "/images/legacy-source/transsion/en/01.jpg",
+    "/images/legacy-source/transsion/en/02.png",
+    "/images/legacy-source/transsion/en/03.png",
+    "/images/legacy-source/transsion/en/04.png",
+    "/images/legacy-source/transsion/en/05.png",
+    "/images/legacy-source/transsion/en/06.jpg",
+    "/images/legacy-source/transsion/en/07.png",
+    "/images/legacy-source/transsion/en/08.jpg",
+    "/images/legacy-source/transsion/en/09.png"
+  ],
+  "transsionZh": [
+    "/images/legacy-source/transsion/zh/01.jpg",
+    "/images/legacy-source/transsion/zh/02.png",
+    "/images/legacy-source/transsion/zh/03.png",
+    "/images/legacy-source/transsion/zh/04.png",
+    "/images/legacy-source/transsion/zh/05.png",
+    "/images/legacy-source/transsion/zh/06.jpg",
+    "/images/legacy-source/transsion/zh/07.png",
+    "/images/legacy-source/transsion/zh/08.jpg",
+    "/images/legacy-source/transsion/zh/09.png",
+    "/images/legacy-source/transsion/zh/10.jpg"
+  ],
+  "maxvalEn": [
+    "/images/legacy-source/maxval/en/01.png",
+    "/images/legacy-source/maxval/en/02.png",
+    "/images/legacy-source/maxval/en/03.png",
+    "/images/legacy-source/maxval/en/04.png",
+    "/images/legacy-source/maxval/en/05.png",
+    "/images/legacy-source/maxval/en/06.png",
+    "/images/legacy-source/maxval/en/07.png",
+    "/images/legacy-source/maxval/en/08.png",
+    "/images/legacy-source/maxval/en/09.png",
+    "/images/legacy-source/maxval/en/10.png"
+  ],
+  "maxvalZh": [
+    "/images/legacy-source/maxval/zh/01.png",
+    "/images/legacy-source/maxval/zh/02.png",
+    "/images/legacy-source/maxval/zh/03.png",
+    "/images/legacy-source/maxval/zh/04.png",
+    "/images/legacy-source/maxval/zh/05.png",
+    "/images/legacy-source/maxval/zh/06.png",
+    "/images/legacy-source/maxval/zh/07.png",
+    "/images/legacy-source/maxval/zh/08.png",
+    "/images/legacy-source/maxval/zh/09.png",
+    "/images/legacy-source/maxval/zh/10.png",
+    "/images/legacy-source/maxval/zh/11.png",
+    "/images/legacy-source/maxval/zh/12.png"
+  ],
+  "neighborhoodEn": [
+    "/images/legacy-source/neighborhood/en/01.png",
+    "/images/legacy-source/neighborhood/en/02.png",
+    "/images/legacy-source/neighborhood/en/03.png",
+    "/images/legacy-source/neighborhood/en/04.png",
+    "/images/legacy-source/neighborhood/en/05.png",
+    "/images/legacy-source/neighborhood/en/06.png",
+    "/images/legacy-source/neighborhood/en/07.png"
+  ],
+  "neighborhoodZh": [
+    "/images/legacy-source/neighborhood/zh/01.png",
+    "/images/legacy-source/neighborhood/zh/02.png",
+    "/images/legacy-source/neighborhood/zh/03.png",
+    "/images/legacy-source/neighborhood/zh/04.png",
+    "/images/legacy-source/neighborhood/zh/05.png",
+    "/images/legacy-source/neighborhood/zh/06.png",
+    "/images/legacy-source/neighborhood/zh/07.png"
+  ],
+  "mitoolsEn": [
+    "/images/legacy-source/mitools/en/01.png",
+    "/images/legacy-source/mitools/en/02.png",
+    "/images/legacy-source/mitools/en/03.png",
+    "/images/legacy-source/mitools/en/04.png",
+    "/images/legacy-source/mitools/en/05.png",
+    "/images/legacy-source/mitools/en/06.png",
+    "/images/legacy-source/mitools/en/07.jpg",
+    "/images/legacy-source/mitools/en/08.jpg",
+    "/images/legacy-source/mitools/en/09.png",
+    "/images/legacy-source/mitools/en/10.png",
+    "/images/legacy-source/mitools/en/11.png",
+    "/images/legacy-source/mitools/en/12.png",
+    "/images/legacy-source/mitools/en/13.png",
+    "/images/legacy-source/mitools/en/14.png",
+    "/images/legacy-source/mitools/en/15.png",
+    "/images/legacy-source/mitools/en/16.png",
+    "/images/legacy-source/mitools/en/17.png",
+    "/images/legacy-source/mitools/en/18.png",
+    "/images/legacy-source/mitools/en/19.png",
+    "/images/legacy-source/mitools/en/20.png",
+    "/images/legacy-source/mitools/en/21.png",
+    "/images/legacy-source/mitools/en/22.png",
+    "/images/legacy-source/mitools/en/23.png",
+    "/images/legacy-source/mitools/en/24.png",
+    "/images/legacy-source/mitools/en/25.png"
+  ],
+  "covers": {
+    "microsoft": "/images/legacy-source/covers/microsoft.jpg",
+    "transsion": "/images/legacy-source/covers/transsion.jpg",
+    "maxval": "/images/legacy-source/covers/maxval.png",
+    "neighborhood": "/images/legacy-source/covers/neighborhood.png",
+    "mitools": "/images/legacy-source/covers/mitools.png"
+  }
+} as const;
