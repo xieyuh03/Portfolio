@@ -76,6 +76,30 @@ const media = {
       zh: '四种模板把重复工作转化为明确的计划、模型、结果去向与执行上限。',
     },
   },
+  encryptedSync: {
+    src: mediaPath('encrypted-data-sync.png'),
+    alt: {
+      en: 'Encrypted data sync dialog in Personal Command Center',
+      zh: 'Personal Command Center 的加密数据同步界面',
+    },
+    label: { en: 'Recoverable local-first data', zh: '可恢复的本地优先数据' },
+    caption: {
+      en: 'A passphrase derives an in-memory key for authenticated encryption. Restore is staged, backed up, and only applied after restart.',
+      zh: '同步口令只在内存中派生认证加密密钥；恢复先暂存并备份当前数据，重启后才应用。',
+    },
+  },
+  worldLedger: {
+    src: mediaPath('native-world-ledger.png'),
+    alt: {
+      en: 'World Ledger boundary inside Personal Command Center',
+      zh: 'Personal Command Center 内的 World Ledger 项目边界',
+    },
+    label: { en: 'Independent project boundary', zh: '独立作品边界' },
+    caption: {
+      en: 'The command center manages the research entry and direction, while World Ledger keeps its own source, public-data contract, and deployment.',
+      zh: '中枢管理研究入口与方向，World Ledger 仍保留自己的源码、公开数据契约与独立发布。',
+    },
+  },
 } satisfies Record<string, MediaItem>;
 
 const challengeCards = [
@@ -342,8 +366,8 @@ export default function PersonalCommandCenterPage() {
               </p>
               <p className="mt-6 max-w-2xl text-base leading-8 text-[#626872] md:text-lg">
                 {t(
-                  'What began as a Feishu assistant evolved into a macOS desktop system for managing knowledge, creative work, investments, persistent Agent tasks, and automations without surrendering data ownership.',
-                  '它从飞书助手演进为 macOS 桌面系统，用来管理知识、创作、投资、持续 Agent 任务与自动化，同时保留对数据和项目边界的控制。',
+                  'What began as a Feishu assistant evolved into a macOS desktop system for managing knowledge, creative work, persistent Agent tasks, and automations—with encrypted recovery and explicit boundaries between private data and public projects.',
+                  '它从飞书助手演进为 macOS 桌面系统，用来管理知识、创作、持续 Agent 任务与自动化，并通过加密恢复机制与明确边界隔离私人数据和公开作品。',
                 )}
               </p>
             </Reveal>
@@ -546,9 +570,68 @@ export default function PersonalCommandCenterPage() {
           </div>
         </Chapter>
 
-        <Chapter id="architecture" tone="dark">
+        <Chapter id="trust" tone="soft">
           <SectionHeading
             index="05"
+            eyebrow={t('Trust & continuity', '信任与连续性')}
+            title={t(
+              'Local-first is not enough if the system cannot recover—or explain its boundaries.',
+              '如果系统无法恢复、也无法解释边界，“本地优先”仍然不够。',
+            )}
+            body={t(
+              'The latest iteration treats recoverability and data separation as product behavior. Private workspace data can move between devices only as an authenticated encrypted snapshot; public research remains an independently deployed project that never consumes private account data.',
+              '最新迭代把可恢复性与数据隔离当作产品行为：私人工作数据只能以认证加密快照跨设备移动；公开研究则作为独立作品发布，永远不读取私人账户数据。',
+            )}
+          />
+          <div className="mt-10 grid gap-6 lg:grid-cols-2">
+            <MediaFrame
+              item={media.encryptedSync}
+              lang={lang}
+              onOpen={setLightboxItem}
+            />
+            <MediaFrame
+              item={media.worldLedger}
+              lang={lang}
+              onOpen={setLightboxItem}
+            />
+          </div>
+          <div className="mt-6 grid gap-px overflow-hidden rounded-[24px] border border-[#dfe2e7] bg-[#dfe2e7] md:grid-cols-3">
+            {[
+              {
+                label: t('Key handling', '密钥处理'),
+                value: t(
+                  'Passphrase stays in memory; Argon2id derives the key.',
+                  '口令只留在内存，由 Argon2id 派生密钥。',
+                ),
+              },
+              {
+                label: t('Recovery safety', '恢复安全'),
+                value: t(
+                  'Validate, stage, back up, then apply after restart.',
+                  '先校验、暂存和备份，再于重启后应用。',
+                ),
+              },
+              {
+                label: t('Publication boundary', '发布边界'),
+                value: t(
+                  'Public evidence ships; positions and accounts never do.',
+                  '只发布公开证据，持仓与账户数据永不进入。',
+                ),
+              },
+            ].map((item) => (
+              <div key={item.label} className="bg-white p-6">
+                <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#1267d6]">
+                  {item.label}
+                </p>
+                <p className="mt-3 text-sm font-semibold leading-7">{item.value}</p>
+              </div>
+            ))}
+          </div>
+        </Chapter>
+
+        <Chapter id="architecture" tone="dark">
+          <SectionHeading
+            index="06"
             eyebrow={t('System architecture', '系统架构')}
             title={t(
               'Local data by default. Cloud intelligence by choice.',
@@ -596,7 +679,7 @@ export default function PersonalCommandCenterPage() {
 
         <Chapter id="review" tone="paper">
           <SectionHeading
-            index="06"
+            index="07"
             eyebrow={t('Product review', '产品复盘')}
             title={t(
               'The foundation is coherent. The next iteration should make that coherence easier to see.',
@@ -628,7 +711,7 @@ export default function PersonalCommandCenterPage() {
 
         <Chapter id="outcome" tone="dark">
           <SectionHeading
-            index="07"
+            index="08"
             eyebrow={t('Current outcome', '当前成果')}
             title={t(
               'A working personal operating layer—not a collection of disconnected AI features.',
@@ -640,6 +723,29 @@ export default function PersonalCommandCenterPage() {
             )}
             dark
           />
+          <div className="mt-10">
+            <MetaGrid
+              dark
+              items={[
+                {
+                  label: t('Work areas', '工作领域'),
+                  value: t('8 primary spaces', '8 个一级空间'),
+                },
+                {
+                  label: t('AI runtimes', 'AI 运行时'),
+                  value: 'Copilot · Ollama · LM Studio',
+                },
+                {
+                  label: t('Automation cadence', '自动化节奏'),
+                  value: t('15-minute background checks', '每 15 分钟后台巡检'),
+                },
+                {
+                  label: t('Continuity model', '连续性模型'),
+                  value: t('One portable context spine', '一条可流动的上下文主线'),
+                },
+              ]}
+            />
+          </div>
           <Reveal className="mt-10">
             <StatementBand label={t('Design principle', '设计原则')}>
               {t(

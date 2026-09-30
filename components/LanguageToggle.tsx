@@ -13,6 +13,7 @@ const LIGHT_BG_PATHS = [
   '/projects/connector-health-center',
   '/projects/unified-connector-experience',
   '/projects/personal-command-center',
+  '/projects/global-market-intelligence',
 ];
 
 export default function LanguageToggle() {
