@@ -1,13 +1,4 @@
 export const legacyAdditional = {
-  "daily-ui": {
-    "en": [
-      "/images/legacy-additional/daily-ui/en/chunk-01.webp"
-    ],
-    "zh": [
-      "/images/legacy-additional/daily-ui/zh/chunk-01.webp"
-    ],
-    "cover": "/images/legacy-additional/daily-ui/cover.webp"
-  },
   "design-inspiration": {
     "en": [
       "/images/legacy-additional/design-inspiration/en/chunk-01.webp"

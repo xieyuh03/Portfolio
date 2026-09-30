@@ -6,6 +6,7 @@ export type LegacyProjectCard = {
   year: string;
   image: string;
   href: string;
+  group: 'professional' | 'graduate' | 'undergraduate';
 };
 
 export const legacyProjectCards: LegacyProjectCard[] = [
@@ -23,6 +24,7 @@ export const legacyProjectCards: LegacyProjectCard[] = [
     year: '2021',
     image: '/images/legacy-source/covers/microsoft.jpg',
     href: '/projects/archive/microsoft-internship-2021',
+    group: 'professional',
   },
   {
     id: 16,
@@ -38,6 +40,7 @@ export const legacyProjectCards: LegacyProjectCard[] = [
     year: '2021',
     image: '/images/legacy-source/covers/transsion.jpg',
     href: '/projects/archive/transsion-product-design',
+    group: 'professional',
   },
   {
     id: 17,
@@ -53,6 +56,7 @@ export const legacyProjectCards: LegacyProjectCard[] = [
     year: '2020',
     image: '/images/legacy-source/covers/maxval.png',
     href: '/projects/archive/maxval-saas-product-design',
+    group: 'professional',
   },
   {
     id: 18,
@@ -68,6 +72,7 @@ export const legacyProjectCards: LegacyProjectCard[] = [
     year: '2020',
     image: '/images/legacy-source/covers/neighborhood.png',
     href: '/projects/archive/neighborhood-app-design',
+    group: 'graduate',
   },
   {
     id: 19,
@@ -83,6 +88,7 @@ export const legacyProjectCards: LegacyProjectCard[] = [
     year: '2020',
     image: '/images/legacy-source/covers/mitools.png',
     href: '/projects/archive/mitools-user-research',
+    group: 'graduate',
   },
   {
     id: 20,
@@ -98,6 +104,7 @@ export const legacyProjectCards: LegacyProjectCard[] = [
     year: '2020–2022',
     image: '/images/dribbble-archive/shot-01.webp',
     href: '/projects/dribbble-archive',
+    group: 'undergraduate',
   },
   {
     id: 21,
@@ -113,6 +120,7 @@ export const legacyProjectCards: LegacyProjectCard[] = [
     year: '2020',
     image: '/images/legacy-pdf/cover.png',
     href: '/projects/visual-design-portfolio',
+    group: 'graduate',
   },
   {
     id: 22,
@@ -128,6 +136,7 @@ export const legacyProjectCards: LegacyProjectCard[] = [
     year: '2021',
     image: '/images/legacy-additional/google-design-exercise/cover-source.webp',
     href: '/projects/archive/google-design-exercise',
+    group: 'graduate',
   },
   {
     id: 23,
@@ -141,8 +150,9 @@ export const legacyProjectCards: LegacyProjectCard[] = [
       { en: 'Physical Product', zh: '实体产品' },
     ],
     year: '2019',
-    image: '/images/legacy-additional/doggo/cover-source.webp',
+    image: '/images/legacy-additional/doggo/cover-source.webp?v=20260930-work',
     href: '/projects/archive/doggo',
+    group: 'graduate',
   },
   {
     id: 24,
@@ -158,6 +168,7 @@ export const legacyProjectCards: LegacyProjectCard[] = [
     year: '2020',
     image: '/images/legacy-additional/personal-brand/cover-source.webp',
     href: '/projects/archive/personal-brand',
+    group: 'graduate',
   },
   {
     id: 25,
@@ -171,38 +182,25 @@ export const legacyProjectCards: LegacyProjectCard[] = [
       { en: 'Product Concept', zh: '产品概念' },
     ],
     year: '2020',
-    image: '/images/legacy-additional/netease-design/cover-source.webp',
+    image: '/images/legacy-additional/netease-design/cover-source.webp?v=20260930-work',
     href: '/projects/archive/netease-design',
+    group: 'undergraduate',
   },
   {
     id: 26,
-    title: 'Design Inspiration',
+    title: 'ArtCenter Graphic Studies',
     description: {
-      en: 'A curated visual inspiration collection from the original portfolio.',
-      zh: '旧作品集中的视觉灵感与图形参考合集。',
+      en: 'A collection of university ArtCenter graphic studies and visual explorations.',
+      zh: '大学 ArtCenter 阶段的图形设计练习与视觉探索合集。',
     },
     tags: [
       { en: 'Visual Research', zh: '视觉研究' },
       { en: 'Inspiration', zh: '灵感收集' },
     ],
     year: '2020',
-    image: '/images/legacy-additional/design-inspiration/cover-source.webp',
+    image: '/images/legacy-additional/design-inspiration/cover-source.webp?v=20260930-work',
     href: '/projects/archive/design-inspiration',
-  },
-  {
-    id: 27,
-    title: 'Graphic Design Archive',
-    description: {
-      en: 'Web banner and poster design work preserved from the original Graphic collection.',
-      zh: '旧站 Graphic 合集中完整保留的网页 Banner 与海报设计。',
-    },
-    tags: [
-      { en: 'Graphic Design', zh: '平面设计' },
-      { en: 'Poster', zh: '海报' },
-    ],
-    year: '2020',
-    image: '/images/legacy-additional/graphic-design/cover-source.webp',
-    href: '/projects/archive/graphic-design',
+    group: 'undergraduate',
   },
   {
     id: 28,
@@ -218,6 +216,7 @@ export const legacyProjectCards: LegacyProjectCard[] = [
     year: '2020',
     image: '/images/legacy-additional/restaurant-booking/cover-source.webp',
     href: '/projects/archive/restaurant-booking',
+    group: 'graduate',
   },
   {
     id: 29,
@@ -231,23 +230,9 @@ export const legacyProjectCards: LegacyProjectCard[] = [
       { en: 'Arduino', zh: 'Arduino' },
     ],
     year: '2020',
-    image: '/images/legacy-additional/transformable-wheel/cover-source.webp',
+    image: '/images/legacy-additional/transformable-wheel/cover-source.webp?v=20260930-work',
     href: '/projects/archive/transformable-wheel',
-  },
-  {
-    id: 30,
-    title: 'Daily UI — Original Site',
-    description: {
-      en: 'The original 100 Days UI challenge page, preserved separately from the Dribbble archive.',
-      zh: '旧站中的 100 Days UI Challenge 原始页面，与 Dribbble 归档分别保留。',
-    },
-    tags: [
-      { en: 'Daily UI', zh: 'Daily UI' },
-      { en: 'Interface', zh: '界面设计' },
-    ],
-    year: '2020',
-    image: '/images/legacy-additional/daily-ui/cover-source.webp',
-    href: '/projects/archive/daily-ui',
+    group: 'undergraduate',
   },
   {
     id: 31,
@@ -261,8 +246,9 @@ export const legacyProjectCards: LegacyProjectCard[] = [
       { en: 'Interaction', zh: '交互设计' },
     ],
     year: '2019',
-    image: '/images/legacy-additional/garbage-interaction/cover-source.webp',
+    image: '/images/legacy-additional/garbage-interaction/cover-source.webp?v=20260930-work',
     href: '/projects/archive/garbage-interaction',
+    group: 'undergraduate',
   },
   {
     id: 32,
@@ -278,6 +264,7 @@ export const legacyProjectCards: LegacyProjectCard[] = [
     year: '2020',
     image: '/images/legacy-additional/foodyards/cover-source.webp',
     href: '/projects/archive/foodyards',
+    group: 'graduate',
   },
   {
     id: 33,
@@ -291,8 +278,9 @@ export const legacyProjectCards: LegacyProjectCard[] = [
       { en: 'Identity', zh: '视觉识别' },
     ],
     year: '2020',
-    image: '/images/legacy-additional/digesta/cover-source.webp',
+    image: '/images/legacy-additional/digesta/cover-source.webp?v=20260930-work',
     href: '/projects/archive/digesta',
+    group: 'graduate',
   },
   {
     id: 34,
@@ -306,7 +294,8 @@ export const legacyProjectCards: LegacyProjectCard[] = [
       { en: 'Booking UX', zh: '预订体验' },
     ],
     year: '2020',
-    image: '/images/legacy-additional/hotel-booking/cover-source.webp',
+    image: '/images/legacy-additional/hotel-booking/cover-source.webp?v=20260930-work',
     href: '/projects/archive/hotel-booking',
+    group: 'graduate',
   },
 ];

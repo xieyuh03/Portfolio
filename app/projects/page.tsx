@@ -32,6 +32,7 @@ type ProjectCategory = {
   title: LocalizedText;
   projects: Project[];
   compact?: boolean;
+  columns?: 2 | 3 | 4;
 };
 
 // Featured project data
@@ -307,6 +308,7 @@ const projectCategories: ProjectCategory[] = [
   },
   {
     title: { en: 'Personal Projects', zh: '个人项目' },
+    columns: 3,
     projects: [
       {
         id: 14,
@@ -365,9 +367,59 @@ const projectCategories: ProjectCategory[] = [
   },
 ];
 
-const orderedProjectCategories = [
-  ...projectCategories.filter((category) => category.title.en !== 'Legacy Archive'),
-  ...projectCategories.filter((category) => category.title.en === 'Legacy Archive'),
+const orderedProjectCategories = projectCategories.filter(
+  (category) => category.title.en !== 'Legacy Archive',
+);
+
+const orderByTitles = (
+  projects: typeof legacyProjectCards,
+  titles: string[],
+) =>
+  titles
+    .map((title) => projects.find((project) => project.title === title))
+    .filter((project): project is (typeof legacyProjectCards)[number] =>
+      Boolean(project),
+    );
+
+const legacySubcategories = [
+  {
+    title: { en: 'Professional Experience', zh: '真实企业项目' },
+    projects: orderByTitles(legacyProjectCards, [
+      'Microsoft D365 Internship',
+      'Transsion Product Design',
+      'MAXVAL SaaS Product Design',
+    ]),
+  },
+  {
+    title: { en: 'Graduate Coursework', zh: '研究生阶段课程项目' },
+    projects: orderByTitles(legacyProjectCards, [
+      'Neighborhood App Design',
+      'MiTools User Research',
+      'FoodYards',
+      'Central Park Visual Identity',
+      'Doggo Safety Seat',
+      'Digesta',
+      'Restaurant Booking Interface',
+      'Hotel Booking Interface',
+    ]),
+  },
+  {
+    title: { en: 'Design Exercises', zh: '设计练习' },
+    projects: orderByTitles(legacyProjectCards, [
+      'Dribbble Daily UI Archive',
+      'Personal Branding',
+      'Google Design Exercise 2021',
+      'NetEase Design Challenge',
+    ]),
+  },
+  {
+    title: { en: 'Undergraduate & Early Work', zh: '更早本科阶段项目' },
+    projects: orderByTitles(legacyProjectCards, [
+      'Garbage Interaction System',
+      'ArtCenter Graphic Studies',
+      'Transformable Wheel',
+    ]),
+  },
 ];
 
 // Earlier work (student-era projects)
@@ -512,9 +564,11 @@ export default function ProjectsPage() {
 
                 <div
                   className={`grid grid-cols-1 gap-6 ${
-                    category.compact
-                      ? 'md:grid-cols-2 lg:grid-cols-3 lg:gap-6'
-                      : 'md:grid-cols-2 lg:gap-8'
+                    category.columns === 4
+                      ? 'sm:grid-cols-2 lg:grid-cols-4 lg:gap-5'
+                      : category.columns === 3
+                        ? 'md:grid-cols-2 lg:grid-cols-3 lg:gap-6'
+                        : 'md:grid-cols-2 lg:gap-8'
                   }`}
                 >
                   {category.projects.map((project, index) => {
@@ -633,6 +687,93 @@ export default function ProjectsPage() {
                 </div>
               </section>
             ))}
+
+            <section>
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="flex items-center gap-4 mb-10"
+              >
+                <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
+                  {t('Earlier Project Archive', '早期项目归档')}
+                </h2>
+                <div className="h-px flex-1 bg-white/10" />
+              </motion.div>
+
+              <div className="space-y-14">
+                {legacySubcategories.map((subcategory, subcategoryIndex) => (
+                  <div key={subcategory.title.en}>
+                    <div className="mb-6 flex items-center gap-3">
+                      <span className="font-mono text-[11px] text-white/35">
+                        0{subcategoryIndex + 1}
+                      </span>
+                      <h3 className="text-xl md:text-2xl font-semibold text-white/80">
+                        {subcategory.title[lang]}
+                      </h3>
+                      <div className="h-px flex-1 bg-white/[0.07]" />
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                      {subcategory.projects.map((project, index) => (
+                        <TiltWrapper
+                          key={project.id}
+                          className="group h-full"
+                          rotateAmplitude={1}
+                          scaleOnHover={1.015}
+                        >
+                          <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: '-40px' }}
+                            transition={{
+                              duration: 0.45,
+                              delay: (index % 4) * 0.06,
+                            }}
+                            className="h-full"
+                          >
+                            <Link
+                              href={project.href}
+                              className="block h-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.045] transition-colors hover:border-white/30"
+                            >
+                              <div
+                                className="relative h-40 bg-[#111] bg-cover bg-center"
+                                style={{
+                                  backgroundImage: `url(${encodeURI(`${basePath}${project.image}`)})`,
+                                }}
+                              >
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                                <span className="absolute right-3 top-3 rounded-full border border-white/15 bg-black/35 px-3 py-1 text-xs text-white/80 backdrop-blur">
+                                  {project.year}
+                                </span>
+                              </div>
+                              <div className="p-4">
+                                <div className="mb-3 flex flex-wrap gap-1.5">
+                                  {project.tags.slice(0, 2).map((tag) => (
+                                    <span
+                                      key={tag.en}
+                                      className="rounded-full border border-white/15 bg-white/[0.06] px-2.5 py-1 text-[10px] text-white/60"
+                                    >
+                                      {tag[lang]}
+                                    </span>
+                                  ))}
+                                </div>
+                                <h4 className="text-lg font-semibold leading-6 text-white">
+                                  {project.title}
+                                </h4>
+                                <p className="mt-2 line-clamp-2 text-xs leading-5 text-white/42">
+                                  {project.description[lang]}
+                                </p>
+                              </div>
+                            </Link>
+                          </motion.div>
+                        </TiltWrapper>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
           </div>
 
           {/* Earlier Work Section —— 暂时隐藏 */}
