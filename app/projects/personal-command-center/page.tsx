@@ -36,8 +36,8 @@ const media = {
     },
     label: { en: 'Unified home', zh: '统一工作台' },
     caption: {
-      en: 'A calm overview keeps information, saved items, notes, and creation visible without merging their workflows.',
-      zh: '统一首页汇总资讯、收藏、笔记与创作，但不合并各模块自己的工作方式。',
+      en: 'The day starts with verified changes, then returns the user to the exact note, project, creation, or Agent task that needs attention.',
+      zh: '一天从已经核验的变化开始，再直接回到需要继续处理的笔记、项目、创作或 Agent 任务。',
     },
   },
   projects: {
@@ -48,8 +48,8 @@ const media = {
     },
     label: { en: 'Project Atlas', zh: '项目地图' },
     caption: {
-      en: 'The command center manages direction, status, and next actions while source code and deployment remain independently owned.',
-      zh: '中枢管理方向、状态与下一步，源码和部署仍由独立项目自己拥有。',
+      en: 'One atlas coordinates goals and next actions while each product keeps ownership of its source code and deployment.',
+      zh: '一张项目地图协调目标与下一步，同时让每个产品继续拥有自己的源码与部署。',
     },
   },
   agent: {
@@ -60,8 +60,8 @@ const media = {
     },
     label: { en: 'Context-bound Agent', zh: '上下文绑定 Agent' },
     caption: {
-      en: 'Opening Agent from a project creates a persistent task with project context already attached and a model that can change each turn.',
-      zh: '从项目进入 Agent 会创建持续任务，自动绑定项目上下文，并允许每一轮切换模型。',
+      en: 'The project, decision boundary, model, permission mode, and conversation remain visible in one persistent task channel.',
+      zh: '项目、决策边界、模型、权限方式与完整对话都保留在同一个持续任务频道里。',
     },
   },
   automation: {
@@ -72,8 +72,8 @@ const media = {
     },
     label: { en: 'Background automation', zh: '后台自动化' },
     caption: {
-      en: 'Four templates turn recurring work into explicit schedules, models, destinations, and limits.',
-      zh: '四种模板把重复工作转化为明确的计划、模型、结果去向与执行上限。',
+      en: 'Project review and public-data refresh become inspectable schedules with an owner, model, destination, and last result.',
+      zh: '项目巡检与公开数据刷新被转化为可检查的计划，明确任务、模型、去向与上次结果。',
     },
   },
   encryptedSync: {
@@ -91,13 +91,13 @@ const media = {
   worldLedger: {
     src: mediaPath('native-world-ledger.png'),
     alt: {
-      en: 'World Ledger boundary inside Personal Command Center',
-      zh: 'Personal Command Center 内的 World Ledger 项目边界',
+      en: 'Native World Ledger ETF research view inside Personal Command Center',
+      zh: 'Personal Command Center 内的 World Ledger ETF 研究视图',
     },
-    label: { en: 'Independent project boundary', zh: '独立作品边界' },
+    label: { en: 'Public evidence, native workflow', zh: '公开证据，原生工作流' },
     caption: {
-      en: 'The command center manages the research entry and direction, while World Ledger keeps its own source, public-data contract, and deployment.',
-      zh: '中枢管理研究入口与方向，World Ledger 仍保留自己的源码、公开数据契约与独立发布。',
+      en: 'World Ledger publishes one public-data contract; the desktop consumes it natively without importing private account data.',
+      zh: 'World Ledger 发布一套公开数据契约；桌面端原生消费它，但不会引入私人账户数据。',
     },
   },
 } satisfies Record<string, MediaItem>;
@@ -256,7 +256,7 @@ function MediaFrame({
       <button
         type="button"
         onClick={() => onOpen(item)}
-        className="group block aspect-[3/2] w-full overflow-hidden bg-[#eef1f5] text-left focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#1267d6]"
+        className="group block w-full overflow-hidden bg-[#eef1f5] text-left focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#1267d6]"
         aria-label={
           lang === 'zh'
             ? `放大查看：${item.alt.zh}`
@@ -270,7 +270,7 @@ function MediaFrame({
           height={1440}
           loading={priority ? 'eager' : 'lazy'}
           decoding="async"
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.01] motion-reduce:transition-none"
+          className="h-auto w-full object-contain transition-transform duration-500 group-hover:scale-[1.005] motion-reduce:transition-none"
         />
       </button>
       <figcaption className="border-t border-[#dfe2e7] px-4 py-3 text-sm leading-6 text-[#626872]">
@@ -341,19 +341,27 @@ export default function PersonalCommandCenterPage() {
       <main className="min-h-screen bg-[#f7f8fa] text-[#111318]">
         <Chapter id="top" tone="surface" className="pt-36 md:pt-44 lg:pt-48">
           <Reveal className="mb-12">
-            <Link
-              href="/projects"
-              className="inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#626872] transition-colors hover:text-[#1267d6]"
-            >
-              <span aria-hidden="true">←</span>
-              {t('All Projects', '所有项目')}
-            </Link>
+            <div className="flex flex-wrap items-center gap-5">
+              <Link
+                href="/projects"
+                className="inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#626872] transition-colors hover:text-[#1267d6]"
+              >
+                <span aria-hidden="true">←</span>
+                {t('All Projects', '所有项目')}
+              </Link>
+              <Link
+                href="/projects/personal-intelligence-system"
+                className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1267d6] transition hover:text-[#0b4fae]"
+              >
+                {t('Part 01 of Personal Intelligence System', 'Personal Intelligence System · 子案例 01')}
+              </Link>
+            </div>
           </Reveal>
           <div className="grid items-center gap-12 lg:grid-cols-[0.92fr_1.08fr]">
             <Reveal>
               <div className="mb-7 flex items-center gap-3 font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8e949e]">
                 <span className="h-px w-10 bg-[#c9cdd4]" aria-hidden="true" />
-                <span>{t('Personal system · Local-first AI', '个人系统 · 本地优先 AI')}</span>
+                <span>{t('Private work layer · Local-first AI', '私人工作层 · 本地优先 AI')}</span>
               </div>
               <h1 className="max-w-4xl text-[clamp(3.4rem,7.2vw,6.8rem)] font-[720] leading-[0.92] tracking-[-0.07em] text-[#111318]">
                 Personal <span className="text-[#1267d6]">Command Center</span>
@@ -753,6 +761,22 @@ export default function PersonalCommandCenterPage() {
                 '让领域保持独立，让上下文可以流动，让自动化持续运行，同时让责任始终可见。',
               )}
             </StatementBand>
+          </Reveal>
+          <Reveal className="mt-8">
+            <Link
+              href="/projects/global-market-intelligence"
+              className="group flex items-center justify-between gap-6 rounded-[24px] border border-white/14 bg-white/[0.055] p-6 text-white transition hover:border-[#70a9f5]/60 hover:bg-white/[0.08]"
+            >
+              <div>
+                <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#70a9f5]">
+                  {t('Continue to subcase 02', '继续阅读子案例 02')}
+                </p>
+                <h3 className="mt-3 text-2xl font-semibold">
+                  World Ledger · {t('Public evidence layer', '公开证据层')}
+                </h3>
+              </div>
+              <span className="text-2xl transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
+            </Link>
           </Reveal>
         </Chapter>
       </main>

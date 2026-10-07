@@ -12,6 +12,7 @@ const LIGHT_BG_PATHS = [
   '/projects/vendor-invoice-center',
   '/projects/connector-health-center',
   '/projects/unified-connector-experience',
+  '/projects/personal-intelligence-system',
   '/projects/personal-command-center',
   '/projects/global-market-intelligence',
 ];

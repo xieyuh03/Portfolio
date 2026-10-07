@@ -191,7 +191,7 @@ function MediaFrame({
       <button
         type="button"
         onClick={() => onOpen(item)}
-        className="group block aspect-[3/2] w-full overflow-hidden bg-[#080b0c] text-left focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#1267d6]"
+        className="group block w-full overflow-hidden bg-[#080b0c] text-left focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#1267d6]"
         aria-label={
           lang === 'zh'
             ? `放大查看：${item.alt.zh}`
@@ -205,7 +205,7 @@ function MediaFrame({
           height={1440}
           loading={priority ? 'eager' : 'lazy'}
           decoding="async"
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.01] motion-reduce:transition-none"
+          className="h-auto w-full object-contain transition-transform duration-500 group-hover:scale-[1.005] motion-reduce:transition-none"
         />
       </button>
       <figcaption className="border-t border-[#dfe2e7] px-4 py-3 text-sm leading-6 text-[#626872]">
@@ -282,19 +282,27 @@ export default function GlobalMarketIntelligencePage() {
       <main className="min-h-screen bg-[#f7f8fa] text-[#111318]">
         <Chapter id="top" tone="surface" className="pt-36 md:pt-44 lg:pt-48">
           <Reveal className="mb-12">
-            <Link
-              href="/projects"
-              className="inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#626872] transition-colors hover:text-[#1267d6]"
-            >
-              <span aria-hidden="true">←</span>
-              {t('All Projects', '所有项目')}
-            </Link>
+            <div className="flex flex-wrap items-center gap-5">
+              <Link
+                href="/projects"
+                className="inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#626872] transition-colors hover:text-[#1267d6]"
+              >
+                <span aria-hidden="true">←</span>
+                {t('All Projects', '所有项目')}
+              </Link>
+              <Link
+                href="/projects/personal-intelligence-system"
+                className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#b87824] transition hover:text-[#805015]"
+              >
+                {t('Part 02 of Personal Intelligence System', 'Personal Intelligence System · 子案例 02')}
+              </Link>
+            </div>
           </Reveal>
           <div className="grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr]">
             <Reveal>
               <div className="mb-7 flex items-center gap-3 font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8e949e]">
                 <span className="h-px w-10 bg-[#c9cdd4]" aria-hidden="true" />
-                <span>{t('Public-data research system', '公开数据研究系统')}</span>
+                <span>{t('Public evidence layer · Research system', '公开证据层 · 研究系统')}</span>
               </div>
               <h1 className="max-w-4xl text-[clamp(3.4rem,7vw,6.5rem)] font-[720] leading-[0.92] tracking-[-0.07em] text-[#111318]">
                 World <span className="text-[#b87824]">Ledger</span>
@@ -645,6 +653,22 @@ export default function GlobalMarketIntelligencePage() {
                 '下一个真正有用的功能往往不是再加一个指标，而是更清楚的来源、更有纪律的比较，或更明确地展示什么会改变当前判断。',
               )}
             </StatementBand>
+          </Reveal>
+          <Reveal className="mt-8">
+            <Link
+              href="/projects/personal-command-center"
+              className="group flex items-center justify-between gap-6 rounded-[24px] border border-[#dfe2e7] bg-white p-6 text-[#111318] shadow-[0_16px_40px_rgba(17,19,24,0.045)] transition hover:border-[#1267d6]/45"
+            >
+              <div>
+                <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#1267d6]">
+                  {t('Return to subcase 01', '返回子案例 01')}
+                </p>
+                <h3 className="mt-3 text-2xl font-semibold">
+                  Personal Command Center · {t('Private work layer', '私人工作层')}
+                </h3>
+              </div>
+              <span className="text-2xl transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
+            </Link>
           </Reveal>
         </Chapter>
       </main>
